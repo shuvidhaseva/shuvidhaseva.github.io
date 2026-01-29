@@ -60,7 +60,11 @@
             background-color: var(--secondary-color);
             display: flex; flex-direction: column; z-index: 1;
         }
+        /* START MODIFICATION: appContainer is now the default active page */
+        #appContainer.active { opacity: 1; visibility: visible; z-index: 5; }
         .page.active { opacity: 1; visibility: visible; z-index: 5; }
+        /* END MODIFICATION */
+
 
         /* --- AUTH UI --- */
 
@@ -245,6 +249,7 @@
             background-color: var(--white);
             border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
             overflow: hidden; position: relative;
+            cursor: pointer; /* NEW: Make the whole card clickable for PDP */
         }
         /* Adjusted height for a more balanced look */
         .card img { width: 100%; height: 110px; object-fit: cover; } 
@@ -256,6 +261,7 @@
         .card-actions {
             position: absolute; bottom: 10px; right: 10px;
             display: flex; gap: 5px;
+            z-index: 2; /* Ensure buttons are clickable over the card's click event */
         }
         
         .add-btn, .wishlist-btn {
@@ -282,6 +288,23 @@
             box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4); 
         }
         /* --- END MODIFIED CARD ACTIONS --- */
+        
+        /* NEW: Discount Tag Style */
+        .discount-tag {
+            position: absolute;
+            top: 5px; right: 5px;
+            background-color: var(--danger); /* Red/Orange background */
+            color: var(--white);
+            padding: 2px 8px;
+            border-radius: 50%; /* Changed to a circle/badge shape */
+            width: 35px; height: 35px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 0.75em;
+            font-weight: 700;
+            z-index: 5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            line-height: 1;
+        }
 
         /* --- UPDATED: PURPLE NAV & FLOATING CART --- */
         nav {
@@ -505,12 +528,12 @@
         .prev-slide { left: 10px; }
         .next-slide { right: 10px; }
         
-        /* CATEGORIES MODIFICATION: Rectangular Cards - INCREASED SIZE AS REQUESTED */
+        /* CATEGORIES MODIFICATION: Smaller Rectangular Cards, Bigger Image */
         .category-item-card {
             flex-shrink: 0;
-            /* MODIFIED: Increased size from 100px to 120px */
-            width: 120px; 
-            height: 120px; 
+            /* MODIFIED: Changed from 120px to 100px for smaller card */
+            width: 100px; 
+            height: 100px; 
             background-color: var(--white);
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -525,13 +548,19 @@
             transition: all 0.2s;
         }
         .category-item-card img {
-            /* MODIFIED: Increased size from 50px to 70px */
-            width: 70px;
-            height: 70px;
+            /* MODIFIED: Increased size from 70px to 80px for bigger image */
+            width: 80px;
+            height: 80px;
             object-fit: contain;
             margin-bottom: 5px;
-            border-radius: 0; /* Override circular dish card image */
-            height: 70px; /* Ensure aspect ratio */
+            border-radius: 0; 
+            height: 80px; 
+        }
+        .category-item-card i {
+             /* NEW: Style for default icon in category card */
+             font-size: 2.2em !important;
+             color:var(--primary-color); 
+             margin-bottom:5px;
         }
         .category-item-card h4 {
             font-size: 0.85em;
@@ -549,6 +578,39 @@
             box-shadow: 0 4px 10px rgba(103, 58, 183, 0.3);
             background-color: #f8f6ff; /* Light purple tint for active */
         }
+
+        /* NEW: PDP Image Slider */
+        .pdp-image-slider-container {
+            width: 100%;
+            height: 250px; /* Bigger image area */
+            overflow: hidden;
+            position: relative;
+            background: #f8f9fa;
+        }
+        .pdp-slider { display: flex; transition: transform 0.3s ease-out; height: 100%; }
+        .pdp-slide { min-width: 100%; height: 100%; }
+        .pdp-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .pdp-dots {
+             position: absolute; bottom: 10px; left: 0; right: 0;
+             display: flex; justify-content: center; gap: 5px;
+        }
+        .pdp-dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; cursor: pointer; }
+        .pdp-dot.active { background: var(--primary-color); }
+
+        .pdp-info h2 { font-size: 1.6em; font-weight: 700; margin-bottom: 5px; }
+        .pdp-info p { color: var(--light-text); margin-bottom: 20px; }
+        .pdp-price { font-size: 1.8em; font-weight: 700; color: var(--primary-color); }
+        .pdp-price span.original { font-size: 0.6em; color: var(--light-text); text-decoration: line-through; margin-left: 10px; font-weight: 400; }
+        
+        /* NEW: PDP Quantity Control */
+        .pdp-qty-controls {
+             display: flex; align-items: center; justify-content: space-between;
+             margin-top: 20px; padding: 15px 0; border-top: 1px solid #f1f2f6;
+        }
+        .pdp-qty-controls .qty-controls { background: var(--white); border: 1px solid #dfe6e9; }
+        .pdp-qty-controls .qty-controls span { font-size: 1.1em; font-weight: 600; }
+        /* Smaller text for minimum quantity warning */
+        #pdpMinQtyWarning { color: var(--danger); font-size: 0.85em; font-weight: 600; margin-top: 5px;}
         
     </style>
 </head>
@@ -557,7 +619,7 @@
     <div class="mobile-container">
 
         <!-- DETAILED LOGIN PAGE -->
-        <div id="loginPage" class="page active">
+        <div id="loginPage" class="page">
             <div class="auth-content">
                 <div class="auth-card">
                     <div class="auth-header">
@@ -688,7 +750,7 @@
         </div>
 
         <!-- HOME -->
-        <div id="appContainer" class="page">
+        <div id="appContainer" class="page active">
             <header class="app-header">
                 <div class="header-top">
                     <h1>
@@ -733,7 +795,8 @@
 
             <!-- Floating Cart Button -->
             <div id="cart-fab-container">
-                <div class="fab-btn" data-page="cartPage">
+                <!-- Data-page handler is moved to JS for auth check -->
+                <div class="fab-btn" id="cartFabBtn"> 
                     <i class="fas fa-shopping-basket"></i>
                     <div id="cart-count">0</div>
                 </div>
@@ -751,6 +814,66 @@
                 </div>
             </nav>
         </div>
+
+        <!-- PRODUCT DETAIL PAGE (NEW) -->
+        <div id="productDetailPage" class="page">
+            <header class="page-header">
+                <i class="fas fa-arrow-left back-btn" data-target="appContainer"></i>
+                <h2 id="pdpHeaderTitle">Product Details</h2>
+            </header>
+            
+            <div style="flex:1; overflow-y:auto;">
+                <!-- Image Slider -->
+                <div class="pdp-image-slider-container">
+                    <div class="pdp-slider" id="pdpSlider">
+                        <!-- Slides injected here -->
+                    </div>
+                    <div class="pdp-dots" id="pdpDots"></div>
+                </div>
+
+                <div style="padding: 20px;">
+                    <!-- Price & Discount -->
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <span class="pdp-price" id="pdpPrice">₹0.00</span>
+                            <span class="pdp-price" id="pdpOriginalPrice"></span>
+                        </div>
+                        <div class="discount-tag" id="pdpDiscountTag" style="display:none;"></div>
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="pdp-info">
+                        <h2 id="pdpName"></h2>
+                        <p id="pdpUnit"></p>
+                    </div>
+
+                    <!-- Quantity & Add to Cart -->
+                    <div class="pdp-qty-controls">
+                        <label style="font-weight:600;">Quantity (Minimum 5):</label>
+                        <div class="qty-controls">
+                            <button id="pdpQtyMinus"><i class="fas fa-minus"></i></button>
+                            <span id="pdpQuantity">5</span>
+                            <button id="pdpQtyPlus"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <p id="pdpMinQtyWarning">Minimum purchase quantity per add: 5</p>
+
+                    <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
+                        <i class="fas fa-shopping-basket"></i> Add to Cart
+                    </button>
+
+                    <h3 style="font-size:1.1em; font-weight:700; margin-top:30px; margin-bottom:10px; color:var(--primary-color);">Product Description</h3>
+                    <p id="pdpDescription" style="line-height:1.6; color:var(--text-color);"></p>
+                    
+                    <button class="btn-main wishlist-btn" id="pdpWishlistBtn" style="background:#fff; color:var(--text-color); box-shadow:none; margin-top:30px;">
+                       <i class="fas fa-heart" style="color:#ccc;"></i> Add to Wishlist
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- END PRODUCT DETAIL PAGE -->
+
 
         <!-- WISHLIST PAGE -->
         <div id="wishlistPage" class="page">
@@ -1027,6 +1150,9 @@ const firebaseConfig = {
         let allDishesData = []; // Stores all dishes for filtering/rendering
         let ordersListener = null;
         let selectedPaymentMethod = 'COD'; // Fixed to COD
+        
+        let currentPdpDish = null; // NEW: Store the currently viewed dish object for PDP
+        let pdpQuantity = 5; // NEW: Start at minimum quantity of 5 for PDP
 
         // MODIFIED: Updated Minimum Order Constants
         const MIN_ORDER_QTY = 3; 
@@ -1041,11 +1167,56 @@ const firebaseConfig = {
             { id: "cat5", name: "Desserts", imageUrl: "https://cdn-icons-png.flaticon.com/512/859/859286.png" },
         ];
         
+        // MODIFIED: Added discount, unit, description, and images fields
         const placeholderDishes = [
-            { key: "dish1", name: "Margherita Pizza (All)", price: 150, imageUrl: "https://i.imgur.com/tYtYQkX.jpeg", categoryId: "cat1", pincode: "ALL" },
-            { key: "dish2", name: "Cheese Burger (110001)", price: 90, imageUrl: "https://i.imgur.com/oQ7S8mR.jpeg", categoryId: "cat2", pincode: "110001" },
-            { key: "dish3", name: "Latte Coffee (ALL)", price: 120, imageUrl: "https://i.imgur.com/J8tV1zL.jpeg", categoryId: "cat3", pincode: "ALL" },
-            { key: "dish5", name: "Double Cheese Pizza (110001)", price: 250, imageUrl: "https://i.imgur.com/8Qp4Z0G.jpeg", categoryId: "cat1", pincode: "110001" },
+            { 
+                key: "dish1", 
+                name: "Margherita Pizza (All)", 
+                price: 150, 
+                discount: 10, 
+                unit: "1 pc", 
+                description: "Classic Italian pizza with tomato sauce, mozzarella cheese, and basil. Simple and delicious.", 
+                imageUrl: "https://i.imgur.com/tYtYQkX.jpeg", 
+                images: ["https://i.imgur.com/tYtYQkX.jpeg", "https://i.imgur.com/oQ7S8mR.jpeg"], 
+                categoryId: "cat1", 
+                pincode: "ALL" 
+            },
+            { 
+                key: "dish2", 
+                name: "Cheese Burger (110001)", 
+                price: 90, 
+                discount: 5, 
+                unit: "1 pc", 
+                description: "Juicy beef patty with melted cheese, lettuce, and tomato in a sesame bun.", 
+                imageUrl: "https://i.imgur.com/oQ7S8mR.jpeg", 
+                images: ["https://i.imgur.com/oQ7S8mR.jpeg", "https://i.imgur.com/tYtYQkX.jpeg"], 
+                categoryId: "cat2", 
+                pincode: "110001" 
+            },
+            { 
+                key: "dish3", 
+                name: "Latte Coffee (ALL)", 
+                price: 120, 
+                discount: 0,
+                unit: "300 ml", 
+                description: "Smooth and creamy latte made with fresh milk and espresso.", 
+                imageUrl: "https://i.imgur.com/J8tV1zL.jpeg", 
+                images: ["https://i.imgur.com/J8tV1zL.jpeg"], 
+                categoryId: "cat3", 
+                pincode: "ALL" 
+            },
+            { 
+                key: "dish5", 
+                name: "Double Cheese Pizza (110001)", 
+                price: 250, 
+                discount: 15, 
+                unit: "1 pc", 
+                description: "Extra cheesy pizza loaded with two types of mozzarella.", 
+                imageUrl: "https://i.imgur.com/8Qp4Z0G.jpeg", 
+                images: ["https://i.imgur.com/8Qp4Z0G.jpeg"], 
+                categoryId: "cat1", 
+                pincode: "110001" 
+            },
         ];
         
         const placeholderSliderImages = [
@@ -1085,6 +1256,14 @@ const firebaseConfig = {
 
         // --- UTILITY & NAVIGATION ---
         const showPage = (id) => {
+            
+            // NEW: Auth check for restricted pages
+            const restrictedPages = ['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'];
+            if (restrictedPages.includes(id) && !currentUser) {
+                alert("Please log in to access this feature."); 
+                id = 'loginPage'; 
+            }
+            
             document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
             document.getElementById('auth-error').style.display = 'none'; 
 
@@ -1111,8 +1290,8 @@ const firebaseConfig = {
             // REMOVED: Support page load
             
             const fab = document.getElementById('cart-fab-container');
-            // MODIFIED: Ensure FAB is visible on all main screens except auth/thankyou/checkout/support/wishlist/orders/terms/privacy
-            fab.style.display = (id === 'appContainer' || id === 'cartPage') ? 'block' : 'none';
+            // MODIFIED: FAB only visible on home, categories, and dishes search page (appContainer)
+            fab.style.display = (id === 'appContainer') ? 'block' : 'none';
 
             // Reset scroll on content pages
             const scrollableElement = document.querySelector(`#${id} > div:nth-child(2)`);
@@ -1131,9 +1310,19 @@ const firebaseConfig = {
         document.querySelectorAll('[data-target], [data-page]').forEach(b => 
             b.addEventListener('click', (e) => {
                 const target = e.currentTarget.dataset.target || e.currentTarget.dataset.page;
-                if(target) showPage(target);
+                 // Allow back buttons and non-restricted links to pass through directly
+                if(target && !['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'].includes(target)) {
+                     showPage(target);
+                } else if (target) {
+                    // Use the auth-checking showPage for restricted pages
+                    showPage(target);
+                }
             })
         );
+        
+        // NEW: Specific handler for Cart FAB button (auth-restricted)
+        document.getElementById('cartFabBtn').onclick = () => showPage('cartPage');
+        
         document.getElementById('gotoRegister').onclick = () => showPage('registerPage');
         document.getElementById('gotoLogin').onclick = () => showPage('loginPage');
         document.getElementById('goToCheckoutBtn').onclick = () => showPage('checkoutPage');
@@ -1235,21 +1424,29 @@ const firebaseConfig = {
         });
 
         onAuthStateChanged(auth, (user) => {
-            // NEW: Fetch theme settings as one of the first things to run
             fetchThemeSettings(); 
             
             currentUser = user;
+            
             if (user) {
-                fetchUserPincodeAndData(); 
-                listenForWishlistUpdates(); 
-                // showPage('appContainer'); // Handled inside fetchUserPincodeAndData now
+                // If logged in, fetch data and ensure we are on a main app page if currently on an auth page.
+                fetchUserPincodeAndData(); // Still runs showPage('appContainer') on success
             }
             else { 
+                // If logged out
                 currentUser = null; 
                 userPincode = null;
                 userData = null;
-                showPage('loginPage'); 
-                initHomeUI(); // Re-render placeholders for guest
+                updateCartUI(); 
+                
+                // Ensure cart and wishlist are visually reset by re-rendering dishes
+                showAllDishes(); 
+                
+                // If the user was on a restricted page, move them to Home or Login
+                const currentPage = document.querySelector('.page.active')?.id;
+                if (['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'].includes(currentPage)) {
+                    showPage('appContainer'); 
+                }
             }
         });
 
@@ -1276,12 +1473,21 @@ const firebaseConfig = {
                  userData = snapData; 
                  userPincode = snapData?.pincode || null;
                  fetchData();
-                 showPage('appContainer'); // Now safe to show main app
+                 
+                 // MODIFIED: Only redirect to appContainer if currently on an auth page
+                 const currentPage = document.querySelector('.page.active')?.id;
+                 if (['loginPage', 'registerPage'].includes(currentPage)) {
+                     showPage('appContainer'); 
+                 }
+
                  
              } catch (e) {
                  console.error("Failed to fetch user data:", e);
                  fetchData();
-                 showPage('appContainer');
+                 const currentPage = document.querySelector('.page.active')?.id;
+                 if (['loginPage', 'registerPage'].includes(currentPage)) {
+                     showPage('appContainer'); 
+                 }
              }
         }
         
@@ -1437,22 +1643,30 @@ const firebaseConfig = {
         }
 
         // --- WISHLIST LOGIC (v9 Syntax) ---
-        window.toggleWishlist = async (dishKey, dishName, dishPrice, dishImage) => {
+        // MODIFIED: Now only takes dishKey and relies on allDishesData for other info
+        window.toggleWishlist = async (dishKey) => { 
             if (!currentUser) {
-                 console.log("Please log in to add items to your Wishlist.");
+                 alert("Please log in to add items to your Wishlist.");
                  showPage('loginPage');
                  return;
             }
-            // v9: Use ref and set/remove
+            const dish = allDishesData.find(d => d.key === dishKey);
+            if (!dish) { console.error("Dish not found for key:", dishKey); return; }
+            
             const wishlistProductRef = ref(db, `users/${currentUser.uid}/wishlist/${dishKey}`);
             
             if (wishlist.includes(dishKey)) {
                 await remove(wishlistProductRef);
             } else {
-                const dishDetails = allDishesData.find(d => d.key === dishKey) || { 
-                    key: dishKey, name: dishName, price: dishPrice || 0, imageUrl: dishImage || '' 
-                };
-                await set(wishlistProductRef, dishDetails);
+                // Store all relevant details in the wishlist node
+                await set(wishlistProductRef, { 
+                    key: dish.key, 
+                    name: dish.name, 
+                    price: dish.price, 
+                    imageUrl: dish.imageUrl,
+                    discount: dish.discount || 0,
+                    unit: dish.unit || 'Unit N/A'
+                });
             }
         };
 
@@ -1472,6 +1686,10 @@ const firebaseConfig = {
                 }
                 if (document.getElementById('wishlistPage').classList.contains('active')) {
                      loadWishlist();
+                }
+                // NEW: Update PDP wishlist button if open
+                if (document.getElementById('productDetailPage').classList.contains('active') && currentPdpDish) {
+                     showProductDetail(currentPdpDish.key);
                 }
             });
         }
@@ -1496,20 +1714,24 @@ const firebaseConfig = {
 
                 items.forEach(d => {
                     const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
-                    const isWished = wishlist.includes(d.key) ? 'active' : ''; 
+                    const originalPrice = d.price || 0;
+                    const discount = d.discount || 0;
+                    const discountedPrice = originalPrice * (1 - discount / 100);
+
                     // MODIFIED: Use purple for the Add button
                     container.innerHTML += `
                         <div class="cart-item">
                             <img src="${dishImage}" alt="${d.name}">
                             <div style="flex:1;">
                                 <h4 style="margin:0; font-size:1em;">${d.name}</h4>
-                                <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${d.price}</p>
+                                <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${discountedPrice.toFixed(2)}</p>
+                                ${discount > 0 ? `<p style="margin:0; font-size:0.8em; color:var(--danger);">Save ${discount}%</p>` : ''}
                             </div>
                             <div style="display:flex; gap:10px;">
-                                <button class="btn-main" onclick="addToCart('${d.key}','${d.name}',${d.price},'${dishImage}'); showPage('cartPage');" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; background:var(--primary-gradient);">
+                                <button class="btn-main" onclick="addToCart('${d.key}'); showPage('cartPage');" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; background:var(--primary-gradient);">
                                     <i class="fas fa-shopping-basket"></i> Add
                                 </button>
-                                <button class="wishlist-btn active" onclick="toggleWishlist('${d.key}','${d.name}',${d.price},'${dishImage}')" style="background-color: var(--danger); color:white; box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4);">
+                                <button class="wishlist-btn active" onclick="toggleWishlist('${d.key}')" style="background-color: var(--danger); color:white; box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4);">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -1531,21 +1753,27 @@ const firebaseConfig = {
                 const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
                 const isWished = wishlist.includes(d.key) ? 'active' : ''; 
                 const wishIcon = 'fa-heart';
+                const discount = d.discount || 0;
+                const discountedPrice = d.price * (1 - discount / 100);
                 
+                const discountTag = discount > 0 ? `<div class="discount-tag">-${discount}%</div>` : ''; // NEW
+
+                // Card is now clickable via showProductDetail, with event.stopPropagation() on buttons
                 c.innerHTML += `
-                    <div class="card">
+                    <div class="card" onclick="showProductDetail('${d.key}')"> 
+                        ${discountTag}
                         <img src="${dishImage}">
                         <div class="card-actions">
-                            <button class="wishlist-btn ${isWished}" onclick="toggleWishlist('${d.key}','${d.name}',${d.price},'${dishImage}')">
+                            <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
                                 <i class="fas ${wishIcon}"></i>
                             </button>
-                            <button class="add-btn" onclick="addToCart('${d.key}','${d.name}',${d.price},'${dishImage}')">
+                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}')">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
                         <div class="card-content">
                             <h3>${d.name}</h3>
-                            <p>₹${d.price}</p>
+                            <p>₹${discountedPrice.toFixed(2)}</p>
                         </div>
                     </div>
                 `;
@@ -1565,7 +1793,7 @@ const firebaseConfig = {
              c.innerHTML += `
                  <div class="category-item-card active" data-category="ALL" onclick="showAllDishes()">
                      <!-- MODIFIED: Increased icon size for consistency with new image size -->
-                     <i class="fas fa-list" style="font-size:1.8em; color:var(--primary-color); margin-bottom:5px;"></i>
+                     <i class="fas fa-list"></i>
                      <h4>All</h4>
                  </div>
             `;
@@ -1573,8 +1801,8 @@ const firebaseConfig = {
 
             categoriesList.forEach((cat) => {
                 const categoryId = cat.id || cat.name;
-                // MODIFIED: Increased fallback icon size to 1.8em
-                const iconOrImage = cat.imageUrl ? `<img src="${cat.imageUrl}" alt="${cat.name}">` : `<i class="fas fa-utensils" style="font-size:1.8em; color:var(--primary-color); margin-bottom:5px;"></i>`; 
+                // MODIFIED: Increased fallback icon size to 2.2em via CSS
+                const iconOrImage = cat.imageUrl ? `<img src="${cat.imageUrl}" alt="${cat.name}">` : `<i class="fas fa-utensils"></i>`; 
                 
                 c.innerHTML += `
                     <div class="category-item-card" data-category="${categoryId}" onclick="filterDishesByCategory('${categoryId}')">
@@ -1637,6 +1865,13 @@ const firebaseConfig = {
                     dish.categoryId = dish.categoryId || 'uncategorized';
                     dish.pincode = dish.pincode || 'ALL';
                     
+                    // NEW: Ensure discount, unit, description, and images are set even if not in DB
+                    dish.discount = dish.discount || 0;
+                    dish.unit = dish.unit || 'Unit N/A';
+                    dish.description = dish.description || 'No description available for this product.';
+                    // Assuming images is an array of strings (URLs)
+                    dish.images = Array.isArray(dish.images) && dish.images.length > 0 ? dish.images : [dish.imageUrl || 'https://via.placeholder.com/150'];
+                    
                     if (userPincode && dish.pincode !== 'ALL' && dish.pincode !== userPincode) {
                         return; 
                     }
@@ -1660,6 +1895,11 @@ const firebaseConfig = {
 
             } catch (error) {
                 console.error("Error fetching app data:", error);
+                // Fallback rendering
+                renderCategories(placeholderCategories);
+                allDishesData = placeholderDishes;
+                showAllDishes();
+                renderSlider(placeholderSliderImages);
             }
         }
         
@@ -1691,12 +1931,26 @@ const firebaseConfig = {
             document.getElementById('dishesSectionTitle').textContent = `Search Results for "${e.target.value}"`;
         });
 
-        window.addToCart = (id,name,price,img) => {
-            const ex = cart.find(i=>i.id===id);
-            if(ex) {
-                 ex.quantity++;
+        // MODIFIED: Simplified to only take key and calculate price/check auth inside
+        window.addToCart = (id, quantity = 1) => { 
+            const dish = allDishesData.find(d => d.key === id);
+            
+            if (!currentUser) {
+                 alert("Please log in to add items to your cart.");
+                 showPage('loginPage');
+                 return;
+            }
+            
+            if (!dish) { console.error("Dish not found for key:", id); return; }
+
+            const discount = dish.discount || 0;
+            const discountedPrice = dish.price * (1 - discount / 100);
+            
+            const ex = cart.find(i => i.id === id);
+            if (ex) {
+                 ex.quantity += quantity;
             } else {
-                 cart.push({id,name,price,img,quantity:1});
+                 cart.push({ id: dish.key, name: dish.name, price: discountedPrice, img: dish.imageUrl, quantity });
             }
             updateCartUI();
         };
@@ -1723,7 +1977,7 @@ const firebaseConfig = {
                             <img src="${dishImage}" alt="${item.name}">
                             <div style="flex:1;">
                                 <h4 style="margin:0; font-size:1em;">${item.name}</h4>
-                                <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${item.price} x ${item.quantity} = ₹${itemTotal.toFixed(2)}</p>
+                                <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${item.price.toFixed(2)} x ${item.quantity} = ₹${itemTotal.toFixed(2)}</p>
                             </div>
                             <div class="qty-controls">
                                 <button onclick="modQty('${item.id}',-1)"><i class="fas fa-minus"></i></button>
@@ -1744,6 +1998,100 @@ const firebaseConfig = {
             checkOrderValidity(); 
         }
 
+        // --- PDP LOGIC (NEW) ---
+        window.showProductDetail = (dishKey) => {
+            if (!currentUser) {
+                 alert("Please log in to view product details and purchase.");
+                 showPage('loginPage');
+                 return;
+            }
+
+            currentPdpDish = allDishesData.find(d => d.key === dishKey);
+            if (!currentPdpDish) return;
+            
+            // Calculate discounted price
+            const discount = currentPdpDish.discount || 0;
+            const originalPrice = currentPdpDish.price;
+            const discountedPrice = originalPrice * (1 - discount / 100);
+            
+            document.getElementById('pdpHeaderTitle').textContent = currentPdpDish.name;
+            document.getElementById('pdpName').textContent = currentPdpDish.name;
+            document.getElementById('pdpUnit').textContent = `Unit: ${currentPdpDish.unit || 'Unit N/A'}`;
+            document.getElementById('pdpDescription').innerHTML = currentPdpDish.description || 'No description available for this product.';
+            
+            document.getElementById('pdpPrice').textContent = `₹${discountedPrice.toFixed(2)}`;
+            
+            // Show original price if discounted
+            if (discount > 0) {
+                 document.getElementById('pdpOriginalPrice').innerHTML = `<span class="original">₹${originalPrice.toFixed(2)}</span>`;
+                 document.getElementById('pdpDiscountTag').style.display = 'flex';
+                 document.getElementById('pdpDiscountTag').textContent = `-${discount}%`;
+            } else {
+                 document.getElementById('pdpOriginalPrice').innerHTML = '';
+                 document.getElementById('pdpDiscountTag').style.display = 'none';
+            }
+            
+            // Wishlist button state (Relies on listener in the background to update `wishlist` array)
+            const wishlistBtn = document.getElementById('pdpWishlistBtn');
+            const isWished = wishlist.includes(dishKey);
+            const heartColor = isWished ? 'var(--danger)' : '#ccc';
+            wishlistBtn.className = `btn-main wishlist-btn ${isWished ? 'active' : ''}`;
+            wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:${heartColor};"></i> ${isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
+            wishlistBtn.onclick = () => toggleWishlist(currentPdpDish.key);
+            
+            // Quantity Controls setup
+            pdpQuantity = 5; // Reset quantity to minimum
+            document.getElementById('pdpQuantity').textContent = pdpQuantity;
+            
+            // Image Slider setup
+            const images = currentPdpDish.images || [currentPdpDish.imageUrl || 'https://via.placeholder.com/150'];
+            const slider = document.getElementById('pdpSlider');
+            const dotsContainer = document.getElementById('pdpDots');
+            slider.innerHTML = images.map(img => `<div class="pdp-slide"><img src="${img}" alt="${currentPdpDish.name}"></div>`).join('');
+            dotsContainer.innerHTML = images.map((_, index) => 
+                `<div class="pdp-dot ${index === 0 ? 'active' : ''}" onclick="goToPdpSlide(${index})"></div>`
+            ).join('');
+            slider.style.transform = 'translateX(0%)'; // Reset slide position
+            pdpCurrentSlide = 0;
+            
+            showPage('productDetailPage');
+        };
+
+        // PDP Slider JS
+        let pdpCurrentSlide = 0;
+        window.goToPdpSlide = (index) => {
+            const slider = document.getElementById('pdpSlider');
+            const dots = document.querySelectorAll('#pdpDots .pdp-dot');
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            pdpCurrentSlide = index;
+        };
+        
+        // PDP Quantity Controls
+        document.getElementById('pdpQtyMinus').onclick = () => {
+             if (pdpQuantity > 5) { // Minimum quantity is 5
+                 pdpQuantity--;
+                 document.getElementById('pdpQuantity').textContent = pdpQuantity;
+             }
+        };
+        document.getElementById('pdpQtyPlus').onclick = () => {
+             pdpQuantity++;
+             document.getElementById('pdpQuantity').textContent = pdpQuantity;
+        };
+
+        // PDP Add to Cart Button (Adds pdpQuantity items at once)
+        document.getElementById('pdpAddToCartBtn').onclick = () => {
+             if (!currentUser) {
+                 alert("Please log in to add items to your cart.");
+                 showPage('loginPage');
+                 return;
+             }
+             if (currentPdpDish) {
+                 window.addToCart(currentPdpDish.key, pdpQuantity);
+                 alert(`${pdpQuantity} x ${currentPdpDish.name} added to cart!`);
+                 showPage('cartPage');
+             }
+        };
 
         // --- PROFILE PAGE & ORDERS (v9 Syntax) ---
 
@@ -2069,6 +2417,9 @@ const firebaseConfig = {
             renderCategories(placeholderCategories);
             renderSlider(placeholderSliderImages);
             renderDishes(placeholderDishes.filter(d => d.pincode === 'ALL')); // Only show All pincode dishes on init
+            // Set initial page to Home
+            document.getElementById('appContainer').classList.add('active');
+            document.getElementById('loginPage').classList.remove('active');
         }
 
         // --- SLIDER LOGIC ---
@@ -2120,6 +2471,18 @@ const firebaseConfig = {
         // Initialize the UI on script load
         initHomeUI(); 
         updateCartUI(); 
+        
+        // Final check to see if user is logged in immediately after init
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // If user object is immediately available (e.g., persistent login)
+                fetchUserPincodeAndData(); 
+                listenForWishlistUpdates(); 
+            } else {
+                // If no user object, stay on the default 'appContainer' page
+                initHomeUI(); 
+            }
+        });
     </script>
 </body>
 </html>
