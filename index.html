@@ -60,11 +60,9 @@
             background-color: var(--secondary-color);
             display: flex; flex-direction: column; z-index: 1;
         }
-        /* START MODIFICATION: appContainer is now the default active page */
-        #appContainer.active { opacity: 1; visibility: visible; z-index: 5; }
-        .page.active { opacity: 1; visibility: visible; z-index: 5; }
-        /* END MODIFICATION */
-
+        /* MODIFIED: Remove .page.active from default login to make appContainer the default */
+        /* .page.active { opacity: 1; visibility: visible; z-index: 5; } */
+        .page.active { opacity: 1; visibility: visible; z-index: 5; } /* Re-added but controlled by JS on load */
 
         /* --- AUTH UI --- */
 
@@ -240,6 +238,7 @@
         /* Make sure cards inside the dishes container fill the grid space */
         #dishesContainer .card {
             width: 100%; /* Override the fixed width: 150px set by .card */
+            cursor: pointer; /* NEW: Card is clickable for PDP */
         }
         /* --- END MODIFICATION 1 --- */
 
@@ -249,13 +248,18 @@
             background-color: var(--white);
             border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
             overflow: hidden; position: relative;
-            cursor: pointer; /* NEW: Make the whole card clickable for PDP */
         }
-        /* Adjusted height for a more balanced look */
-        .card img { width: 100%; height: 110px; object-fit: cover; } 
+        /* MODIFIED: Changed to object-fit: contain as requested */
+        .card img { 
+            width: 100%; 
+            height: 110px; 
+            object-fit: contain; /* MODIFIED: To show full image */
+            background-color: #f1f2f6; /* Added background for better display if image is small */
+        } 
         .card-content { padding: 12px; }
         .card-content h3 { margin: 0 0 4px 0; font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;}
         .card-content p { color: var(--primary-color); font-weight: 700; font-size: 0.95em; margin: 0;}
+        .card-content p span.original { font-size: 0.8em; color: var(--light-text); text-decoration: line-through; margin-left: 5px; font-weight: 400;}
         
         /* MODIFIED: Add-to-cart button now sits beside the heart button */
         .card-actions {
@@ -288,7 +292,7 @@
             box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4); 
         }
         /* --- END MODIFIED CARD ACTIONS --- */
-        
+
         /* NEW: Discount Tag Style */
         .discount-tag {
             position: absolute;
@@ -531,9 +535,9 @@
         /* CATEGORIES MODIFICATION: Smaller Rectangular Cards, Bigger Image */
         .category-item-card {
             flex-shrink: 0;
-            /* MODIFIED: Changed from 120px to 100px for smaller card */
-            width: 100px; 
-            height: 100px; 
+            /* MODIFIED: Changed from 120px to 90px for smaller card */
+            width: 90px; 
+            height: 90px; 
             background-color: var(--white);
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -542,28 +546,27 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 10px;
+            padding: 5px; /* Reduced padding */
             text-align: center;
             border: 2px solid transparent; 
             transition: all 0.2s;
         }
         .category-item-card img {
-            /* MODIFIED: Increased size from 70px to 80px for bigger image */
-            width: 80px;
-            height: 80px;
+            /* MODIFIED: Increased size from 70px to 60px relative to card size */
+            width: 60px;
+            height: 60px;
             object-fit: contain;
-            margin-bottom: 5px;
+            margin-bottom: 2px; /* Reduced margin */
             border-radius: 0; 
-            height: 80px; 
         }
         .category-item-card i {
              /* NEW: Style for default icon in category card */
-             font-size: 2.2em !important;
+             font-size: 2em !important; /* Larger icon */
              color:var(--primary-color); 
-             margin-bottom:5px;
+             margin-bottom: 2px;
         }
         .category-item-card h4 {
-            font-size: 0.85em;
+            font-size: 0.75em; /* Smaller font for small card */
             margin: 0;
             font-weight: 600;
             color: var(--text-color);
@@ -578,7 +581,7 @@
             box-shadow: 0 4px 10px rgba(103, 58, 183, 0.3);
             background-color: #f8f6ff; /* Light purple tint for active */
         }
-
+        
         /* NEW: PDP Image Slider */
         .pdp-image-slider-container {
             width: 100%;
@@ -589,7 +592,7 @@
         }
         .pdp-slider { display: flex; transition: transform 0.3s ease-out; height: 100%; }
         .pdp-slide { min-width: 100%; height: 100%; }
-        .pdp-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .pdp-slide img { width: 100%; height: 100%; object-fit: contain; } /* NEW: Contain for PDP images */
         .pdp-dots {
              position: absolute; bottom: 10px; left: 0; right: 0;
              display: flex; justify-content: center; gap: 5px;
@@ -795,8 +798,7 @@
 
             <!-- Floating Cart Button -->
             <div id="cart-fab-container">
-                <!-- Data-page handler is moved to JS for auth check -->
-                <div class="fab-btn" id="cartFabBtn"> 
+                <div class="fab-btn" id="cartFabBtn"> <!-- MODIFIED: data-page removed, handler via JS -->
                     <i class="fas fa-shopping-basket"></i>
                     <div id="cart-count">0</div>
                 </div>
@@ -806,12 +808,12 @@
             <!-- NOTE: The 'nav' element is kept inside appContainer but its CSS position is fixed. -->
             <nav>
                 <div class="nav-item active" data-page="appContainer"><i class="fas fa-home"></i><p>Home</p></div>
-                <div class="nav-item" data-page="ordersPage" id="ordersNavBtn"><i class="fas fa-receipt"></i><p>Orders</p></div>
-                <div class="nav-item" data-page="wishlistPage" id="wishlistNavBtn"><i class="fas fa-heart"></i><p>Wishlist</p></div>
-                <div class="nav-item" data-page="profilePage" id="profileNavBtn">
+                <div class="nav-item" id="ordersNavBtn"><i class="fas fa-receipt"></i><p>Orders</p></div> <!-- MODIFIED: data-page removed, handler via JS -->
+                <div class="nav-item" id="wishlistNavBtn"><i class="fas fa-heart"></i><p>Wishlist</p></div> <!-- MODIFIED: data-page removed, handler via JS -->
+                <div class="nav-item" id="profileNavBtn">
                     <i class="fas fa-user"></i>
                     <p>Profile</p>
-                </div>
+                </div> <!-- MODIFIED: data-page removed, handler via JS -->
             </nav>
         </div>
 
@@ -849,17 +851,17 @@
 
                     <!-- Quantity & Add to Cart -->
                     <div class="pdp-qty-controls">
-                        <label style="font-weight:600;">Quantity (Minimum 5):</label>
+                        <label style="font-weight:600;">Quantity (Max 5):</label> <!-- MODIFIED TEXT -->
                         <div class="qty-controls">
                             <button id="pdpQtyMinus"><i class="fas fa-minus"></i></button>
-                            <span id="pdpQuantity">5</span>
+                            <span id="pdpQuantity">1</span> <!-- MODIFIED START QTY -->
                             <button id="pdpQtyPlus"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <p id="pdpMinQtyWarning">Minimum purchase quantity per add: 5</p>
+                    <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> <!-- MODIFIED WARNING TEXT -->
 
                     <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
-                        <i class="fas fa-shopping-basket"></i> Add to Cart
+                        <i class="fas fa-shopping-basket"></i> Add to Cart (Max 5) <!-- MODIFIED BUTTON TEXT -->
                     </button>
 
                     <h3 style="font-size:1.1em; font-weight:700; margin-top:30px; margin-bottom:10px; color:var(--primary-color);">Product Description</h3>
@@ -1003,17 +1005,20 @@
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">2. Delivery Charges</h4>
                 <p>Har order par <strong style="color:var(--danger);">₹10 fixed delivery charge</strong> liya jayega, chahe order kitna bhi bada ho।</p>
+                
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">3. Per Item Quantity Rule (Max 5)</h4>
+                <p>Aap ek hi product ki zyada se zyada <strong style="color:var(--danger);">5 quantity</strong> order kar sakte hain।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">3. Account Responsibility</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Account Responsibility</h4>
                 <p>Aap apne mobile number aur password ki suraksha ke liye khud zimmedar hain। Galat jankari dene par account band kiya ja sakta hai।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Delivery Time</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Delivery Time</h4>
                 <p>Hum koshish karte hain ki order jaldi deliver ho, lekin mausam ya traffic ki wajah se deri ho sakti hai।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Order Cancellation</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">6. Order Cancellation</h4>
                 <p>Order place hone ke baad agar humne saaman pack kar diya hai, toh cancellation swikar nahi kiya jayega।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">6. Contact Us</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">7. Contact Us</h4>
                 <p>Kisi bhi shikayat ke liye app ke support section mein message karein।</p>
                 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
@@ -1057,7 +1062,7 @@
                 <p>Hum aapka personal data kisi bhi third-party ko bechte ya share nahi karte hain। Aapka data puri tarah surakshit hai।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Order Rules</h4>
-                <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order hona anivarya hai। Har order par ₹10 delivery charge liya jayega।</p>
+                <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order, aur maximum 5 quantity per item ka order hona anivarya hai। Har order par ₹10 delivery charge liya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Contact Us</h4>
                 <p>Agar aapko koi sawal hai, toh aap humse app ke support section mein sampark kar sakte hain।</p>
@@ -1152,11 +1157,13 @@ const firebaseConfig = {
         let selectedPaymentMethod = 'COD'; // Fixed to COD
         
         let currentPdpDish = null; // NEW: Store the currently viewed dish object for PDP
-        let pdpQuantity = 5; // NEW: Start at minimum quantity of 5 for PDP
+        let pdpQuantity = 1; // MODIFIED: Start at minimum quantity of 1 for PDP
+        let pdpAutoScrollInterval; // NEW: For auto-scroll
 
         // MODIFIED: Updated Minimum Order Constants
         const MIN_ORDER_QTY = 3; 
         const MIN_ORDER_AMOUNT = 50;
+        const MAX_ITEM_QTY = 5; // NEW: Maximum quantity per item (Customer Request)
         
         // --- DATA PLACEHOLDERS (For UI demonstration when DB is empty) ---
         const placeholderCategories = [
@@ -1172,7 +1179,7 @@ const firebaseConfig = {
             { 
                 key: "dish1", 
                 name: "Margherita Pizza (All)", 
-                price: 150, 
+                price: 150, // Old structure price for fallback
                 discount: 10, 
                 unit: "1 pc", 
                 description: "Classic Italian pizza with tomato sauce, mozzarella cheese, and basil. Simple and delicious.", 
@@ -1256,12 +1263,13 @@ const firebaseConfig = {
 
         // --- UTILITY & NAVIGATION ---
         const showPage = (id) => {
-            
-            // NEW: Auth check for restricted pages
+             // NEW: Auth check for restricted pages
             const restrictedPages = ['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'];
             if (restrictedPages.includes(id) && !currentUser) {
-                alert("Please log in to access this feature."); 
-                id = 'loginPage'; 
+                // Do not show an alert on initial load or if the user clicks a non-interactive element first.
+                if (id !== 'appContainer') { // Only redirect to login if attempting a restricted action
+                   id = 'loginPage';
+                }
             }
             
             document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
@@ -1287,11 +1295,15 @@ const firebaseConfig = {
             if(id === 'ordersPage') loadOrders();
             if(id === 'profilePage') loadProfilePage(); 
             if(id === 'wishlistPage') loadWishlist();
-            // REMOVED: Support page load
             
             const fab = document.getElementById('cart-fab-container');
             // MODIFIED: FAB only visible on home, categories, and dishes search page (appContainer)
             fab.style.display = (id === 'appContainer') ? 'block' : 'none';
+
+            // NEW: Stop PDP auto-scroll when leaving the page
+            if (id !== 'productDetailPage' && pdpAutoScrollInterval) {
+                 clearInterval(pdpAutoScrollInterval);
+            }
 
             // Reset scroll on content pages
             const scrollableElement = document.querySelector(`#${id} > div:nth-child(2)`);
@@ -1299,6 +1311,15 @@ const firebaseConfig = {
                  scrollableElement.scrollTop = 0;
             }
         };
+        
+        // NEW: Auth-checking navigation handler for restricted elements
+        const authCheckAndNavigate = (targetPage) => {
+             if (!currentUser) {
+                  showPage('loginPage');
+             } else {
+                  showPage(targetPage);
+             }
+        }
 
         const showError = (msg) => {
             const err = document.getElementById('auth-error');
@@ -1306,23 +1327,24 @@ const firebaseConfig = {
             err.style.display = 'block';
         }
 
-        // Global event listeners for navigation
+        // Global event listeners for navigation (non-restricted pages like Terms/Privacy/Back Buttons)
         document.querySelectorAll('[data-target], [data-page]').forEach(b => 
             b.addEventListener('click', (e) => {
                 const target = e.currentTarget.dataset.target || e.currentTarget.dataset.page;
-                 // Allow back buttons and non-restricted links to pass through directly
-                if(target && !['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'].includes(target)) {
-                     showPage(target);
-                } else if (target) {
-                    // Use the auth-checking showPage for restricted pages
+                // Only allow direct navigation if it's a back button or an unrestricted page
+                if(target && target !== 'ordersPage' && target !== 'wishlistPage' && target !== 'profilePage') {
                     showPage(target);
                 }
             })
         );
         
-        // NEW: Specific handler for Cart FAB button (auth-restricted)
-        document.getElementById('cartFabBtn').onclick = () => showPage('cartPage');
-        
+        // NEW: Event listeners for Auth-restricted elements
+        document.getElementById('cartFabBtn').onclick = () => authCheckAndNavigate('cartPage');
+        document.getElementById('ordersNavBtn').onclick = () => authCheckAndNavigate('ordersPage');
+        document.getElementById('wishlistNavBtn').onclick = () => authCheckAndNavigate('wishlistPage');
+        document.getElementById('profileNavBtn').onclick = () => authCheckAndNavigate('profilePage');
+
+
         document.getElementById('gotoRegister').onclick = () => showPage('registerPage');
         document.getElementById('gotoLogin').onclick = () => showPage('loginPage');
         document.getElementById('goToCheckoutBtn').onclick = () => showPage('checkoutPage');
@@ -1335,6 +1357,7 @@ const firebaseConfig = {
             userPincode=null;
             userData=null;
             updateCartUI(); 
+            showPage('loginPage'); // Go to login after logout
         };
         // REMOVED: Need Support Button Handler
         document.getElementById('changeProfileImageLink').onclick = (e) => { 
@@ -1424,28 +1447,30 @@ const firebaseConfig = {
         });
 
         onAuthStateChanged(auth, (user) => {
+            // NEW: Fetch theme settings as one of the first things to run
             fetchThemeSettings(); 
             
             currentUser = user;
-            
             if (user) {
-                // If logged in, fetch data and ensure we are on a main app page if currently on an auth page.
-                fetchUserPincodeAndData(); // Still runs showPage('appContainer') on success
+                fetchUserPincodeAndData(); 
+                listenForWishlistUpdates(); 
+                // Redirect if currently on a non-Home starting page (Login/Register)
+                const currentPage = document.querySelector('.page.active')?.id;
+                if (currentPage === 'loginPage' || currentPage === 'registerPage') {
+                    showPage('appContainer');
+                }
             }
             else { 
-                // If logged out
                 currentUser = null; 
                 userPincode = null;
                 userData = null;
                 updateCartUI(); 
-                
-                // Ensure cart and wishlist are visually reset by re-rendering dishes
-                showAllDishes(); 
-                
-                // If the user was on a restricted page, move them to Home or Login
-                const currentPage = document.querySelector('.page.active')?.id;
+                // If logged out, render guest placeholders and stay on the current page (Home if user hasn't clicked anything)
+                initHomeUI(true); 
+                // If current page is restricted, force redirect to login
+                 const currentPage = document.querySelector('.page.active')?.id;
                 if (['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'].includes(currentPage)) {
-                    showPage('appContainer'); 
+                    showPage('loginPage'); 
                 }
             }
         });
@@ -1473,21 +1498,12 @@ const firebaseConfig = {
                  userData = snapData; 
                  userPincode = snapData?.pincode || null;
                  fetchData();
-                 
-                 // MODIFIED: Only redirect to appContainer if currently on an auth page
-                 const currentPage = document.querySelector('.page.active')?.id;
-                 if (['loginPage', 'registerPage'].includes(currentPage)) {
-                     showPage('appContainer'); 
-                 }
-
+                 // Do not explicitly call showPage('appContainer') here to allow navigation logic in onAuthStateChanged to control it.
                  
              } catch (e) {
                  console.error("Failed to fetch user data:", e);
                  fetchData();
-                 const currentPage = document.querySelector('.page.active')?.id;
-                 if (['loginPage', 'registerPage'].includes(currentPage)) {
-                     showPage('appContainer'); 
-                 }
+                 // Do not explicitly call showPage('appContainer') here.
              }
         }
         
@@ -1514,6 +1530,8 @@ const firebaseConfig = {
 
         // --- ORDER PLACEMENT (v9 Syntax) ---
         document.getElementById('placeOrderBtn').onclick = async () => {
+             if (!currentUser) { alert("Please login to place an order."); showPage('loginPage'); return;}
+
             // Get data from the *current* checkout fields
             const customerName = document.getElementById('addressName').value.trim();
             const phone = document.getElementById('contactPhone').value.trim();
@@ -1542,13 +1560,22 @@ const firebaseConfig = {
             const total = (subtotal + deliveryFee).toFixed(2);
             
             // FIX: Ensure cart items are copied correctly
-            const itemsToStore = cart.map(item => ({
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                img: item.img,
-                quantity: item.quantity
-            }));
+            const itemsToStore = cart.map(item => {
+                const fullDish = allDishesData.find(d => d.key === item.id);
+                // NEW: Store the price split for Admin app to calculate revenue/earning
+                const priceData = fullDish?.price || { final: item.price, restaurantPrice: item.price, adminFee: 0 };
+                
+                return {
+                    id: item.id,
+                    name: item.name,
+                    price: parseFloat(item.price).toFixed(2), // Discounted price for total calculation
+                    img: item.img,
+                    quantity: item.quantity,
+                    // NEW: Store price split for revenue calculation in Admin App
+                    restaurantPrice: parseFloat(priceData.restaurantPrice || item.price).toFixed(2),
+                    adminFee: parseFloat(priceData.adminFee || 0).toFixed(2),
+                };
+            });
 
             const order = {
                 userId: currentUser.uid,
@@ -1643,27 +1670,27 @@ const firebaseConfig = {
         }
 
         // --- WISHLIST LOGIC (v9 Syntax) ---
-        // MODIFIED: Now only takes dishKey and relies on allDishesData for other info
-        window.toggleWishlist = async (dishKey) => { 
-            if (!currentUser) {
-                 alert("Please log in to add items to your Wishlist.");
+        // MODIFIED: Only takes dishKey now and relies on allDishesData
+        window.toggleWishlist = async (dishKey) => {
+             if (!currentUser) {
                  showPage('loginPage');
                  return;
-            }
+             }
+             
             const dish = allDishesData.find(d => d.key === dishKey);
             if (!dish) { console.error("Dish not found for key:", dishKey); return; }
-            
+
             const wishlistProductRef = ref(db, `users/${currentUser.uid}/wishlist/${dishKey}`);
             
             if (wishlist.includes(dishKey)) {
                 await remove(wishlistProductRef);
             } else {
-                // Store all relevant details in the wishlist node
-                await set(wishlistProductRef, { 
+                 await set(wishlistProductRef, { 
                     key: dish.key, 
                     name: dish.name, 
-                    price: dish.price, 
-                    imageUrl: dish.imageUrl,
+                    // FIX: Use the actual price structure data if available
+                    price: parseFloat(dish.price?.final || dish.price || 0), 
+                    imageUrl: dish.images?.[0] || dish.imageUrl,
                     discount: dish.discount || 0,
                     unit: dish.unit || 'Unit N/A'
                 });
@@ -1687,9 +1714,9 @@ const firebaseConfig = {
                 if (document.getElementById('wishlistPage').classList.contains('active')) {
                      loadWishlist();
                 }
-                // NEW: Update PDP wishlist button if open
+                 // NEW: Update PDP wishlist button if open
                 if (document.getElementById('productDetailPage').classList.contains('active') && currentPdpDish) {
-                     showProductDetail(currentPdpDish.key);
+                     updatePdpWishlistButton(currentPdpDish.key);
                 }
             });
         }
@@ -1713,10 +1740,10 @@ const firebaseConfig = {
                 }
 
                 items.forEach(d => {
-                    const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
-                    const originalPrice = d.price || 0;
-                    const discount = d.discount || 0;
-                    const discountedPrice = originalPrice * (1 - discount / 100);
+                     const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
+                     const originalPrice = d.price / (1 - (d.discount || 0) / 100); // Reconstruct original price (approx)
+                     const discount = d.discount || 0;
+                     const discountedPrice = d.price;
 
                     // MODIFIED: Use purple for the Add button
                     container.innerHTML += `
@@ -1728,7 +1755,7 @@ const firebaseConfig = {
                                 ${discount > 0 ? `<p style="margin:0; font-size:0.8em; color:var(--danger);">Save ${discount}%</p>` : ''}
                             </div>
                             <div style="display:flex; gap:10px;">
-                                <button class="btn-main" onclick="addToCart('${d.key}'); showPage('cartPage');" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; background:var(--primary-gradient);">
+                                <button class="btn-main" onclick="addToCart('${d.key}', 1)" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; background:var(--primary-gradient);">
                                     <i class="fas fa-shopping-basket"></i> Add
                                 </button>
                                 <button class="wishlist-btn active" onclick="toggleWishlist('${d.key}')" style="background-color: var(--danger); color:white; box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4);">
@@ -1754,26 +1781,32 @@ const firebaseConfig = {
                 const isWished = wishlist.includes(d.key) ? 'active' : ''; 
                 const wishIcon = 'fa-heart';
                 const discount = d.discount || 0;
-                const discountedPrice = d.price * (1 - discount / 100);
+                // FIX: Use the final price property from the price object
+                const finalPrice = parseFloat(d.price?.final || d.price || 0); // Use .final price
+                const originalPrice = finalPrice / (1 - discount / 100); // Reconstruct original price (approx)
+                const discountedPrice = finalPrice;
                 
                 const discountTag = discount > 0 ? `<div class="discount-tag">-${discount}%</div>` : ''; // NEW
+                const priceDisplay = discount > 0 
+                    ? `₹${discountedPrice.toFixed(2)} <span class="original">₹${originalPrice.toFixed(2)}</span>`
+                    : `₹${originalPrice.toFixed(2)}`;
 
                 // Card is now clickable via showProductDetail, with event.stopPropagation() on buttons
                 c.innerHTML += `
                     <div class="card" onclick="showProductDetail('${d.key}')"> 
                         ${discountTag}
-                        <img src="${dishImage}">
+                        <img src="${dishImage}" alt="${d.name}">
                         <div class="card-actions">
                             <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
                                 <i class="fas ${wishIcon}"></i>
                             </button>
-                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}')">
+                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
                         <div class="card-content">
                             <h3>${d.name}</h3>
-                            <p>₹${discountedPrice.toFixed(2)}</p>
+                            <p>${priceDisplay}</p>
                         </div>
                     </div>
                 `;
@@ -1864,12 +1897,15 @@ const firebaseConfig = {
                     const dish = { key: d.key, ...d.val() };
                     dish.categoryId = dish.categoryId || 'uncategorized';
                     dish.pincode = dish.pincode || 'ALL';
-                    
-                    // NEW: Ensure discount, unit, description, and images are set even if not in DB
+                    // NEW: Ensure all fields are present for PDP/card rendering
                     dish.discount = dish.discount || 0;
-                    dish.unit = dish.unit || 'Unit N/A';
-                    dish.description = dish.description || 'No description available for this product.';
-                    // Assuming images is an array of strings (URLs)
+                    dish.unit = dish.weight || 'Unit N/A'; // Using 'weight' as 'unit' in customer app
+                    dish.description = dish.description || 'No description available.';
+                    
+                    // FIX: Ensure correct price is used for the card/cart price calculation (final price)
+                    dish.price = dish.price?.final ? parseFloat(dish.price.final) : parseFloat(dish.price || 0); // Store calculated final price
+                    
+                    // NEW: Ensure images array exists
                     dish.images = Array.isArray(dish.images) && dish.images.length > 0 ? dish.images : [dish.imageUrl || 'https://via.placeholder.com/150'];
                     
                     if (userPincode && dish.pincode !== 'ALL' && dish.pincode !== userPincode) {
@@ -1890,20 +1926,18 @@ const firebaseConfig = {
                 });
                 renderSlider(sliderImages);
                 
-                // REMOVED: Fetch Social Links
-                // REMOVED: Fetch Support Topics
-
             } catch (error) {
                 console.error("Error fetching app data:", error);
-                // Fallback rendering
+                // Use placeholders on error
+                allDishesData = placeholderDishes.map(d => ({ 
+                    ...d, 
+                    price: parseFloat(d.price) // Ensure price is number for calculation
+                }));
                 renderCategories(placeholderCategories);
-                allDishesData = placeholderDishes;
                 showAllDishes();
                 renderSlider(placeholderSliderImages);
             }
         }
-        
-        // REMOVED: loadSupportTopics()
         
         window.filterDishesByCategory = (categoryId) => {
             const filtered = allDishesData.filter(d => d.categoryId === categoryId);
@@ -1931,33 +1965,66 @@ const firebaseConfig = {
             document.getElementById('dishesSectionTitle').textContent = `Search Results for "${e.target.value}"`;
         });
 
-        // MODIFIED: Simplified to only take key and calculate price/check auth inside
-        window.addToCart = (id, quantity = 1) => { 
-            const dish = allDishesData.find(d => d.key === id);
-            
-            if (!currentUser) {
-                 alert("Please log in to add items to your cart.");
+        // MODIFIED: Implements Max 5 constraint
+        window.addToCart = (id, quantity = 1) => {
+             if (!currentUser) {
                  showPage('loginPage');
                  return;
-            }
+             }
             
+            const dish = allDishesData.find(d => d.key === id);
             if (!dish) { console.error("Dish not found for key:", id); return; }
 
             const discount = dish.discount || 0;
-            const discountedPrice = dish.price * (1 - discount / 100);
+            const finalPrice = parseFloat(dish.price || 0); // Use the final price
+            const discountedPrice = finalPrice * (1 - discount / 100);
+
+            const ex = cart.find(i=>i.id===id);
             
-            const ex = cart.find(i => i.id === id);
-            if (ex) {
-                 ex.quantity += quantity;
-            } else {
-                 cart.push({ id: dish.key, name: dish.name, price: discountedPrice, img: dish.imageUrl, quantity });
+            // Check max quantity constraint before adding
+            let newQuantity = quantity;
+            if(ex) {
+                 newQuantity = ex.quantity + quantity;
             }
+
+            if (newQuantity > MAX_ITEM_QTY) {
+                 alert(`Cannot add. Maximum quantity for this item is ${MAX_ITEM_QTY}.`);
+                 // Allow immediate maximum quantity add from the card button only if it was a single item add
+                 if (ex && ex.quantity < MAX_ITEM_QTY && quantity === 1) {
+                      ex.quantity = MAX_ITEM_QTY;
+                      alert(`Quantity automatically adjusted to the maximum of ${MAX_ITEM_QTY}.`);
+                 } else {
+                      return; 
+                 }
+            } else {
+                 // Proceed with regular add/update
+                 if(ex) {
+                     ex.quantity = newQuantity;
+                 } else {
+                     // Store discounted price in cart item
+                     cart.push({id: dish.key, name: dish.name, price: discountedPrice, img: dish.imageUrl, quantity: newQuantity});
+                 }
+            }
+            
             updateCartUI();
         };
 
+        // MODIFIED: Implements Max 5 and Min 1 constraint
         window.modQty = (id,n) => {
             const i = cart.find(x=>x.id===id);
-            if(i) { i.quantity+=n; if(i.quantity<=0) cart=cart.filter(x=>x.id!==id); updateCartUI(); }
+            if(i) { 
+                const newQty = i.quantity + n;
+
+                if (newQty < 1) {
+                     cart=cart.filter(x=>x.id!==id); // Remove if quantity goes to 0 or below
+                } else if (newQty > MAX_ITEM_QTY) {
+                     alert(`Cannot increase quantity above maximum limit of ${MAX_ITEM_QTY}.`);
+                     return; // Do nothing if max exceeded
+                } else {
+                     i.quantity = newQty;
+                }
+                updateCartUI(); 
+            }
         };
         
         function updateCartUI() {
@@ -1998,10 +2065,9 @@ const firebaseConfig = {
             checkOrderValidity(); 
         }
 
-        // --- PDP LOGIC (NEW) ---
+         // --- PDP LOGIC (NEW) ---
         window.showProductDetail = (dishKey) => {
             if (!currentUser) {
-                 alert("Please log in to view product details and purchase.");
                  showPage('loginPage');
                  return;
             }
@@ -2011,8 +2077,9 @@ const firebaseConfig = {
             
             // Calculate discounted price
             const discount = currentPdpDish.discount || 0;
-            const originalPrice = currentPdpDish.price;
-            const discountedPrice = originalPrice * (1 - discount / 100);
+            const finalPrice = parseFloat(currentPdpDish.price || 0);
+            const originalPrice = finalPrice / (1 - discount / 100); 
+            const discountedPrice = finalPrice;
             
             document.getElementById('pdpHeaderTitle').textContent = currentPdpDish.name;
             document.getElementById('pdpName').textContent = currentPdpDish.name;
@@ -2032,17 +2099,16 @@ const firebaseConfig = {
             }
             
             // Wishlist button state (Relies on listener in the background to update `wishlist` array)
-            const wishlistBtn = document.getElementById('pdpWishlistBtn');
-            const isWished = wishlist.includes(dishKey);
-            const heartColor = isWished ? 'var(--danger)' : '#ccc';
-            wishlistBtn.className = `btn-main wishlist-btn ${isWished ? 'active' : ''}`;
-            wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:${heartColor};"></i> ${isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
-            wishlistBtn.onclick = () => toggleWishlist(currentPdpDish.key);
+            updatePdpWishlistButton(dishKey);
             
             // Quantity Controls setup
-            pdpQuantity = 5; // Reset quantity to minimum
+            pdpQuantity = 1; // MODIFIED: Reset quantity to minimum of 1
             document.getElementById('pdpQuantity').textContent = pdpQuantity;
             
+            // NEW: Set initial text for button and warning
+            document.getElementById('pdpAddToCartBtn').textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
+            document.getElementById('pdpMinQtyWarning').textContent = `प्रति वस्तु अधिकतम खरीद मात्रा:  ${MAX_ITEM_QTY}`;
+
             // Image Slider setup
             const images = currentPdpDish.images || [currentPdpDish.imageUrl || 'https://via.placeholder.com/150'];
             const slider = document.getElementById('pdpSlider');
@@ -2054,44 +2120,85 @@ const firebaseConfig = {
             slider.style.transform = 'translateX(0%)'; // Reset slide position
             pdpCurrentSlide = 0;
             
+            // NEW: Start auto-scroll if there's more than one image
+            clearInterval(pdpAutoScrollInterval);
+            if (images.length > 1) {
+                 pdpAutoScrollInterval = setInterval(pdpNextSlide, 2000); // 2 sec auto-scroll
+            }
+            
             showPage('productDetailPage');
         };
+
+        function updatePdpWishlistButton(dishKey) {
+            const wishlistBtn = document.getElementById('pdpWishlistBtn');
+            const isWished = wishlist.includes(dishKey);
+            const heartColor = isWished ? 'var(--danger)' : '#ccc';
+            wishlistBtn.className = `btn-main wishlist-btn ${isWished ? 'active' : ''}`;
+            wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:${heartColor};"></i> ${isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
+            wishlistBtn.onclick = () => toggleWishlist(dishKey);
+        }
 
         // PDP Slider JS
         let pdpCurrentSlide = 0;
         window.goToPdpSlide = (index) => {
             const slider = document.getElementById('pdpSlider');
             const dots = document.querySelectorAll('#pdpDots .pdp-dot');
-            slider.style.transform = `translateX(-${index * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-            pdpCurrentSlide = index;
+            const totalSlides = dots.length;
+            if (index >= 0 && index < totalSlides) {
+                slider.style.transform = `translateX(-${index * 100}%)`;
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+                pdpCurrentSlide = index;
+            }
+        };
+        
+        // NEW: PDP Next Slide for Auto-Scroll
+        window.pdpNextSlide = () => {
+             const dots = document.querySelectorAll('#pdpDots .pdp-dot');
+             if (dots.length <= 1) return;
+             let nextIndex = pdpCurrentSlide + 1;
+             if (nextIndex >= dots.length) nextIndex = 0;
+             window.goToPdpSlide(nextIndex);
         };
         
         // PDP Quantity Controls
         document.getElementById('pdpQtyMinus').onclick = () => {
-             if (pdpQuantity > 5) { // Minimum quantity is 5
+             if (pdpQuantity > 1) { // MODIFIED: Minimum quantity is 1
                  pdpQuantity--;
                  document.getElementById('pdpQuantity').textContent = pdpQuantity;
              }
         };
         document.getElementById('pdpQtyPlus').onclick = () => {
-             pdpQuantity++;
-             document.getElementById('pdpQuantity').textContent = pdpQuantity;
+             if (pdpQuantity < MAX_ITEM_QTY) { // MODIFIED: Maximum quantity is 5
+                 pdpQuantity++;
+                 document.getElementById('pdpQuantity').textContent = pdpQuantity;
+             } else {
+                 alert(`Cannot add more. Maximum quantity per item is ${MAX_ITEM_QTY}.`);
+             }
         };
 
         // PDP Add to Cart Button (Adds pdpQuantity items at once)
         document.getElementById('pdpAddToCartBtn').onclick = () => {
              if (!currentUser) {
-                 alert("Please log in to add items to your cart.");
                  showPage('loginPage');
                  return;
              }
              if (currentPdpDish) {
+                 // Check if the current cart quantity + pdpQuantity exceeds MAX_ITEM_QTY for this item
+                 const existingItem = cart.find(i=>i.id===currentPdpDish.key);
+                 const currentTotal = existingItem ? existingItem.quantity : 0;
+                 
+                 if (currentTotal + pdpQuantity > MAX_ITEM_QTY) {
+                      alert(`You can only have a maximum of ${MAX_ITEM_QTY} of this item in your cart (Current: ${currentTotal}, Adding: ${pdpQuantity}). Please reduce the quantity.`);
+                      return;
+                 }
+                 
                  window.addToCart(currentPdpDish.key, pdpQuantity);
                  alert(`${pdpQuantity} x ${currentPdpDish.name} added to cart!`);
                  showPage('cartPage');
              }
         };
+        // --- END PDP LOGIC ---
+
 
         // --- PROFILE PAGE & ORDERS (v9 Syntax) ---
 
@@ -2102,7 +2209,7 @@ const firebaseConfig = {
                 
                 const mobile = userData.mobile || 'N/A';
                 
-                // MODIFIED: Simplified Address Display
+                // MODIFIED (FIX): Display full address correctly
                 const address = userData.address 
                     ? `${userData.address.line || 'N/A'}, ${userData.address.district || 'N/A'}, ${userData.address.state || 'N/A'} - ${userData.pincode || 'N/A'}` 
                     : 'Address N/A (Update in Registration)';
@@ -2110,11 +2217,15 @@ const firebaseConfig = {
                 document.getElementById('profileUserMobileDisplay').textContent = `Mobile: ${mobile}`;
                 document.getElementById('profileUserAddressDisplay').textContent = `Address: ${address}`;
 
+            } else {
+                 // Should be unreachable due to auth gate, but as fallback for display
+                 document.getElementById('profileUserName').textContent = 'Guest User';
+                 document.getElementById('profileUserEmail').textContent = 'Please log in';
+                 document.getElementById('profileUserMobileDisplay').textContent = `Mobile: N/A`;
+                 document.getElementById('profileUserAddressDisplay').textContent = `Address: N/A`;
             }
         }
         
-        // REMOVED: Mobile Update JS Logic
-
         // NEW FUNCTION: Confirm and Cancel Active Order (Only if PLACED)
         window.confirmCancelOrder = (orderKey) => {
             if (confirm("Kya aap sach mein yeh order cancel karna chahte hain? Ek baar cancel hone ke baad wapas nahi ho payega.")) {
@@ -2186,8 +2297,9 @@ const firebaseConfig = {
                  : (o.items ? Object.values(o.items) : []);
              
              let itemsHtml = orderItems.map(item => {
-                 const itemPrice = parseFloat(item.price).toFixed(2);
-                 const itemTotal = (item.price * item.quantity).toFixed(2);
+                 // FIX: Ensure price is parsed as float for calculations
+                 const itemPrice = parseFloat(item.price || 0).toFixed(2);
+                 const itemTotal = (parseFloat(item.price || 0) * parseFloat(item.quantity || 0)).toFixed(2);
                  const itemImage = item.img || 'https://via.placeholder.com/150';
                  const isRemoved = item.status === 'CANCELLED_OUT_OF_STOCK'; // Item removed by DP/Admin
                  const itemStatusStyle = isRemoved ? 'opacity: 0.5; text-decoration: line-through;' : '';
@@ -2413,13 +2525,27 @@ const firebaseConfig = {
             });
         }
         
-        function initHomeUI() {
+        function initHomeUI(isGuest = false) {
             renderCategories(placeholderCategories);
             renderSlider(placeholderSliderImages);
-            renderDishes(placeholderDishes.filter(d => d.pincode === 'ALL')); // Only show All pincode dishes on init
-            // Set initial page to Home
-            document.getElementById('appContainer').classList.add('active');
-            document.getElementById('loginPage').classList.remove('active');
+            // If guest, only show ALL pincode dishes from placeholders
+            const initialDishes = isGuest 
+                ? placeholderDishes.filter(d => d.pincode === 'ALL')
+                : placeholderDishes; 
+                
+            // Ensure price is converted to number
+            const initialDishesWithNumberPrice = initialDishes.map(d => ({ 
+                ...d, 
+                price: parseFloat(d.price) 
+            }));
+
+            allDishesData = initialDishesWithNumberPrice; // Update allDishesData for correct rendering on guest load
+            renderDishes(initialDishesWithNumberPrice); 
+            
+             // Set the initial active page (Home) only if no other page is active (i.e., on first load)
+            if (!document.querySelector('.page.active')) {
+                document.getElementById('appContainer').classList.add('active');
+            }
         }
 
         // --- SLIDER LOGIC ---
@@ -2468,21 +2594,9 @@ const firebaseConfig = {
             resetInterval();
         };
 
-        // Initialize the UI on script load
-        initHomeUI(); 
+        // Initialize the UI on script load (sets initial state for guest/no-auth)
+        initHomeUI(true); 
         updateCartUI(); 
-        
-        // Final check to see if user is logged in immediately after init
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // If user object is immediately available (e.g., persistent login)
-                fetchUserPincodeAndData(); 
-                listenForWishlistUpdates(); 
-            } else {
-                // If no user object, stay on the default 'appContainer' page
-                initHomeUI(); 
-            }
-        });
     </script>
 </body>
 </html>
