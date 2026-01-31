@@ -10,8 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <!-- REMOVED: Leaflet CSS link as map is removed -->
-
+    
     <style>
         :root {
             /* --- MODIFIED: DEEP PURPLE SCHEME (Based on image hint) --- */
@@ -508,7 +507,8 @@
         }
         .slider { display: flex; transition: transform 0.5s ease-in-out; }
         .slide { min-width: 100%; height: 200px; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        /* Adjusted for better display of banner */
+        .slide img { width: 100%; height: 100%; object-fit: contain; } 
         .fallback-slide {
             display: flex;
             justify-content: center;
@@ -738,6 +738,10 @@
 
                         <div class="auth-switch">
                             Already have an account? <a href="#" id="gotoLogin">Login</a>
+                            <!-- NEW: Forgot Password link -->
+                            <p style="margin-top: 10px; font-size: 0.9em;">
+                                Forgot your password? <a href="#" onclick="alert('Password reset link has been sent to your email (Simulated).');">Reset Password</a>
+                            </p>
                         </div>
                         <!-- NEW: T&C and Privacy Links -->
                         <div style="text-align:center; margin-top:20px; font-size:0.8em; color:#636e72;">
@@ -1127,7 +1131,8 @@ const firebaseConfig = {
             onAuthStateChanged, 
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
-            signOut 
+            signOut,
+            sendPasswordResetEmail // For password reset (although only simulated message is given in UI)
         } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { 
             getDatabase, 
@@ -1165,70 +1170,92 @@ const firebaseConfig = {
         const MIN_ORDER_AMOUNT = 50;
         const MAX_ITEM_QTY = 5; // NEW: Maximum quantity per item (Customer Request)
         
-        // --- DATA PLACEHOLDERS (For UI demonstration when DB is empty) ---
+        // --- UPDATED DATA PLACEHOLDERS (Fast Food, Grocery, Treats, with new images) ---
+        // Image URLs are simulated or from placeholder services.
         const placeholderCategories = [
-            { id: "cat1", name: "Pizza", imageUrl: "https://cdn-icons-png.flaticon.com/512/3595/3595560.png" },
-            { id: "cat2", name: "Burgers", imageUrl: "https://cdn-icons-png.flaticon.com/512/877/877995.png" },
-            { id: "cat3", name: "Beverages", imageUrl: "https://cdn-icons-png.flaticon.com/512/1047/1047392.png" },
-            { id: "cat4", name: "Indian", imageUrl: "https://cdn-icons-png.flaticon.com/512/5753/5753127.png" },
-            { id: "cat5", name: "Desserts", imageUrl: "https://cdn-icons-png.flaticon.com/512/859/859286.png" },
+            { id: "fastfood", name: "Fast Food", imageUrl: "https://cdn-icons-png.flaticon.com/512/857/857681.png" }, // Burger/Fast Food Icon
+            { id: "grocery", name: "Grocery", imageUrl: "https://cdn-icons-png.flaticon.com/512/3081/3081977.png" }, // Shopping basket Icon
+            { id: "treats", name: "Treats", imageUrl: "https://cdn-icons-png.flaticon.com/512/4740/4740118.png" }, // Ice Cream/Dessert Icon
+            { id: "indian", name: "Indian", imageUrl: "https://cdn-icons-png.flaticon.com/512/5753/5753127.png" }, 
         ];
         
-        // MODIFIED: Added discount, unit, description, and images fields
-        const placeholderDishes = [
-            { 
-                key: "dish1", 
-                name: "Margherita Pizza (All)", 
-                price: 150, // Old structure price for fallback
-                discount: 10, 
-                unit: "1 pc", 
-                description: "Classic Italian pizza with tomato sauce, mozzarella cheese, and basil. Simple and delicious.", 
-                imageUrl: "https://i.imgur.com/tYtYQkX.jpeg", 
-                images: ["https://i.imgur.com/tYtYQkX.jpeg", "https://i.imgur.com/oQ7S8mR.jpeg"], 
-                categoryId: "cat1", 
-                pincode: "ALL" 
-            },
-            { 
-                key: "dish2", 
-                name: "Cheese Burger (110001)", 
-                price: 90, 
-                discount: 5, 
-                unit: "1 pc", 
-                description: "Juicy beef patty with melted cheese, lettuce, and tomato in a sesame bun.", 
-                imageUrl: "https://i.imgur.com/oQ7S8mR.jpeg", 
-                images: ["https://i.imgur.com/oQ7S8mR.jpeg", "https://i.imgur.com/tYtYQkX.jpeg"], 
-                categoryId: "cat2", 
-                pincode: "110001" 
-            },
-            { 
-                key: "dish3", 
-                name: "Latte Coffee (ALL)", 
-                price: 120, 
-                discount: 0,
-                unit: "300 ml", 
-                description: "Smooth and creamy latte made with fresh milk and espresso.", 
-                imageUrl: "https://i.imgur.com/J8tV1zL.jpeg", 
-                images: ["https://i.imgur.com/J8tV1zL.jpeg"], 
-                categoryId: "cat3", 
-                pincode: "ALL" 
-            },
-            { 
-                key: "dish5", 
-                name: "Double Cheese Pizza (110001)", 
-                price: 250, 
-                discount: 15, 
-                unit: "1 pc", 
-                description: "Extra cheesy pizza loaded with two types of mozzarella.", 
-                imageUrl: "https://i.imgur.com/8Qp4Z0G.jpeg", 
-                images: ["https://i.imgur.com/8Qp4Z0G.jpeg"], 
-                categoryId: "cat1", 
-                pincode: "110001" 
-            },
-        ];
-        
+        // UPDATED SLIDER IMAGES (Using the new Banner URL)
         const placeholderSliderImages = [
-            { downloadURL: "https://i.imgur.com/8Qp4Z0G.jpeg", title: "50% OFF" }, 
-            { downloadURL: "https://i.imgur.com/oQ7S8mR.jpeg", title: "Free Delivery" },
+            // Image 1: Aapki Suvidha, Hamari Seva (Using the banner image)
+            { downloadURL: "https://i.ibb.co/SwMq0bXj/Picsart-26-01-27-11-31-49-432.png", title: "Aapki Suvidha, Hamari Seva" }, 
+        ];
+        
+        const placeholderDishes = [
+            // Fast Food (Combo - Updated URL)
+            { 
+                key: "dish_ff1", 
+                name: "Mega Meal Burger Combo", 
+                price: { final: 180.00, restaurantPrice: 150.00, adminFee: 30.00 }, 
+                discount: 15, 
+                unit: "1 Combo", 
+                description: "Extra large double patty burger with crispy fries and a soft drink.", 
+                // Using the isolated fast food combo image
+                imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png", 
+                images: ["https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png"], 
+                categoryId: "fastfood", 
+                pincode: "ALL" 
+            },
+            // Fast Food (Samosa - Updated URL)
+            { 
+                key: "dish_ff2", 
+                name: "Aloo Samosa (3 Pcs)", 
+                price: { final: 45.00, restaurantPrice: 35.00, adminFee: 10.00 }, 
+                discount: 0, 
+                unit: "3 Pieces", 
+                description: "Crispy and hot potato samosas with tangy chutney.", 
+                // Using the samosa image
+                imageUrl: "https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg", 
+                images: ["https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg"], 
+                categoryId: "fastfood", 
+                pincode: "ALL" 
+            },
+            // Grocery (Dairy/Paneer - Updated URL)
+            { 
+                key: "dish_gr1", 
+                name: "Sudha Paneer 200g", 
+                price: { final: 70.00, restaurantPrice: 65.00, adminFee: 5.00 },
+                discount: 0, 
+                unit: "200g Pouch", 
+                description: "Vacuum sealed for extra freshness.", 
+                // Using the Sudha Paneer image
+                imageUrl: "https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg", 
+                images: ["https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg"], 
+                categoryId: "grocery", 
+                pincode: "ALL" 
+            },
+            // Grocery (Atta/Grains - Updated URL)
+            { 
+                key: "dish_gr2", 
+                name: "Aashirvaad Atta 1Kg", 
+                price: { final: 65.00, restaurantPrice: 60.00, adminFee: 5.00 },
+                discount: 5, 
+                unit: "1 Kg Pack", 
+                description: "Whole wheat flour for soft rotis.", 
+                // Using the Aashirvaad Atta image
+                imageUrl: "https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg", 
+                images: ["https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg"], 
+                categoryId: "grocery", 
+                pincode: "ALL" 
+            },
+            // Treats (Cadbury Silk Oreo - Updated URL)
+            { 
+                key: "dish_tr1", 
+                name: "Premium Chocolate Bar", 
+                price: { final: 180.00, restaurantPrice: 160.00, adminFee: 20.00 },
+                discount: 10, 
+                unit: "1 Large Bar", 
+                description: "A delicious milk chocolate bar with crunchy bits and a smooth center.", 
+                // Using the newly provided image for a different chocolate treat
+                imageUrl: "https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg", 
+                images: ["https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg"], 
+                categoryId: "treats", 
+                pincode: "ALL" 
+            },
         ];
         
         // Placeholder DP details for 'On Way' status if real DP data is missing
@@ -1438,7 +1465,8 @@ const firebaseConfig = {
             } catch (error) {
                 btn.disabled = false; btn.textContent = 'Sign Up Now';
                 if (error.code === 'auth/email-already-in-use') {
-                    showError("This email is already registered. Please login.");
+                    // FIX: Informative message for existing email
+                    showError("This email is already registered. Please use the Login tab or the 'Reset Password' link below.");
                 } else {
                     showError("Registration Failed: " + error.message);
                 }
@@ -1495,15 +1523,46 @@ const firebaseConfig = {
                       // Not found in either (Shouldn't happen post-register) -> Continue
                  }
                  
-                 userData = snapData; 
-                 userPincode = snapData?.pincode || null;
+                 // FIX 2: Ensure full userData object is saved for profile display on every login
+                 if (snapData) {
+                    userData = {
+                        name: snapData.name || "User Name",
+                        mobile: snapData.mobile || "N/A",
+                        email: snapData.email || currentUser.email,
+                        pincode: snapData.pincode || "N/A",
+                        address: {
+                            state: snapData.address?.state || "N/A",
+                            district: snapData.address?.district || "N/A",
+                            line: snapData.address?.line || "N/A"
+                        }
+                    };
+                    userPincode = userData.pincode;
+                 } else {
+                     // Fallback if no user data found (shouldn't happen for a logged-in user who registered)
+                     userData = {
+                         name: currentUser.email.split('@')[0],
+                         mobile: "N/A",
+                         email: currentUser.email,
+                         pincode: "N/A",
+                         address: { state: "N/A", district: "N/A", line: "N/A" }
+                     };
+                     userPincode = null;
+                 }
+                 
                  fetchData();
-                 // Do not explicitly call showPage('appContainer') here to allow navigation logic in onAuthStateChanged to control it.
                  
              } catch (e) {
                  console.error("Failed to fetch user data:", e);
+                 // Fallback: If DB fetch fails, populate minimal data from auth object
+                 userData = {
+                     name: currentUser.email.split('@')[0],
+                     mobile: "N/A",
+                     email: currentUser.email,
+                     pincode: "N/A",
+                     address: { state: "N/A", district: "N/A", line: "N/A" }
+                 };
+                 userPincode = null;
                  fetchData();
-                 // Do not explicitly call showPage('appContainer') here.
              }
         }
         
@@ -1686,10 +1745,10 @@ const firebaseConfig = {
                 await remove(wishlistProductRef);
             } else {
                  await set(wishlistProductRef, { 
-                    key: dish.key, 
+                    key: dish.key, // FIX: Ensure key is saved in the object for retrieval
                     name: dish.name, 
-                    // FIX: Use the actual price structure data if available
-                    price: parseFloat(dish.price?.final || dish.price || 0), 
+                    // FIX: Use the discounted customerPrice for saving/display (from the modified object)
+                    price: parseFloat(dish.customerPrice || 0), 
                     imageUrl: dish.images?.[0] || dish.imageUrl,
                     discount: dish.discount || 0,
                     unit: dish.unit || 'Unit N/A'
@@ -1741,9 +1800,10 @@ const firebaseConfig = {
 
                 items.forEach(d => {
                      const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
-                     const originalPrice = d.price / (1 - (d.discount || 0) / 100); // Reconstruct original price (approx)
                      const discount = d.discount || 0;
-                     const discountedPrice = d.price;
+                     const discountedPrice = parseFloat(d.price || 0);
+                     // Calculate original price from the saved discounted price
+                     const originalPrice = discountedPrice / (1 - discount / 100); 
 
                     // MODIFIED: Use purple for the Add button
                     container.innerHTML += `
@@ -1751,7 +1811,9 @@ const firebaseConfig = {
                             <img src="${dishImage}" alt="${d.name}">
                             <div style="flex:1;">
                                 <h4 style="margin:0; font-size:1em;">${d.name}</h4>
-                                <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${discountedPrice.toFixed(2)}</p>
+                                <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${discountedPrice.toFixed(2)}
+                                    ${discount > 0 ? `<span style="font-size: 0.8em; color: var(--light-text); text-decoration: line-through; margin-left: 5px;">₹${originalPrice.toFixed(2)}</span>` : ''}
+                                </p>
                                 ${discount > 0 ? `<p style="margin:0; font-size:0.8em; color:var(--danger);">Save ${discount}%</p>` : ''}
                             </div>
                             <div style="display:flex; gap:10px;">
@@ -1781,15 +1843,17 @@ const firebaseConfig = {
                 const isWished = wishlist.includes(d.key) ? 'active' : ''; 
                 const wishIcon = 'fa-heart';
                 const discount = d.discount || 0;
-                // FIX: Use the final price property from the price object
-                const finalPrice = parseFloat(d.price?.final || d.price || 0); // Use .final price
-                const originalPrice = finalPrice / (1 - discount / 100); // Reconstruct original price (approx)
-                const discountedPrice = finalPrice;
+                // FIX: Use the pre-calculated customerPrice for card display
+                const discountedPrice = parseFloat(d.customerPrice || 0); 
+                // Reconstruct original price (which is the final price before discount)
+                const originalPrice = parseFloat(d.price.final || 0);
                 
-                const discountTag = discount > 0 ? `<div class="discount-tag">-${discount}%</div>` : ''; // NEW
+                // FIX: Price Display (Kitna ka tha kitna ka liye)
                 const priceDisplay = discount > 0 
                     ? `₹${discountedPrice.toFixed(2)} <span class="original">₹${originalPrice.toFixed(2)}</span>`
                     : `₹${originalPrice.toFixed(2)}`;
+
+                const discountTag = discount > 0 ? `<div class="discount-tag">-${discount}%</div>` : ''; // NEW
 
                 // Card is now clickable via showProductDetail, with event.stopPropagation() on buttons
                 c.innerHTML += `
@@ -1899,11 +1963,17 @@ const firebaseConfig = {
                     dish.pincode = dish.pincode || 'ALL';
                     // NEW: Ensure all fields are present for PDP/card rendering
                     dish.discount = dish.discount || 0;
-                    dish.unit = dish.weight || 'Unit N/A'; // Using 'weight' as 'unit' in customer app
+                    dish.unit = dish.unit || 'Unit N/A'; // Using 'unit' field from admin
                     dish.description = dish.description || 'No description available.';
                     
-                    // FIX: Ensure correct price is used for the card/cart price calculation (final price)
-                    dish.price = dish.price?.final ? parseFloat(dish.price.final) : parseFloat(dish.price || 0); // Store calculated final price
+                    // FIX: Ensure correct price object is used/created
+                    dish.price = dish.price && typeof dish.price === 'object' 
+                        ? dish.price 
+                        : { final: parseFloat(dish.price || 0), restaurantPrice: parseFloat(dish.price || 0), adminFee: 0 };
+                        
+                    // Store the actual customer-facing price (final price - discount) for easy access in cards/cart
+                    const finalPriceBeforeDiscount = parseFloat(dish.price.final || 0);
+                    dish.customerPrice = finalPriceBeforeDiscount * (1 - dish.discount / 100); 
                     
                     // NEW: Ensure images array exists
                     dish.images = Array.isArray(dish.images) && dish.images.length > 0 ? dish.images : [dish.imageUrl || 'https://via.placeholder.com/150'];
@@ -1929,10 +1999,16 @@ const firebaseConfig = {
             } catch (error) {
                 console.error("Error fetching app data:", error);
                 // Use placeholders on error
-                allDishesData = placeholderDishes.map(d => ({ 
-                    ...d, 
-                    price: parseFloat(d.price) // Ensure price is number for calculation
-                }));
+                allDishesData = placeholderDishes.map(d => {
+                    const priceObj = d.price;
+                    const finalPriceBeforeDiscount = parseFloat(priceObj.final || 0);
+                    // Add customerPrice property to placeholder dishes
+                    return { 
+                        ...d, 
+                        price: priceObj, // Keep the full object
+                        customerPrice: finalPriceBeforeDiscount * (1 - (d.discount || 0) / 100), 
+                    };
+                });
                 renderCategories(placeholderCategories);
                 showAllDishes();
                 renderSlider(placeholderSliderImages);
@@ -1975,9 +2051,8 @@ const firebaseConfig = {
             const dish = allDishesData.find(d => d.key === id);
             if (!dish) { console.error("Dish not found for key:", id); return; }
 
-            const discount = dish.discount || 0;
-            const finalPrice = parseFloat(dish.price || 0); // Use the final price
-            const discountedPrice = finalPrice * (1 - discount / 100);
+            // FIX: Use customerPrice for the price in the cart
+            const discountedPrice = parseFloat(dish.customerPrice || 0);
 
             const ex = cart.find(i=>i.id===id);
             
@@ -2077,9 +2152,10 @@ const firebaseConfig = {
             
             // Calculate discounted price
             const discount = currentPdpDish.discount || 0;
-            const finalPrice = parseFloat(currentPdpDish.price || 0);
-            const originalPrice = finalPrice / (1 - discount / 100); 
-            const discountedPrice = finalPrice;
+            // FIX: Use final price (before discount) for originalPrice
+            const originalPrice = parseFloat(currentPdpDish.price.final || 0); 
+            // FIX: Use customerPrice (after discount) for discountedPrice
+            const discountedPrice = parseFloat(currentPdpDish.customerPrice || 0); 
             
             document.getElementById('pdpHeaderTitle').textContent = currentPdpDish.name;
             document.getElementById('pdpName').textContent = currentPdpDish.name;
@@ -2107,7 +2183,7 @@ const firebaseConfig = {
             
             // NEW: Set initial text for button and warning
             document.getElementById('pdpAddToCartBtn').textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
-            document.getElementById('pdpMinQtyWarning').textContent = `प्रति वस्तु अधिकतम खरीद मात्रा:  ${MAX_ITEM_QTY}`;
+            document.getElementById('pdpMinQtyWarning').textContent = `प्रति वस्तु अधिकतम खरीद मात्रा: ${MAX_ITEM_QTY}`;
 
             // Image Slider setup
             const images = currentPdpDish.images || [currentPdpDish.imageUrl || 'https://via.placeholder.com/150'];
@@ -2204,18 +2280,21 @@ const firebaseConfig = {
 
         function loadProfilePage() {
             if(currentUser && userData) {
+                // FIX: Use full userData object
                 document.getElementById('profileUserName').textContent = userData.name || currentUser.email.split('@')[0];
-                document.getElementById('profileUserEmail').textContent = currentUser.email || 'N/A';
+                document.getElementById('profileUserEmail').textContent = userData.email || 'N/A';
                 
                 const mobile = userData.mobile || 'N/A';
                 
-                // MODIFIED (FIX): Display full address correctly
-                const address = userData.address 
-                    ? `${userData.address.line || 'N/A'}, ${userData.address.district || 'N/A'}, ${userData.address.state || 'N/A'} - ${userData.pincode || 'N/A'}` 
-                    : 'Address N/A (Update in Registration)';
+                const addressLine = userData.address?.line || 'N/A';
+                const district = userData.address?.district || 'N/A';
+                const state = userData.address?.state || 'N/A';
+                const pincode = userData.pincode || 'N/A';
+
+                const fullAddressDisplay = `${addressLine}, ${district}, ${state} - ${pincode}`;
                 
                 document.getElementById('profileUserMobileDisplay').textContent = `Mobile: ${mobile}`;
-                document.getElementById('profileUserAddressDisplay').textContent = `Address: ${address}`;
+                document.getElementById('profileUserAddressDisplay').textContent = `Address: ${fullAddressDisplay}`;
 
             } else {
                  // Should be unreachable due to auth gate, but as fallback for display
@@ -2526,21 +2605,28 @@ const firebaseConfig = {
         }
         
         function initHomeUI(isGuest = false) {
+            
+            // Only convert placeholders once
+            if (placeholderDishes.some(d => !d.customerPrice)) {
+                placeholderDishes.forEach(d => {
+                    // Ensure price structure is consistent
+                    const priceObj = d.price && typeof d.price === 'object' 
+                        ? d.price 
+                        : { final: parseFloat(d.price || 0), restaurantPrice: parseFloat(d.price || 0), adminFee: 0 };
+                        
+                    const finalPriceBeforeDiscount = parseFloat(priceObj.final || 0);
+                    d.price = priceObj; // Keep the full object
+                    d.customerPrice = finalPriceBeforeDiscount * (1 - (d.discount || 0) / 100); 
+                });
+            }
+            
             renderCategories(placeholderCategories);
             renderSlider(placeholderSliderImages);
-            // If guest, only show ALL pincode dishes from placeholders
-            const initialDishes = isGuest 
-                ? placeholderDishes.filter(d => d.pincode === 'ALL')
-                : placeholderDishes; 
+            
+            const initialDishes = placeholderDishes.filter(d => d.pincode === 'ALL');
                 
-            // Ensure price is converted to number
-            const initialDishesWithNumberPrice = initialDishes.map(d => ({ 
-                ...d, 
-                price: parseFloat(d.price) 
-            }));
-
-            allDishesData = initialDishesWithNumberPrice; // Update allDishesData for correct rendering on guest load
-            renderDishes(initialDishesWithNumberPrice); 
+            allDishesData = initialDishes; // Update allDishesData for correct rendering on guest load
+            renderDishes(initialDishes); 
             
              // Set the initial active page (Home) only if no other page is active (i.e., on first load)
             if (!document.querySelector('.page.active')) {
