@@ -2490,15 +2490,22 @@ const firebaseConfig = {
             }
         }
         
-        // NEW FUNCTION: Confirm and Cancel Active Order (Only if PLACED)
+        // REMOVED: NEW FUNCTION: Confirm and Cancel Active Order (Only if PLACED)
+        /*
         window.confirmCancelOrder = (orderKey) => {
             if (confirm("Kya aap sach mein yeh order cancel karna chahte hain? Ek baar cancel hone ke baad wapas nahi ho payega.")) {
                 cancelOrder(orderKey);
             }
         };
+        */
 
         window.cancelOrder = async (orderKey) => {
             if (!currentUser) return;
+            // NEW: Add a final alert to simulate a better warning after clicking the main button
+            if (!confirm("Order cancel karne se pehle aakhri baar sochein. Ek baar cancel hone ke baad wapas nahi ho payega. Cancel karne ke liye 'OK' dabayein.")) {
+                 return; // Stop cancellation if user clicks Cancel on the last prompt
+            }
+            
             const btn = document.querySelector(`#order-${orderKey} .cancel-order-btn`);
             if (btn) {
                 btn.disabled = true;
@@ -2590,7 +2597,7 @@ const firebaseConfig = {
                   // Only option for active order (Can Cancel)
                   actionButtonsHtml = `
                       <div class="order-action-buttons">
-                          <button class="btn-main cancel-order-btn" onclick="confirmCancelOrder('${o.k}')" style="background:var(--danger); width:100%; margin-top:0; box-shadow:none;">
+                          <button class="btn-main cancel-order-btn" onclick="cancelOrder('${o.k}')" style="background:var(--danger); width:100%; margin-top:0; box-shadow:none;">
                               <i class="fas fa-times-circle"></i> Order Cancel Karein
                           </button>
                       </div>
