@@ -291,6 +291,42 @@
             box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4); 
         }
         /* --- END MODIFIED CARD ACTIONS --- */
+        
+        /* --- NEW: OUT OF STOCK STYLES --- */
+        .card.oos {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none; /* Disable all interactions on the card */
+            position: relative;
+        }
+
+        .oos-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 3;
+            border-radius: 18px;
+            border: 3px dashed var(--danger);
+        }
+        /* NEW: OOS button styles for disabled state (overriding .btn-main:disabled) */
+        .card.oos .add-btn, .card.oos .wishlist-btn {
+             background: #bdc3c7; 
+             cursor: not-allowed; 
+             box-shadow: none; 
+             color: #6c757d;
+             pointer-events: none;
+        }
+        /* --- END NEW: OUT OF STOCK STYLES --- */
+
 
         /* NEW: Discount Tag Style */
         .discount-tag {
@@ -863,6 +899,12 @@
                         </div>
                     </div>
                     <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> <!-- MODIFIED WARNING TEXT -->
+                    
+                    <!-- NEW: OOS WARNING FOR PDP -->
+                    <p id="pdpOutOfStockWarning" style="color:var(--danger); font-size:1.1em; font-weight:700; text-align:center; display:none; margin-top:20px;">
+                       <i class="fas fa-exclamation-triangle"></i> YEH PRODUCT ABHI OUT OF STOCK HAI!
+                    </p>
+
 
                     <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
                         <i class="fas fa-shopping-basket"></i> Add to Cart (Max 5) <!-- MODIFIED BUTTON TEXT -->
@@ -1023,7 +1065,7 @@
                 <p>Order place hone ke baad agar humne saaman pack kar diya hai, toh cancellation swikar nahi kiya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">7. Contact Us</h4>
-                <p>Kisi bhi shikayat ke liye app ke support section mein message karein।</p>
+                <p>Kisi bhi shikayat ya sawal ke liye aap humein <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par email kar sakte hain।</p>
                 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
                     &copy; 2026 Shuvidha Seva. All Rights Reserved.
@@ -1042,6 +1084,15 @@
             </header>
             <!-- UPDATED CONTENT START (Hindi) -->
             <div style="flex:1; padding:20px; overflow-y:auto; font-size: 0.9em; line-height: 1.6;">
+                <h3 style="color:var(--primary-color); margin-top:0;">App & Developer Information</h3>
+                <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+                    <li><strong>Application Name:</strong> Shuvidha Seva</li>
+                    <li><strong>Package ID:</strong> com.shuvidha.seva</li>
+                    <li><strong>Developer:</strong> Prabhat Acharya</li>
+                    <li><strong>Contact Email:</strong> shuvidhaseva1@gmail.com</li>
+                    <li><strong>Last Updated:</strong> 03 February 2026</li>
+                </ul>
+                
                 <h3 style="color:var(--primary-color); margin-top:0;">Privacy Policy - Shuvidha Seva</h3>
                 <p>Aapki privacy hamare liye bahut mahatvapurn hai। Yeh policy batati hai ki <strong>Shuvidha Seva</strong> aapka data kaise collect aur istemal karta hai।</p>
 
@@ -1069,7 +1120,7 @@
                 <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order, aur maximum 5 quantity per item ka order hona anivarya hai। Har order par ₹10 delivery charge liya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Contact Us</h4>
-                <p>Agar aapko koi sawal hai, toh aap humse app ke support section mein sampark kar sakte hain।</p>
+                <p>Agar aapko koi sawal hai, toh aap humse <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par sampark kar sakte hain ya app ke support section mein message karein।</p>
 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
                     <p>&copy; 2026 Shuvidha Seva. All Rights Reserved.</p>
@@ -1198,12 +1249,13 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png", 
                 images: ["https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png"], 
                 categoryId: "fastfood", 
-                pincode: "ALL" 
+                pincode: "ALL",
+                isOutOfStock: false, // ADDED: Out of Stock
             },
             // Fast Food (Samosa - Updated URL)
             { 
                 key: "dish_ff2", 
-                name: "Aloo Samosa (3 Pcs)", 
+                name: "Aloo Samosa (3 Pcs) - OOS", 
                 price: { final: 45.00, restaurantPrice: 35.00, adminFee: 10.00 }, 
                 discount: 0, 
                 unit: "3 Pieces", 
@@ -1212,7 +1264,8 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg", 
                 images: ["https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg"], 
                 categoryId: "fastfood", 
-                pincode: "ALL" 
+                pincode: "ALL",
+                isOutOfStock: true, // ADDED: Out of Stock (Simulated)
             },
             // Grocery (Dairy/Paneer - Updated URL)
             { 
@@ -1226,7 +1279,8 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg", 
                 images: ["https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg"], 
                 categoryId: "grocery", 
-                pincode: "ALL" 
+                pincode: "ALL",
+                isOutOfStock: false, // ADDED: Out of Stock
             },
             // Grocery (Atta/Grains - Updated URL)
             { 
@@ -1240,7 +1294,8 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg", 
                 images: ["https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg"], 
                 categoryId: "grocery", 
-                pincode: "ALL" 
+                pincode: "ALL",
+                isOutOfStock: false, // ADDED: Out of Stock
             },
             // Treats (Cadbury Silk Oreo - Updated URL)
             { 
@@ -1254,7 +1309,8 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg", 
                 images: ["https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg"], 
                 categoryId: "treats", 
-                pincode: "ALL" 
+                pincode: "ALL",
+                isOutOfStock: false, // ADDED: Out of Stock
             },
         ];
         
@@ -1730,13 +1786,21 @@ const firebaseConfig = {
 
         // --- WISHLIST LOGIC (v9 Syntax) ---
         // MODIFIED: Only takes dishKey now and relies on allDishesData
-        window.toggleWishlist = async (dishKey) => {
+        window.toggleWishlist = async (dishKey, event) => {
+             // NEW: Check if item is Out of Stock
+             const dish = allDishesData.find(d => d.key === dishKey);
+             if (dish && dish.isOutOfStock) {
+                 alert("Yeh product abhi Out of Stock hai, isliye isse wishlist mein nahi daal sakte.");
+                 if(event) event.stopPropagation();
+                 return;
+             }
+            
              if (!currentUser) {
                  showPage('loginPage');
                  return;
              }
-             
-            const dish = allDishesData.find(d => d.key === dishKey);
+
+            
             if (!dish) { console.error("Dish not found for key:", dishKey); return; }
 
             const wishlistProductRef = ref(db, `users/${currentUser.uid}/wishlist/${dishKey}`);
@@ -1767,14 +1831,29 @@ const firebaseConfig = {
                     });
                 }
                 // Update UI everywhere
-                if (document.getElementById('appContainer').classList.contains('active')) {
-                   showAllDishes();
+                if (document.querySelector('#appContainer')?.classList.contains('active')) {
+                   // Only re-render if Home is active (to avoid performance issues on other pages)
+                   // The call to showAllDishes handles the filter state correctly
+                   if (document.getElementById('home-search-input').value.trim() !== '') {
+                        // If searching, trigger the search function to re-render with new wishlist status
+                        document.getElementById('home-search-input').dispatchEvent(new Event('input'));
+                   } else {
+                       // If showing all or filtered by category, re-render
+                       const activeCategoryCard = document.querySelector('.category-item-card.active');
+                       if (activeCategoryCard && activeCategoryCard.dataset.category === 'ALL') {
+                            showAllDishes();
+                       } else if (activeCategoryCard) {
+                            window.filterDishesByCategory(activeCategoryCard.dataset.category);
+                       } else {
+                             showAllDishes(); // Fallback to all if state is unclear
+                       }
+                   }
                 }
-                if (document.getElementById('wishlistPage').classList.contains('active')) {
+                if (document.querySelector('#wishlistPage')?.classList.contains('active')) {
                      loadWishlist();
                 }
                  // NEW: Update PDP wishlist button if open
-                if (document.getElementById('productDetailPage').classList.contains('active') && currentPdpDish) {
+                if (document.querySelector('#productDetailPage')?.classList.contains('active') && currentPdpDish) {
                      updatePdpWishlistButton(currentPdpDish.key);
                 }
             });
@@ -1799,6 +1878,13 @@ const firebaseConfig = {
                 }
 
                 items.forEach(d => {
+                     // NEW: Check OOS status of the item based on allDishesData
+                     const fullDish = allDishesData.find(dish => dish.key === d.key);
+                     const isOutOfStock = fullDish?.isOutOfStock || false; // Default to false if not found/no field
+                     const oosClass = isOutOfStock ? 'oos' : '';
+                     const oosText = isOutOfStock ? 'OUT OF STOCK' : 'Add';
+                     const oosColor = isOutOfStock ? 'background: #bdc3c7; color: #6c757d; cursor: not-allowed; box-shadow: none;' : 'background:var(--primary-gradient);';
+                     
                      const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
                      const discount = d.discount || 0;
                      const discountedPrice = parseFloat(d.price || 0);
@@ -1807,7 +1893,7 @@ const firebaseConfig = {
 
                     // MODIFIED: Use purple for the Add button
                     container.innerHTML += `
-                        <div class="cart-item">
+                        <div class="cart-item ${oosClass}">
                             <img src="${dishImage}" alt="${d.name}">
                             <div style="flex:1;">
                                 <h4 style="margin:0; font-size:1em;">${d.name}</h4>
@@ -1815,10 +1901,11 @@ const firebaseConfig = {
                                     ${discount > 0 ? `<span style="font-size: 0.8em; color: var(--light-text); text-decoration: line-through; margin-left: 5px;">₹${originalPrice.toFixed(2)}</span>` : ''}
                                 </p>
                                 ${discount > 0 ? `<p style="margin:0; font-size:0.8em; color:var(--danger);">Save ${discount}%</p>` : ''}
+                                ${isOutOfStock ? `<p style="margin:0; font-size:0.8em; color:var(--danger); font-weight:700;">(Out of Stock)</p>` : ''}
                             </div>
                             <div style="display:flex; gap:10px;">
-                                <button class="btn-main" onclick="addToCart('${d.key}', 1)" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; background:var(--primary-gradient);">
-                                    <i class="fas fa-shopping-basket"></i> Add
+                                <button class="btn-main" onclick="${isOutOfStock ? `alert('Cannot add. Product is Out of Stock.')` : `addToCart('${d.key}', 1)`}" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; ${oosColor}" ${isOutOfStock ? 'disabled' : ''}>
+                                    <i class="fas fa-shopping-basket"></i> ${oosText}
                                 </button>
                                 <button class="wishlist-btn active" onclick="toggleWishlist('${d.key}')" style="background-color: var(--danger); color:white; box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4);">
                                     <i class="fas fa-trash"></i>
@@ -1848,6 +1935,12 @@ const firebaseConfig = {
                 // Reconstruct original price (which is the final price before discount)
                 const originalPrice = parseFloat(d.price.final || 0);
                 
+                // NEW: Out of Stock Logic
+                const isOutOfStock = d.isOutOfStock || false;
+                const oosClass = isOutOfStock ? 'oos' : '';
+                const oosOverlay = isOutOfStock ? '<div class="oos-overlay"><i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i>OUT OF STOCK</div>' : '';
+                const clickHandler = isOutOfStock ? `alert('Yeh item abhi Out of Stock hai.')` : `showProductDetail('${d.key}')`;
+                
                 // FIX: Price Display (Kitna ka tha kitna ka liye)
                 const priceDisplay = discount > 0 
                     ? `₹${discountedPrice.toFixed(2)} <span class="original">₹${originalPrice.toFixed(2)}</span>`
@@ -1857,14 +1950,15 @@ const firebaseConfig = {
 
                 // Card is now clickable via showProductDetail, with event.stopPropagation() on buttons
                 c.innerHTML += `
-                    <div class="card" onclick="showProductDetail('${d.key}')"> 
+                    <div class="card ${oosClass}" onclick="${clickHandler}"> 
+                        ${oosOverlay}
                         ${discountTag}
                         <img src="${dishImage}" alt="${d.name}">
                         <div class="card-actions">
-                            <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
+                            <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}', event)">
                                 <i class="fas ${wishIcon}"></i>
                             </button>
-                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
+                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}', 1, event)">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -1965,6 +2059,7 @@ const firebaseConfig = {
                     dish.discount = dish.discount || 0;
                     dish.unit = dish.unit || 'Unit N/A'; // Using 'unit' field from admin
                     dish.description = dish.description || 'No description available.';
+                    dish.isOutOfStock = dish.isOutOfStock || false; // NEW: OOS status
                     
                     // FIX: Ensure correct price object is used/created
                     dish.price = dish.price && typeof dish.price === 'object' 
@@ -2041,14 +2136,21 @@ const firebaseConfig = {
             document.getElementById('dishesSectionTitle').textContent = `Search Results for "${e.target.value}"`;
         });
 
-        // MODIFIED: Implements Max 5 constraint
-        window.addToCart = (id, quantity = 1) => {
+        // MODIFIED: Implements Max 5 constraint AND OOS check
+        window.addToCart = (id, quantity = 1, event) => {
+             // NEW: Out of Stock check
+             const dish = allDishesData.find(d => d.key === id);
+             if (dish && dish.isOutOfStock) {
+                 alert("Yeh product abhi Out of Stock hai aur order confirm nahi ho sakta.");
+                 if(event) event.stopPropagation(); // Stop click from propagating if called from card action
+                 return;
+             }
+             
              if (!currentUser) {
                  showPage('loginPage');
                  return;
              }
             
-            const dish = allDishesData.find(d => d.key === id);
             if (!dish) { console.error("Dish not found for key:", id); return; }
 
             // FIX: Use customerPrice for the price in the cart
@@ -2086,6 +2188,13 @@ const firebaseConfig = {
 
         // MODIFIED: Implements Max 5 and Min 1 constraint
         window.modQty = (id,n) => {
+             // Check OOS for the item (needed if item was OOS and is now in cart)
+            const dish = allDishesData.find(d => d.key === id);
+            if (dish && dish.isOutOfStock && n > 0) {
+                 alert("Yeh product abhi Out of Stock hai aur quantity nahi badhai ja sakti.");
+                 return;
+            }
+            
             const i = cart.find(x=>x.id===id);
             if(i) { 
                 const newQty = i.quantity + n;
@@ -2106,25 +2215,38 @@ const firebaseConfig = {
             const container = document.getElementById('cartItemsContainer');
             container.innerHTML = '';
             let subtotal = 0;
+            let oosItemsInCart = 0; // NEW: Track OOS items
 
             if (cart.length === 0) {
                 container.innerHTML = '<p style="text-align:center; color:#777; margin-top:50px;"><i class="fas fa-shopping-basket" style="font-size:2em; margin-bottom:10px;"></i><br>Your cart is empty.</p>';
             } else {
                 cart.forEach(item => {
+                    // NEW: Check OOS status from allDishesData
+                    const dishData = allDishesData.find(d => d.key === item.id);
+                    const isOutOfStock = dishData?.isOutOfStock || false;
+                    if (isOutOfStock) oosItemsInCart++; // Count OOS items
+                    
                     const itemTotal = item.price * item.quantity;
                     subtotal += itemTotal;
                     const dishImage = item.img || 'https://via.placeholder.com/150';
+                    
+                    const oosClass = isOutOfStock ? 'oos' : '';
+                    const oosText = isOutOfStock ? '<span style="color:var(--danger); font-weight:700;">(OOS)</span>' : '';
+                    
+                    // Disable quantity controls if OOS (must remove/reduce to 0)
+                    const disablePlus = isOutOfStock ? 'disabled' : '';
+
                     container.innerHTML += `
-                        <div class="cart-item">
+                        <div class="cart-item ${oosClass}">
                             <img src="${dishImage}" alt="${item.name}">
                             <div style="flex:1;">
-                                <h4 style="margin:0; font-size:1em;">${item.name}</h4>
+                                <h4 style="margin:0; font-size:1em;">${item.name} ${oosText}</h4>
                                 <p style="margin:2px 0 0 0; color:var(--primary-color); font-weight:600;">₹${item.price.toFixed(2)} x ${item.quantity} = ₹${itemTotal.toFixed(2)}</p>
                             </div>
                             <div class="qty-controls">
                                 <button onclick="modQty('${item.id}',-1)"><i class="fas fa-minus"></i></button>
                                 <span>${item.quantity}</span>
-                                <button onclick="modQty('${item.id}',1)"><i class="fas fa-plus"></i></button>
+                                <button onclick="modQty('${item.id}',1)" ${disablePlus}><i class="fas fa-plus"></i></button>
                             </div>
                         </div>
                     `;
@@ -2137,7 +2259,20 @@ const firebaseConfig = {
             document.getElementById('total-price').textContent = `₹${total.toFixed(2)}`;
             document.getElementById('cart-count').textContent = cart.reduce((a, b) => a + b.quantity, 0);
 
-            checkOrderValidity(); 
+            // NEW: Disable checkout if OOS items exist in the cart
+            const goToCheckoutBtn = document.getElementById('goToCheckoutBtn');
+            const cartWarning = document.getElementById('order-constraint-warning');
+            
+            if (oosItemsInCart > 0) {
+                 goToCheckoutBtn.disabled = true;
+                 goToCheckoutBtn.style.opacity = '0.6';
+                 goToCheckoutBtn.textContent = `Checkout Blocked (${oosItemsInCart} OOS Item(s))`;
+                 cartWarning.style.display = 'block';
+                 cartWarning.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Remove ${oosItemsInCart} Out of Stock item(s) to proceed.`;
+            } else {
+                 goToCheckoutBtn.textContent = `Proceed to Checkout`;
+                 checkOrderValidity(); // Check min order constraints
+            }
         }
 
          // --- PDP LOGIC (NEW) ---
@@ -2149,6 +2284,9 @@ const firebaseConfig = {
 
             currentPdpDish = allDishesData.find(d => d.key === dishKey);
             if (!currentPdpDish) return;
+            
+            // NEW: Check OOS status
+            const isOutOfStock = currentPdpDish.isOutOfStock || false;
             
             // Calculate discounted price
             const discount = currentPdpDish.discount || 0;
@@ -2182,8 +2320,34 @@ const firebaseConfig = {
             document.getElementById('pdpQuantity').textContent = pdpQuantity;
             
             // NEW: Set initial text for button and warning
-            document.getElementById('pdpAddToCartBtn').textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
             document.getElementById('pdpMinQtyWarning').textContent = `प्रति वस्तु अधिकतम खरीद मात्रा: ${MAX_ITEM_QTY}`;
+            
+            // NEW: Handle OOS on PDP
+            const pdpAddToCartBtn = document.getElementById('pdpAddToCartBtn');
+            const pdpWishlistBtn = document.getElementById('pdpWishlistBtn');
+            const pdpQtyControls = document.querySelector('.pdp-qty-controls');
+            const pdpOOSWarning = document.getElementById('pdpOutOfStockWarning');
+            
+            if (isOutOfStock) {
+                 pdpAddToCartBtn.disabled = true;
+                 pdpAddToCartBtn.style.opacity = '0.6';
+                 pdpAddToCartBtn.textContent = 'OUT OF STOCK';
+                 pdpQtyControls.style.opacity = '0.5';
+                 pdpQtyControls.style.pointerEvents = 'none';
+                 pdpOOSWarning.style.display = 'block';
+                 pdpWishlistBtn.disabled = true;
+                 pdpWishlistBtn.style.opacity = '0.6';
+            } else {
+                 pdpAddToCartBtn.disabled = false;
+                 pdpAddToCartBtn.style.opacity = '1';
+                 pdpAddToCartBtn.textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
+                 pdpQtyControls.style.opacity = '1';
+                 pdpQtyControls.style.pointerEvents = 'auto';
+                 pdpOOSWarning.style.display = 'none';
+                 pdpWishlistBtn.disabled = false;
+                 pdpWishlistBtn.style.opacity = '1';
+            }
+
 
             // Image Slider setup
             const images = currentPdpDish.images || [currentPdpDish.imageUrl || 'https://via.placeholder.com/150'];
@@ -2207,11 +2371,25 @@ const firebaseConfig = {
 
         function updatePdpWishlistButton(dishKey) {
             const wishlistBtn = document.getElementById('pdpWishlistBtn');
+            // NEW: Check OOS status before updating wishlist button for interaction
+             const dish = allDishesData.find(d => d.key === dishKey);
+             const isOutOfStock = dish?.isOutOfStock || false;
+
             const isWished = wishlist.includes(dishKey);
             const heartColor = isWished ? 'var(--danger)' : '#ccc';
-            wishlistBtn.className = `btn-main wishlist-btn ${isWished ? 'active' : ''}`;
-            wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:${heartColor};"></i> ${isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
-            wishlistBtn.onclick = () => toggleWishlist(dishKey);
+            
+            // Check if button is enabled/disabled by OOS check in showProductDetail. 
+            // Only update the visual state (wished/not wished) if not OOS.
+            if (!isOutOfStock) {
+                 wishlistBtn.className = `btn-main wishlist-btn ${isWished ? 'active' : ''}`;
+                 wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:${heartColor};"></i> ${isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
+                 wishlistBtn.onclick = () => toggleWishlist(dishKey);
+            } else {
+                 // If OOS, keep the disabled state set in showProductDetail
+                 wishlistBtn.className = `btn-main wishlist-btn`;
+                 wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:#ccc;"></i> Add to Wishlist (OOS)`;
+                 wishlistBtn.onclick = () => alert("Cannot add. Product is Out of Stock.");
+            }
         }
 
         // PDP Slider JS
@@ -2259,6 +2437,12 @@ const firebaseConfig = {
                  return;
              }
              if (currentPdpDish) {
+                 // NEW: OOS check (redundant but safe)
+                 if (currentPdpDish.isOutOfStock) {
+                      alert("Yeh product abhi Out of Stock hai aur order confirm nahi ho sakta.");
+                      return;
+                 }
+                 
                  // Check if the current cart quantity + pdpQuantity exceeds MAX_ITEM_QTY for this item
                  const existingItem = cart.find(i=>i.id===currentPdpDish.key);
                  const currentTotal = existingItem ? existingItem.quantity : 0;
@@ -2268,6 +2452,7 @@ const firebaseConfig = {
                       return;
                  }
                  
+                 // NOTE: The third argument 'event' is not passed here, as it's not needed for prevention.
                  window.addToCart(currentPdpDish.key, pdpQuantity);
                  alert(`${pdpQuantity} x ${currentPdpDish.name} added to cart!`);
                  showPage('cartPage');
@@ -2617,6 +2802,7 @@ const firebaseConfig = {
                     const finalPriceBeforeDiscount = parseFloat(priceObj.final || 0);
                     d.price = priceObj; // Keep the full object
                     d.customerPrice = finalPriceBeforeDiscount * (1 - (d.discount || 0) / 100); 
+                    d.isOutOfStock = d.isOutOfStock || false; // Ensure OOS status exists
                 });
             }
             
