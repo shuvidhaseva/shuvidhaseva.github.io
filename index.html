@@ -309,23 +309,6 @@
             line-height: 1;
         }
 
-        /* NEW: Out of stock logic */
-        .card.out-of-stock {
-            opacity: 0.5;
-            pointer-events: none; /* Disable click on the card itself */
-        }
-        .out-of-stock-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1em;
-            font-weight: 700;
-            color: var(--danger);
-            z-index: 10;
-        }
-        /* END NEW: Out of stock logic */
-
         /* --- UPDATED: PURPLE NAV & FLOATING CART --- */
         nav {
             /* MODIFIED: Changed to 'fixed' to prevent it from moving up when keyboard is open */
@@ -879,8 +862,7 @@
                             <button id="pdpQtyPlus"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <!-- NEW: Warning text for stock -->
-                    <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> 
+                    <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> <!-- MODIFIED WARNING TEXT -->
 
                     <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
                         <i class="fas fa-shopping-basket"></i> Add to Cart (Max 5) <!-- MODIFIED BUTTON TEXT -->
@@ -922,15 +904,10 @@
                 <p id="order-constraint-warning" style="color:var(--danger); text-align:center; margin-bottom:15px; display:none;">
                     Minimum order: 3 items AND ₹50.00
                 </p>
-                <!-- NEW: Free delivery message -->
-                <p id="free-delivery-message" style="color:var(--success); text-align:center; margin-bottom:15px; display:none;">
-                    You qualify for free delivery!
-                </p>
                 <div id="cartItemsContainer"></div>
                 <div id="cart-summary" style="margin-top:30px; border-top:1px solid var(--border-color); padding-top:20px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Subtotal</span><span id="subtotal-price">₹0.00</span></div>
-                    <!-- NEW: Delivery fee display -->
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Delivery Fee</span><span id="delivery-fee-display">₹10.00</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Delivery Fee</span><span>₹10.00</span></div>
                     <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.4em; color:#2d3436; margin-top:10px;"><span>Total</span><span id="total-price">₹10.00</span></div>
                     <button class="btn-main" id="goToCheckoutBtn" style="margin-top:25px;">Proceed to Checkout</button>
                 </div>
@@ -1202,10 +1179,6 @@ const firebaseConfig = {
         const MIN_ORDER_AMOUNT = 50;
         const MAX_ITEM_QTY = 5; // NEW: Maximum quantity per item (Customer Request)
         
-        // NEW: Delivery Fee Config (will be fetched from Admin settings)
-        let adminDeliveryFee = 10.00; // Default delivery fee
-        let freeDeliveryThreshold = 0; // Default threshold (0 = no free delivery)
-
         // --- UPDATED DATA PLACEHOLDERS (Fast Food, Grocery, Treats, with new images) ---
         // Image URLs are simulated or from placeholder services.
         const placeholderCategories = [
@@ -1234,8 +1207,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png", 
                 images: ["https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png"], 
                 categoryId: "fastfood", 
-                pincode: "ALL" ,
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Fast Food (Samosa - Updated URL)
             { 
@@ -1249,8 +1221,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg", 
                 images: ["https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg"], 
                 categoryId: "fastfood", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Grocery (Fourtun/kachi Ghani - Updated URL)
             { 
@@ -1264,8 +1235,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg", 
                 images: ["https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg"], 
                 categoryId: "grocery", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Grocery (Fourtun/Soya health  - Updated URL)
             { 
@@ -1279,8 +1249,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg", 
                 images: ["https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg"], 
                 categoryId: "grocery", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Treats (Cadbury Silk Oreo - Updated URL)
             { 
@@ -1294,8 +1263,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg", 
                 images: ["https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg"], 
                 categoryId: "treats", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
         ];
         
@@ -1306,33 +1274,27 @@ const firebaseConfig = {
             imageUrl: "https://cdn-icons-png.flaticon.com/512/4140/4140037.png" 
         };
 
-        // --- THEME & SETTINGS COLOR LINKING LOGIC (NEW) ---
-        async function fetchThemeAndDeliverySettings() {
+        // --- THEME COLOR LINKING LOGIC (NEW) ---
+        async function fetchThemeSettings() {
              try {
-                 const settingsRef = ref(db, 'settings');
-                 const snapshot = await get(settingsRef);
-                 const settings = snapshot.val() || {};
-
-                 // 1. Theme Color
-                 const customerThemeColor = settings.theme?.customerThemeColor;
+                 const themeRef = ref(db, 'settings/theme/customerThemeColor');
+                 const snapshot = await get(themeRef);
+                 const customerThemeColor = snapshot.val();
+                 
                  if (customerThemeColor && /^#[0-9A-F]{6}$/i.test(customerThemeColor)) {
+                     // Apply the fetched color to the CSS variables
                      document.documentElement.style.setProperty('--primary-color', customerThemeColor);
+                     // Set a simple gradient based on the new primary color (Note: Gradient should ideally be calculated)
+                     // For simplicity, using a slightly darker version for the gradient end if possible, otherwise use the same color
                      const fallbackGradientEnd = customerThemeColor; 
                      document.documentElement.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${customerThemeColor} 0%, ${fallbackGradientEnd} 100%)`);
                  }
-                 
-                 // 2. Delivery Fee Settings
-                 adminDeliveryFee = parseFloat(settings.delivery?.deliveryFee || 10.00);
-                 freeDeliveryThreshold = parseFloat(settings.delivery?.freeDeliveryThreshold || 0);
-
              } catch (e) {
-                 console.error("Failed to fetch settings:", e);
-                 // Fallback to defaults if fetch fails
-                 adminDeliveryFee = 10.00;
-                 freeDeliveryThreshold = 0;
+                 console.error("Failed to fetch theme settings:", e);
+                 // Fallback to default CSS variables if fetch fails
              }
         }
-        // --- END THEME & SETTINGS LINKING LOGIC ---
+        // --- END THEME COLOR LINKING LOGIC ---
 
 
         // --- UTILITY & NAVIGATION ---
@@ -1523,7 +1485,7 @@ const firebaseConfig = {
 
         onAuthStateChanged(auth, (user) => {
             // NEW: Fetch theme settings as one of the first things to run
-            fetchThemeAndDeliverySettings(); 
+            fetchThemeSettings(); 
             
             currentUser = user;
             if (user) {
@@ -1660,12 +1622,10 @@ const firebaseConfig = {
                  console.log(`Minimum order: ${MIN_ORDER_QTY} items AND ₹${MIN_ORDER_AMOUNT.toFixed(2)}.`); return;
             }
             
-            // Calculate final delivery fee based on settings and order total
-            const deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : adminDeliveryFee;
-            const total = (subtotal + deliveryFee).toFixed(2);
-            
             // Construct the address using the (possibly) changed fields
             const fullAddress = `${addressFullLine}, ${stateDistrict} (Pincode: ${pincode}) - Instructions: ${instructions || 'None'}`;
+            const deliveryFee = 10.00;
+            const total = (subtotal + deliveryFee).toFixed(2);
             
             // FIX: Ensure cart items are copied correctly
             const itemsToStore = cart.map(item => {
@@ -1739,7 +1699,7 @@ const firebaseConfig = {
             
             const orderBtn = document.getElementById('placeOrderBtn');
             const warning = document.getElementById('order-constraint-warning');
-            const freeDeliveryMsg = document.getElementById('free-delivery-message');
+
 
             // Cart Page Check (Checks Cart constraints only)
             if (document.getElementById('cartPage').classList.contains('active')) {
@@ -1749,18 +1709,10 @@ const firebaseConfig = {
                     warning.innerHTML = `Minimum order: ${MIN_ORDER_QTY} items AND ₹${MIN_ORDER_AMOUNT.toFixed(2)}`;
                     document.getElementById('goToCheckoutBtn').disabled = true;
                     document.getElementById('goToCheckoutBtn').style.opacity = '0.6';
-                    freeDeliveryMsg.style.display = 'none';
                 } else {
                     warning.style.display = 'none';
                     document.getElementById('goToCheckoutBtn').disabled = false;
                     document.getElementById('goToCheckoutBtn').style.opacity = '1';
-                    
-                    // NEW: Show free delivery message
-                    if (subtotal >= freeDeliveryThreshold) {
-                         freeDeliveryMsg.style.display = 'block';
-                    } else {
-                         freeDeliveryMsg.style.display = 'none';
-                    }
                 }
             }
 
@@ -1795,12 +1747,6 @@ const firebaseConfig = {
              
             const dish = allDishesData.find(d => d.key === dishKey);
             if (!dish) { console.error("Dish not found for key:", dishKey); return; }
-
-            // NEW: Check stock status for wishlist
-            if (dish.isInStock === false) {
-                 alert('This product is currently out of stock.');
-                 return;
-            }
 
             const wishlistProductRef = ref(db, `users/${currentUser.uid}/wishlist/${dishKey}`);
             
@@ -1918,24 +1864,16 @@ const firebaseConfig = {
 
                 const discountTag = discount > 0 ? `<div class="discount-tag">-${discount}%</div>` : ''; // NEW
 
-                // NEW: Out of stock logic
-                const isInStock = d.isInStock === undefined ? true : d.isInStock; // Assume true if not specified
-                const stockOverlay = !isInStock ? '<div class="out-of-stock-overlay">Out of Stock</div>' : '';
-                const cardClass = !isInStock ? 'card out-of-stock' : 'card';
-                // Click handler behavior for out of stock products (disabled, but the card still exists)
-                const clickHandler = isInStock ? `showProductDetail('${d.key}')` : `alert('This product is out of stock.')`;
-
+                // Card is now clickable via showProductDetail, with event.stopPropagation() on buttons
                 c.innerHTML += `
-                    <div class="${cardClass}" onclick="${clickHandler}"> 
-                        ${stockOverlay}
+                    <div class="card" onclick="showProductDetail('${d.key}')"> 
                         ${discountTag}
                         <img src="${dishImage}" alt="${d.name}">
                         <div class="card-actions">
                             <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
                                 <i class="fas ${wishIcon}"></i>
                             </button>
-                            <!-- NEW: Disable add button if out of stock -->
-                            <button class="add-btn" ${!isInStock ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
+                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -2036,7 +1974,6 @@ const firebaseConfig = {
                     dish.discount = dish.discount || 0;
                     dish.unit = dish.unit || 'Unit N/A'; // Using 'unit' field from admin
                     dish.description = dish.description || 'No description available.';
-                    dish.isInStock = dish.isInStock === undefined ? true : dish.isInStock; // NEW: Read stock status
                     
                     // FIX: Ensure correct price object is used/created
                     dish.price = dish.price && typeof dish.price === 'object' 
@@ -2123,12 +2060,6 @@ const firebaseConfig = {
             const dish = allDishesData.find(d => d.key === id);
             if (!dish) { console.error("Dish not found for key:", id); return; }
 
-            // NEW: Check stock status
-            if (dish.isInStock === false) {
-                 alert('This product is currently out of stock.');
-                 return;
-            }
-
             // FIX: Use customerPrice for the price in the cart
             const discountedPrice = parseFloat(dish.customerPrice || 0);
 
@@ -2209,13 +2140,9 @@ const firebaseConfig = {
                 });
             }
 
-            // NEW: Delivery Fee Calculation Logic
-            const deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : adminDeliveryFee;
+            const deliveryFee = 10.00;
             const total = subtotal + deliveryFee;
-            
-            // NEW: Update UI elements with new calculations
             document.getElementById('subtotal-price').textContent = `₹${subtotal.toFixed(2)}`;
-            document.getElementById('delivery-fee-display').textContent = deliveryFee === 0 ? 'Free' : `₹${deliveryFee.toFixed(2)}`;
             document.getElementById('total-price').textContent = `₹${total.toFixed(2)}`;
             document.getElementById('cart-count').textContent = cart.reduce((a, b) => a + b.quantity, 0);
 
@@ -2263,23 +2190,9 @@ const firebaseConfig = {
             pdpQuantity = 1; // MODIFIED: Reset quantity to minimum of 1
             document.getElementById('pdpQuantity').textContent = pdpQuantity;
             
-            // NEW: Stock check logic for PDP
-            const isInStock = currentPdpDish.isInStock === undefined ? true : currentPdpDish.isInStock;
-            const pdpAddToCartBtn = document.getElementById('pdpAddToCartBtn');
-            const pdpMinQtyWarning = document.getElementById('pdpMinQtyWarning');
-
-            if (!isInStock) {
-                pdpAddToCartBtn.disabled = true;
-                pdpAddToCartBtn.textContent = 'Out of Stock';
-                pdpMinQtyWarning.textContent = 'This product is currently out of stock.';
-                pdpMinQtyWarning.style.color = 'var(--danger)';
-            } else {
-                pdpAddToCartBtn.disabled = false;
-                pdpAddToCartBtn.textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
-                pdpMinQtyWarning.textContent = `प्रति वस्तु अधिकतम खरीद मात्रा: ${MAX_ITEM_QTY}`;
-                pdpMinQtyWarning.style.color = 'var(--danger)';
-            }
-            // END NEW: Stock check logic for PDP
+            // NEW: Set initial text for button and warning
+            document.getElementById('pdpAddToCartBtn').textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
+            document.getElementById('pdpMinQtyWarning').textContent = `प्रति वस्तु अधिकतम खरीद मात्रा: ${MAX_ITEM_QTY}`;
 
             // Image Slider setup
             const images = currentPdpDish.images || [currentPdpDish.imageUrl || 'https://via.placeholder.com/150'];
