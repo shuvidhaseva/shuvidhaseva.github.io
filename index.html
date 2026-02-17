@@ -413,7 +413,7 @@
             padding: 12px; border-radius: 15px; margin-bottom: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
-        .cart-item img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
+        .cart-item img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; margin-right: 15px;}
         .qty-controls { display: flex; align-items: center; gap: 8px; background: #f5f6fa; padding: 5px 10px; border-radius: 20px;}
         .qty-controls button {
             background: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
@@ -907,7 +907,7 @@
                             <button id="pdpQtyPlus"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <!-- NEW: Warning text for stock -->
+                    <!-- NEW: Warning text for minimum quantity -->
                     <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> 
 
                     <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
@@ -1610,6 +1610,7 @@
         async function handleGoogleSignIn() {
             const provider = new GoogleAuthProvider();
             try {
+                // THIS IS THE CORRECTED LINE: Using signInWithPopup instead of signInWithRedirect
                 const result = await signInWithPopup(auth, provider);
                 const user = result.user;
 
