@@ -413,7 +413,7 @@
             padding: 12px; border-radius: 15px; margin-bottom: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
-        .cart-item img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; margin-right: 15px;}
+        .cart-item img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
         .qty-controls { display: flex; align-items: center; gap: 8px; background: #f5f6fa; padding: 5px 10px; border-radius: 20px;}
         .qty-controls button {
             background: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
@@ -638,7 +638,7 @@
 
     <div class="mobile-container">
 
-        <!-- MODIFIED: DETAILED LOGIN PAGE (Only Google Sign-In Visible) -->
+        <!-- DETAILED LOGIN PAGE -->
         <div id="loginPage" class="page">
             <div class="auth-content">
                 <div class="auth-card">
@@ -647,22 +647,29 @@
                             <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
                         </div>
                         <h1>Welcome Back</h1>
-                        <p>Sign in using your Google Account</p> 
+                        <p>Sign in with your Email and Password</p> 
                     </div>
                     
                     <div class="auth-body">
                         <p id="auth-error"></p>
                         
-                        <!-- GOOGLE LOGIN BUTTON ONLY -->
-                        <button class="btn-main" id="googleLoginBtn" style="background: #ffffff; color: #444; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top:0;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google" style="width: 20px; margin-right: 10px;">
-                            Sign in with Google
-                        </button>
-                        <!-- END GOOGLE LOGIN BUTTON ONLY -->
-
-                        <!-- MODIFIED: Switch Text -->
+                        <!-- LOGIN FORM -->
+                        <form id="login-form">
+                            <div class="input-group">
+                                <label class="input-label">* EMAIL ADDRESS</label>
+                                <input type="email" id="login-email" class="auth-input" placeholder="name@example.com" required>
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">* PASSWORD</label>
+                                <input type="password" id="login-password" class="auth-input" placeholder="********" required>
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <button class="btn-main" type="submit" id="loginBtn">Login to Shuvidha Seva</button> 
+                        </form>
+                        
                         <div class="auth-switch">
-                            Don't have an account? <a href="#" id="gotoRegister">Register via Google</a>
+                            Don't have an account? <a href="#" id="gotoRegister">Register</a>
                         </div>
                         <!-- NEW: T&C and Privacy Links -->
                         <div style="text-align:center; margin-top:20px; font-size:0.8em; color:#636e72;">
@@ -677,7 +684,7 @@
             </div>
         </div>
 
-        <!-- MODIFIED: DETAILED REGISTER PAGE (Only Google Sign-In Visible) -->
+        <!-- DETAILED REGISTER PAGE -->
         <div id="registerPage" class="page">
              <div class="auth-content">
                 <div class="auth-card" style="max-height: 80vh; overflow-y: auto; padding-bottom: 20px;">
@@ -686,26 +693,72 @@
                             <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
                         </div>
                         <h1>Create Account</h1>
-                        <p>Sign up using your Google Account</p>
+                        <p>Join the Shuvidha Seva community today!</p>
                     </div>
                     
                     <div class="auth-body" style="padding-top: 0;">
-                        
-                        <!-- GOOGLE REGISTER BUTTON ONLY -->
-                        <button class="btn-main" id="googleRegisterBtn" style="background: #ffffff; color: #444; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 0;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google" style="width: 20px; margin-right: 10px;">
-                            Sign up with Google
-                        </button>
-                        <!-- END GOOGLE REGISTER BUTTON ONLY -->
-                        
-                        <!-- MODIFIED: OR Divider and Switch Text -->
-                        <div class="or-divider" style="margin: 15px 0;">OR</div>
+                        <!-- REGISTER FORM -->
+                        <form id="register-form">
+                            <p style="font-size: 0.8em; color: var(--danger); text-align: center; margin-bottom: 20px;">* All fields are required</p>
+                            <!-- Name -->
+                            <div class="input-group">
+                                <label class="input-label">* FULL NAME</label>
+                                <input type="text" id="regName" class="auth-input" placeholder="John Doe" required>
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <!-- Mobile Number -->
+                            <div class="input-group">
+                                <label class="input-label">* MOBILE NUMBER</label>
+                                <input type="tel" id="regMobile" class="auth-input" placeholder="9876543210" maxlength="10" required>
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <!-- Email -->
+                            <div class="input-group">
+                                <label class="input-label">* EMAIL ADDRESS</label>
+                                <input type="email" id="registerEmail" class="auth-input" placeholder="name@example.com" required>
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <!-- Password -->
+                            <div class="input-group">
+                                <label class="input-label">* PASSWORD</label>
+                                <input type="password" id="registerPassword" class="auth-input" placeholder="********" required>
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            
+                            <!-- NEW ADDRESS FIELDS -->
+                            <h3 style="font-size:1.1em; font-weight:700; margin-top:30px; margin-bottom:15px; color:var(--primary-color);">Delivery Address</h3>
+                            
+                            <div class="input-group">
+                                <label class="input-label">* PINCODE</label>
+                                <input type="tel" id="regPincode" class="auth-input no-icon" placeholder="Enter Pincode" maxlength="6" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">* STATE</label>
+                                <input type="text" id="regState" class="auth-input no-icon" placeholder="State Name" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">* DISTRICT</label>
+                                <input type="text" id="regDistrict" class="auth-input no-icon" placeholder="District Name" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">* VILLAGE / BUILDING / HOUSE</label>
+                                <input type="text" id="regAddressLine" class="auth-input no-icon" placeholder="Flat No, Building Name, Village" required>
+                            </div>
+                            <!-- END NEW ADDRESS FIELDS -->
+
+
+                            <button class="btn-main" type="submit" id="registerBtn">Sign Up Now</button> 
+                        </form>
+
                         <div class="auth-switch">
-                            Already have an account? <a href="#" id="gotoLogin">Login via Google</a>
-                            <!-- NEW: Forgot Password link (removed as email/pass form is gone) -->
-                            <!-- <p style="margin-top: 10px; font-size: 0.9em;">
+                            Already have an account? <a href="#" id="gotoLogin">Login</a>
+                            <!-- NEW: Forgot Password link -->
+                            <p style="margin-top: 10px; font-size: 0.9em;">
                                 Forgot your password? <a href="#" onclick="alert('Password reset link has been sent to your email (Simulated).');">Reset Password</a>
-                            </p> -->
+                            </p>
                         </div>
                         <!-- NEW: T&C and Privacy Links -->
                         <div style="text-align:center; margin-top:20px; font-size:0.8em; color:#636e72;">
@@ -720,7 +773,7 @@
             </div>
         </div>
 
-        <!-- HOME (No change to this block) -->
+        <!-- HOME -->
         <div id="appContainer" class="page active">
             <header class="app-header">
                 <div class="header-top">
@@ -1088,16 +1141,17 @@
     <script>
         // !! IMPORTANT: REPLACE THESE VALUES WITH YOUR ACTUAL FIREBASE PROJECT CONFIGURATION !!
         // Configuration matched with Admin App
-        const firebaseConfig = {
-          apiKey: "AIzaSyD2ZpkPF0EIT4uK0YULGgBvfU7kHeCml2Q",
-          authDomain: "shuvidha-seva-32df0.firebaseapp.com",
-          databaseURL: "https://shuvidha-seva-32df0-default-rtdb.firebaseio.com",
-          projectId: "shuvidha-seva-32df0",
-          storageBucket: "shuvidha-seva-32df0.firebasestorage.app",
-          messagingSenderId: "508915247632",
-          appId: "1:508915247632:web:91c3df82b4eae3c750f895",
-          measurementId: "G-MQ6BPYD4EP"
-        };
+const firebaseConfig = {
+  apiKey: "AIzaSyD2ZpkPF0EIT4uK0YULGgBvfU7kHeCml2Q",
+  authDomain: "shuvidha-seva-32df0.firebaseapp.com",
+  databaseURL: "https://shuvidha-seva-32df0-default-rtdb.firebaseio.com",
+  projectId: "shuvidha-seva-32df0",
+  storageBucket: "shuvidha-seva-32df0.firebasestorage.app",
+  messagingSenderId: "508915247632",
+  appId: "1:508915247632:web:91c3df82b4eae3c750f895",
+  measurementId: "G-MQ6BPYD4EP"
+};
+
     </script>
     
     <!-- Firebase SDK (v9 Syntax) -->
@@ -1110,10 +1164,7 @@
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             signOut,
-            sendPasswordResetEmail, // For password reset (although only simulated message is given in UI)
-            // NEW: Add Google Auth provider
-            GoogleAuthProvider,
-            signInWithPopup
+            sendPasswordResetEmail // For password reset (although only simulated message is given in UI)
         } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { 
             getDatabase, 
@@ -1180,7 +1231,7 @@
                 unit: "1 Combo", 
                 description: "Extra large double patty burger with crispy fries and a soft drink.", 
                 // Using the isolated fast food combo image
-                imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png",
+                imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png", 
                 images: ["https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png"], 
                 categoryId: "fastfood", 
                 pincode: "ALL" ,
@@ -1335,6 +1386,32 @@
             }
         };
         
+        // NEW: Auth-checking navigation handler for restricted elements
+        const authCheckAndNavigate = (targetPage) => {
+             if (!currentUser) {
+                  showPage('loginPage');
+             } else {
+                  showPage(targetPage);
+             }
+        }
+
+        const showError = (msg) => {
+            const err = document.getElementById('auth-error');
+            err.textContent = msg;
+            err.style.display = 'block';
+        }
+
+        // Global event listeners for navigation (non-restricted pages like Terms/Privacy/Back Buttons)
+        document.querySelectorAll('[data-target], [data-page]').forEach(b => 
+            b.addEventListener('click', (e) => {
+                const target = e.currentTarget.dataset.target || e.currentTarget.dataset.page;
+                // Only allow direct navigation if it's a back button or an unrestricted page
+                if(target && target !== 'ordersPage' && target !== 'wishlistPage' && target !== 'profilePage') {
+                    showPage(target);
+                }
+            })
+        );
+        
         // NEW: Event listeners for Auth-restricted elements
         document.getElementById('cartFabBtn').onclick = () => authCheckAndNavigate('cartPage');
         document.getElementById('ordersNavBtn').onclick = () => authCheckAndNavigate('ordersPage');
@@ -1374,9 +1451,75 @@
 
 
         // --- AUTHENTICATION (v9 Syntax) ---
-        // *** REMOVED: document.getElementById('login-form').addEventListener('submit', ...) ***
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true; btn.textContent = 'Signing In...'; showError("Please wait...");
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                btn.disabled = false; btn.textContent = 'Login to Shuvidha Seva';
+                showError("Login Failed: Invalid email or password.");
+                console.error("Login Error:", error.message);
+            }
+        });
 
-        // *** REMOVED: document.getElementById('register-form').addEventListener('submit', ...) ***
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const mobile = document.getElementById('regMobile').value.trim();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const pincode = document.getElementById('regPincode').value.trim();
+            const state = document.getElementById('regState').value;
+            const district = document.getElementById('regDistrict').value;
+            const addressLine = document.getElementById('regAddressLine').value;
+
+            const btn = document.getElementById('registerBtn');
+            if(!name || !mobile || !email || !password || !pincode || !state || !district || !addressLine) {
+                showError("All fields marked with * are required."); return;
+            }
+            if(mobile.length !== 10 || isNaN(mobile)) {
+                showError("Please enter a valid 10-digit mobile number."); return;
+            }
+            if(pincode.length !== 6 || isNaN(pincode)) {
+                showError("Please enter a valid 6-digit pincode."); return;
+            }
+            if(password.length < 6) {
+                showError("Password must be at least 6 characters."); return;
+            }
+
+            btn.disabled = true; btn.textContent = 'Creating Account...'; showError("Please wait...");
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                // v9: Use user.uid for ref
+                await set(ref(db, 'users/' + user.uid), { 
+                    mobile: mobile,
+                    name: name,
+                    email: email,
+                    pincode: pincode,
+                    address: { state: state, district: district, line: addressLine },
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Reset form fields
+                e.target.reset();
+
+            } catch (error) {
+                btn.disabled = false; btn.textContent = 'Sign Up Now';
+                if (error.code === 'auth/email-already-in-use') {
+                    // FIX: Informative message for existing email
+                    showError("This email is already registered. Please use the Login tab or the 'Reset Password' link below.");
+                } else {
+                    showError("Registration Failed: " + error.message);
+                }
+                console.error("Registration Error:", error.message);
+            }
+        });
 
         onAuthStateChanged(auth, (user) => {
             // NEW: Fetch theme settings as one of the first things to run
@@ -1406,46 +1549,6 @@
                 }
             }
         });
-        
-        // --- NEW: GOOGLE SIGN-IN LOGIC ---
-        async function handleGoogleSignIn() {
-            const provider = new GoogleAuthProvider();
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-
-                // Check if user is new or existing in our database
-                const userRef = ref(db, 'users/' + user.uid);
-                const snapshot = await get(userRef);
-
-                if (!snapshot.exists()) {
-                    // User is new, save their Google data to our DB
-                    // Note: Google doesn't provide mobile/pincode, user must add it later
-                    await set(userRef, {
-                        name: user.displayName || 'Google User',
-                        email: user.email,
-                        mobile: '', // User needs to update this
-                        pincode: '', // User needs to update this
-                        address: { state: '', district: '', line: '' },
-                        createdAt: new Date().toISOString()
-                    });
-                     // Let the user know they need to complete their profile
-                    alert("Welcome! Please go to your profile to complete your address and mobile number for deliveries.");
-                }
-                // For existing users, onAuthStateChanged will handle the rest.
-                // The page will automatically navigate to 'appContainer'.
-
-            } catch (error) {
-                console.error("Google Sign-In Error:", error);
-                // NOTE: This is where the user sees the error if it happens after selection
-                showError("Google Sign-In failed. Please ensure your browser allows pop-ups and third-party cookies for Firebase/Google Auth. (Error: " + error.code + ")");
-            }
-        }
-
-        // Attach the handler to both Google buttons
-        document.getElementById('googleLoginBtn').onclick = handleGoogleSignIn;
-        document.getElementById('googleRegisterBtn').onclick = handleGoogleSignIn;
-        // --- END GOOGLE SIGN-IN LOGIC ---
 
         // --- USER DATA & PINCODE LOGIC (Auth Fix Applied Here) ---
         async function fetchUserPincodeAndData() {
@@ -1484,7 +1587,7 @@
                  } else {
                      // Fallback if no user data found (shouldn't happen for a logged-in user who registered)
                      userData = {
-                         name: currentUser.displayName || currentUser.email.split('@')[0],
+                         name: currentUser.email.split('@')[0],
                          mobile: "N/A",
                          email: currentUser.email,
                          pincode: "N/A",
@@ -1499,7 +1602,7 @@
                  console.error("Failed to fetch user data:", e);
                  // Fallback: If DB fetch fails, populate minimal data from auth object
                  userData = {
-                     name: currentUser.displayName || currentUser.email.split('@')[0],
+                     name: currentUser.email.split('@')[0],
                      mobile: "N/A",
                      email: currentUser.email,
                      pincode: "N/A",
@@ -1513,7 +1616,7 @@
         function loadCheckoutAddress() {
              // Load registered data into editable fields as default
             if (userData && userData.address) {
-                document.getElementById('addressName').value = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = userData.mobile || '';
                 document.getElementById('addressPincode').value = userData.pincode || '';
                 // State/District remain read-only, pulled from registration/profile
@@ -1522,7 +1625,7 @@
                 document.getElementById('addressInstructions').value = ''; // Clear instructions
             } else {
                 // Clear fields if address is missing so user must input it
-                document.getElementById('addressName').value = currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = '';
                 document.getElementById('addressPincode').value = '';
                 document.getElementById('addressStateDistrict').value = 'Address not set. Update in Profile.';
@@ -1707,7 +1810,7 @@
                  await set(wishlistProductRef, { 
                     key: dish.key, // FIX: Ensure key is saved in the object for retrieval
                     name: dish.name, 
-                    // FIX: Use the discounted price for saving/display (from the modified object)
+                    // FIX: Use the discounted customerPrice for saving/display (from the modified object)
                     price: parseFloat(dish.customerPrice || 0), 
                     imageUrl: dish.images?.[0] || dish.imageUrl,
                     discount: dish.discount || 0,
@@ -1718,7 +1821,7 @@
 
         function listenForWishlistUpdates() {
             if (!currentUser) return;
-            // v9: Use onValue for live updates
+            // v9: Use onValue
             onValue(ref(db, `users/${currentUser.uid}/wishlist`), (snapshot) => {
                 wishlist = []; 
                 if (snapshot.exists()) {
@@ -1851,7 +1954,7 @@
             
             if(categoriesList.length === 0) { 
                 c.innerHTML = '<p style="padding:10px; color:#666; width:100%; text-align:center; font-style:italic;">Admin has not added any categories yet. Please wait.</p>'; 
-                return; 
+                return;
             }
             
             // --- MODIFIED: ADD 'ALL' CATEGORY FIRST ---
@@ -1968,7 +2071,16 @@
             } catch (error) {
                 console.error("Error fetching app data:", error);
                 // Use placeholders on error
-                allDishesData = initialDishes; // Use the placeholder data defined globally
+                allDishesData = placeholderDishes.map(d => {
+                    const priceObj = d.price;
+                    const finalPriceBeforeDiscount = parseFloat(priceObj.final || 0);
+                    // Add customerPrice property to placeholder dishes
+                    return { 
+                        ...d, 
+                        price: priceObj, // Keep the full object
+                        customerPrice: finalPriceBeforeDiscount * (1 - (d.discount || 0) / 100), 
+                    };
+                });
                 renderCategories(placeholderCategories);
                 showAllDishes();
                 renderSlider(placeholderSliderImages);
@@ -2265,7 +2377,7 @@
         function loadProfilePage() {
             if(currentUser && userData) {
                 // FIX: Use full userData object
-                document.getElementById('profileUserName').textContent = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('profileUserName').textContent = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('profileUserEmail').textContent = userData.email || 'N/A';
                 
                 const mobile = userData.mobile || 'N/A';
