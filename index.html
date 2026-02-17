@@ -242,7 +242,7 @@
         /* --- END MODIFICATION 1 --- */
 
         .card {
-            flex-shrink: 0; /* Important for horizontal scroll children */
+            flex-shrink: 0; /* Important for horizontal-scroll children */
             width: 150px; /* Default width for horizontal-scroll */
             background-color: var(--white);
             border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
@@ -1138,8 +1138,6 @@
             <!-- UPDATED CONTENT END -->
         </div>
         <!-- END NEW: PRIVACY POLICY PAGE -->
-        
-        <!-- REMOVED: SUPPORT PAGE -->
 
         <!-- ORDERS -->
         <div id="ordersPage" class="page">
@@ -1171,7 +1169,7 @@
         // Configuration matched with Admin App
         const firebaseConfig = {
           apiKey: "AIzaSyD2ZpkPF0EIT4uK0YULGgBvfU7kHeCml2Q",
-          authDomain: "shuvidhaseva.github.io",
+          authDomain: "shuvidha-seva-32df0.firebaseapp.com",
           databaseURL: "https://shuvidha-seva-32df0-default-rtdb.firebaseio.com",
           projectId: "shuvidha-seva-32df0",
           storageBucket: "shuvidha-seva-32df0.firebasestorage.app",
@@ -1223,10 +1221,6 @@
         let ordersListener = null;
         let selectedPaymentMethod = 'COD'; // Fixed to COD
         
-        let currentPdpDish = null; // NEW: Store the currently viewed dish object for PDP
-        let pdpQuantity = 1; // MODIFIED: Start at minimum quantity of 1 for PDP
-        let pdpAutoScrollInterval; // NEW: For auto-scroll
-
         // MODIFIED: Updated Minimum Order Constants
         const MIN_ORDER_QTY = 3; 
         const MIN_ORDER_AMOUNT = 50;
@@ -1416,12 +1410,12 @@
             }
         };
         
-        // NEW: Auth-checking navigation handler for restricted elements
+        // NEW: Event listeners for Auth-restricted elements
         const authCheckAndNavigate = (targetPage) => {
              if (!currentUser) {
-                  showPage('loginPage');
+                 showPage('loginPage');
              } else {
-                  showPage(targetPage);
+                 showPage(targetPage);
              }
         }
 
@@ -1926,7 +1920,7 @@
 
         function listenForWishlistUpdates() {
             if (!currentUser) return;
-            // v9: Use onValue
+            // v9: Use onValue for live updates
             onValue(ref(db, `users/${currentUser.uid}/wishlist`), (snapshot) => {
                 wishlist = []; 
                 if (snapshot.exists()) {
@@ -2059,7 +2053,7 @@
             
             if(categoriesList.length === 0) { 
                 c.innerHTML = '<p style="padding:10px; color:#666; width:100%; text-align:center; font-style:italic;">Admin has not added any categories yet. Please wait.</p>'; 
-                return;
+                return; 
             }
             
             // --- MODIFIED: ADD 'ALL' CATEGORY FIRST ---
