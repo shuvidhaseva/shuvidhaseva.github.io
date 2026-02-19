@@ -149,8 +149,18 @@
             color: #b2bec3; transition: color 0.3s;
         }
         
+        /* MODIFICATION: New style for password toggle icon */
+        .input-group i.password-toggle-icon {
+            left: auto; /* Unset left positioning */
+            right: 15px; /* Position on the right */
+            cursor: pointer; /* Make it look clickable */
+            z-index: 3; /* Ensure it's on top */
+        }
+        
         .auth-input {
-            width: 100%; padding: 15px 15px 15px 45px;
+            width: 100%; 
+            /* MODIFICATION: Added padding-right for toggle icon */
+            padding: 15px 45px 15px 45px;
             background: #f8f9fa; border: 2px solid #f1f2f6;
             border-radius: 12px; font-size: 1em;
             outline: none; transition: all 0.3s; box-sizing: border-box; font-family: 'Poppins', sans-serif; color: #333;
@@ -160,7 +170,9 @@
             /* MODIFIED: Purple Shadow */
             box-shadow: 0 5px 15px rgba(103, 58, 183, 0.1); 
         }
-        .auth-input:focus + i { color: var(--primary-color); } 
+        /* MODIFICATION: Use general sibling selector to color both icons */
+        .auth-input:focus ~ i { color: var(--primary-color); } 
+
         /* NEW: Address input style without icon padding */
          .auth-input.no-icon {
             padding: 15px;
@@ -242,7 +254,7 @@
         /* --- END MODIFICATION 1 --- */
 
         .card {
-            flex-shrink: 0; /* Important for horizontal-scroll children */
+            flex-shrink: 0; /* Important for horizontal scroll children */
             width: 150px; /* Default width for horizontal-scroll */
             background-color: var(--white);
             border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
@@ -413,7 +425,7 @@
             padding: 12px; border-radius: 15px; margin-bottom: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
-        .cart-item img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; margin-right: 15px;}
+        .cart-item img { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
         .qty-controls { display: flex; align-items: center; gap: 8px; background: #f5f6fa; padding: 5px 10px; border-radius: 20px;}
         .qty-controls button {
             background: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
@@ -660,24 +672,16 @@
                                 <input type="email" id="login-email" class="auth-input" placeholder="name@example.com" required>
                                 <i class="fas fa-envelope"></i>
                             </div>
+                            <!-- MODIFIED: Added password toggle icon -->
                             <div class="input-group">
                                 <label class="input-label">* PASSWORD</label>
                                 <input type="password" id="login-password" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <!-- NEW: Password visibility toggle -->
-                                <i class="fas fa-eye toggle-password" style="left: auto; right: 15px; cursor: pointer;"></i>
+                                <i class="fas fa-eye password-toggle-icon" id="toggleLoginPassword"></i>
                             </div>
                             <button class="btn-main" type="submit" id="loginBtn">Login to Shuvidha Seva</button> 
                         </form>
                         
-                        <!-- NEW: OR Divider and Google Login -->
-                        <div class="or-divider">OR</div>
-                        <button class="btn-main" id="googleLoginBtn" style="background: #ffffff; color: #444; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top:0;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google" style="width: 20px; margin-right: 10px;">
-                            Sign in with Google
-                        </button>
-                        <!-- END NEW -->
-
                         <div class="auth-switch">
                             Don't have an account? <a href="#" id="gotoRegister">Register</a>
                         </div>
@@ -719,7 +723,7 @@
                             <!-- Mobile Number -->
                             <div class="input-group">
                                 <label class="input-label">* MOBILE NUMBER</label>
-                                <input type="tel" id="regMobile" class="auth-input" placeholder="9876543210" maxlength="10" required>
+                                <input type="tel" id="regMobile" class="auth-input" placeholder="01234567890" maxlength="10" required>
                                 <i class="fas fa-mobile-alt"></i>
                             </div>
                             <!-- Email -->
@@ -728,21 +732,19 @@
                                 <input type="email" id="registerEmail" class="auth-input" placeholder="name@example.com" required>
                                 <i class="fas fa-envelope"></i>
                             </div>
-                            <!-- Password -->
+                            <!-- MODIFIED: Added password toggle icon -->
                             <div class="input-group">
                                 <label class="input-label">* PASSWORD</label>
                                 <input type="password" id="registerPassword" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <!-- NEW: Password visibility toggle -->
-                                <i class="fas fa-eye toggle-password" style="left: auto; right: 15px; cursor: pointer;"></i>
+                                <i class="fas fa-eye password-toggle-icon" id="toggleRegisterPassword"></i>
                             </div>
-                             
-                            <!-- NEW: Confirm Password -->
+                             <!-- NEW: Added Confirm Password field with toggle -->
                             <div class="input-group">
                                 <label class="input-label">* CONFIRM PASSWORD</label>
                                 <input type="password" id="registerConfirmPassword" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <i class="fas fa-eye toggle-password" style="left: auto; right: 15px; cursor: pointer;"></i>
+                                <i class="fas fa-eye password-toggle-icon" id="toggleRegisterConfirmPassword"></i>
                             </div>
                             
                             <!-- NEW ADDRESS FIELDS -->
@@ -772,14 +774,6 @@
 
                             <button class="btn-main" type="submit" id="registerBtn">Sign Up Now</button> 
                         </form>
-                        
-                        <!-- NEW: OR Divider and Google Register -->
-                        <div class="or-divider" style="margin: 15px 0;">OR</div>
-                        <button class="btn-main" id="googleRegisterBtn" style="background: #ffffff; color: #444; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 0;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google" style="width: 20px; margin-right: 10px;">
-                            Sign up with Google
-                        </button>
-                        <!-- END NEW -->
 
                         <div class="auth-switch">
                             Already have an account? <a href="#" id="gotoLogin">Login</a>
@@ -907,7 +901,7 @@
                             <button id="pdpQtyPlus"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <!-- NEW: Warning text for minimum quantity -->
+                    <!-- NEW: Warning text for stock -->
                     <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> 
 
                     <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
@@ -1138,6 +1132,8 @@
             <!-- UPDATED CONTENT END -->
         </div>
         <!-- END NEW: PRIVACY POLICY PAGE -->
+        
+        <!-- REMOVED: SUPPORT PAGE -->
 
         <!-- ORDERS -->
         <div id="ordersPage" class="page">
@@ -1167,16 +1163,17 @@
     <script>
         // !! IMPORTANT: REPLACE THESE VALUES WITH YOUR ACTUAL FIREBASE PROJECT CONFIGURATION !!
         // Configuration matched with Admin App
-        const firebaseConfig = {
-          apiKey: "AIzaSyD2ZpkPF0EIT4uK0YULGgBvfU7kHeCml2Q",
-          authDomain: "shuvidha-seva-32df0.firebaseapp.com",
-          databaseURL: "https://shuvidha-seva-32df0-default-rtdb.firebaseio.com",
-          projectId: "shuvidha-seva-32df0",
-          storageBucket: "shuvidha-seva-32df0.firebasestorage.app",
-          messagingSenderId: "508915247632",
-          appId: "1:508915247632:web:91c3df82b4eae3c750f895",
-          measurementId: "G-MQ6BPYD4EP"
-        };
+const firebaseConfig = {
+  apiKey: "AIzaSyD2ZpkPF0EIT4uK0YULGgBvfU7kHeCml2Q",
+  authDomain: "shuvidha-seva-32df0.firebaseapp.com",
+  databaseURL: "https://shuvidha-seva-32df0-default-rtdb.firebaseio.com",
+  projectId: "shuvidha-seva-32df0",
+  storageBucket: "shuvidha-seva-32df0.firebasestorage.app",
+  messagingSenderId: "508915247632",
+  appId: "1:508915247632:web:91c3df82b4eae3c750f895",
+  measurementId: "G-MQ6BPYD4EP"
+};
+
     </script>
     
     <!-- Firebase SDK (v9 Syntax) -->
@@ -1189,10 +1186,7 @@
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             signOut,
-            sendPasswordResetEmail, // For password reset (although only simulated message is given in UI)
-            // NEW: Add Google Auth provider
-            GoogleAuthProvider,
-            signInWithPopup
+            sendPasswordResetEmail // For password reset (although only simulated message is given in UI)
         } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { 
             getDatabase, 
@@ -1221,6 +1215,10 @@
         let ordersListener = null;
         let selectedPaymentMethod = 'COD'; // Fixed to COD
         
+        let currentPdpDish = null; // NEW: Store the currently viewed dish object for PDP
+        let pdpQuantity = 1; // MODIFIED: Start at minimum quantity of 1 for PDP
+        let pdpAutoScrollInterval; // NEW: For auto-scroll
+
         // MODIFIED: Updated Minimum Order Constants
         const MIN_ORDER_QTY = 3; 
         const MIN_ORDER_AMOUNT = 50;
@@ -1255,7 +1253,7 @@
                 unit: "1 Combo", 
                 description: "Extra large double patty burger with crispy fries and a soft drink.", 
                 // Using the isolated fast food combo image
-                imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png",
+                imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png", 
                 images: ["https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png"], 
                 categoryId: "fastfood", 
                 pincode: "ALL" ,
@@ -1323,7 +1321,6 @@
             },
         ];
         
-        // Placeholder DP details for 'On Way' status if real DP data is missing
         const simulatedDriver = {
             name: "Rajesh Kumar (Fallback)",
             mobile: "9876543210",
@@ -1410,12 +1407,12 @@
             }
         };
         
-        // NEW: Event listeners for Auth-restricted elements
+        // NEW: Auth-checking navigation handler for restricted elements
         const authCheckAndNavigate = (targetPage) => {
              if (!currentUser) {
-                 showPage('loginPage');
+                  showPage('loginPage');
              } else {
-                 showPage(targetPage);
+                  showPage(targetPage);
              }
         }
 
@@ -1436,29 +1433,6 @@
             })
         );
         
-        // --- NEW: PASSWORD VISIBILITY TOGGLE ---
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('toggle-password')) {
-                // Find the input field. It's not always the direct previous sibling anymore.
-                const inputGroup = e.target.closest('.input-group');
-                if (inputGroup) {
-                    const passwordInput = inputGroup.querySelector('.auth-input');
-                    if (passwordInput) {
-                        if (passwordInput.type === 'password') {
-                            passwordInput.type = 'text';
-                            e.target.classList.remove('fa-eye');
-                            e.target.classList.add('fa-eye-slash');
-                        } else {
-                            passwordInput.type = 'password';
-                            e.target.classList.remove('fa-eye-slash');
-                            e.target.classList.add('fa-eye');
-                        }
-                    }
-                }
-            }
-        });
-
-
         // NEW: Event listeners for Auth-restricted elements
         document.getElementById('cartFabBtn').onclick = () => authCheckAndNavigate('cartPage');
         document.getElementById('ordersNavBtn').onclick = () => authCheckAndNavigate('ordersPage');
@@ -1519,14 +1493,20 @@
             const mobile = document.getElementById('regMobile').value.trim();
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-            // NEW: Get confirm password value
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value; // Get confirm password value
             const pincode = document.getElementById('regPincode').value.trim();
             const state = document.getElementById('regState').value;
             const district = document.getElementById('regDistrict').value;
             const addressLine = document.getElementById('regAddressLine').value;
 
             const btn = document.getElementById('registerBtn');
+            
+            // MODIFICATION: Added password match validation
+            if (password !== confirmPassword) {
+                showError("Passwords do not match. Please try again.");
+                return;
+            }
+
             if(!name || !mobile || !email || !password || !pincode || !state || !district || !addressLine) {
                 showError("All fields marked with * are required."); return;
             }
@@ -1539,13 +1519,6 @@
             if(password.length < 6) {
                 showError("Password must be at least 6 characters."); return;
             }
-
-            // NEW: Add password match validation
-            if (password !== confirmPassword) {
-                showError("Passwords do not match. Please try again.");
-                return;
-            }
-
 
             btn.disabled = true; btn.textContent = 'Creating Account...'; showError("Please wait...");
 
@@ -1605,50 +1578,6 @@
                 }
             }
         });
-        
-        // --- NEW: GOOGLE SIGN-IN LOGIC ---
-        async function handleGoogleSignIn() {
-            const provider = new GoogleAuthProvider();
-            try {
-                // THIS IS THE CORRECTED LINE: Using signInWithPopup instead of signInWithRedirect
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-
-                // Check if user is new or existing in our database
-                const userRef = ref(db, 'users/' + user.uid);
-                const snapshot = await get(userRef);
-
-                if (!snapshot.exists()) {
-                    // User is new, save their Google data to our DB
-                    // Note: Google doesn't provide mobile/pincode, user must add it later
-                    await set(userRef, {
-                        name: user.displayName || 'Google User',
-                        email: user.email,
-                        mobile: '', // User needs to update this
-                        pincode: '', // User needs to update this
-                        address: {
-                            state: '',
-                            district: '',
-                            line: ''
-                        },
-                        createdAt: new Date().toISOString()
-                    });
-                     // Let the user know they need to complete their profile
-                    alert("Welcome! Please go to your profile to complete your address and mobile number for deliveries.");
-                }
-                // For existing users, onAuthStateChanged will handle the rest.
-                // The page will automatically navigate to 'appContainer'.
-
-            } catch (error) {
-                console.error("Google Sign-In Error:", error);
-                showError("Google Sign-In failed. Please try again or use email/password.");
-            }
-        }
-
-        // Attach the handler to both Google buttons
-        document.getElementById('googleLoginBtn').onclick = handleGoogleSignIn;
-        document.getElementById('googleRegisterBtn').onclick = handleGoogleSignIn;
-        // --- END GOOGLE SIGN-IN LOGIC ---
 
         // --- USER DATA & PINCODE LOGIC (Auth Fix Applied Here) ---
         async function fetchUserPincodeAndData() {
@@ -1687,7 +1616,7 @@
                  } else {
                      // Fallback if no user data found (shouldn't happen for a logged-in user who registered)
                      userData = {
-                         name: currentUser.displayName || currentUser.email.split('@')[0],
+                         name: currentUser.email.split('@')[0],
                          mobile: "N/A",
                          email: currentUser.email,
                          pincode: "N/A",
@@ -1702,7 +1631,7 @@
                  console.error("Failed to fetch user data:", e);
                  // Fallback: If DB fetch fails, populate minimal data from auth object
                  userData = {
-                     name: currentUser.displayName || currentUser.email.split('@')[0],
+                     name: currentUser.email.split('@')[0],
                      mobile: "N/A",
                      email: currentUser.email,
                      pincode: "N/A",
@@ -1716,7 +1645,7 @@
         function loadCheckoutAddress() {
              // Load registered data into editable fields as default
             if (userData && userData.address) {
-                document.getElementById('addressName').value = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = userData.mobile || '';
                 document.getElementById('addressPincode').value = userData.pincode || '';
                 // State/District remain read-only, pulled from registration/profile
@@ -1725,7 +1654,7 @@
                 document.getElementById('addressInstructions').value = ''; // Clear instructions
             } else {
                 // Clear fields if address is missing so user must input it
-                document.getElementById('addressName').value = currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = '';
                 document.getElementById('addressPincode').value = '';
                 document.getElementById('addressStateDistrict').value = 'Address not set. Update in Profile.';
@@ -1921,7 +1850,7 @@
 
         function listenForWishlistUpdates() {
             if (!currentUser) return;
-            // v9: Use onValue for live updates
+            // v9: Use onValue
             onValue(ref(db, `users/${currentUser.uid}/wishlist`), (snapshot) => {
                 wishlist = []; 
                 if (snapshot.exists()) {
@@ -2054,7 +1983,7 @@
             
             if(categoriesList.length === 0) { 
                 c.innerHTML = '<p style="padding:10px; color:#666; width:100%; text-align:center; font-style:italic;">Admin has not added any categories yet. Please wait.</p>'; 
-                return; 
+                return;
             }
             
             // --- MODIFIED: ADD 'ALL' CATEGORY FIRST ---
@@ -2477,7 +2406,7 @@
         function loadProfilePage() {
             if(currentUser && userData) {
                 // FIX: Use full userData object
-                document.getElementById('profileUserName').textContent = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('profileUserName').textContent = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('profileUserEmail').textContent = userData.email || 'N/A';
                 
                 const mobile = userData.mobile || 'N/A';
@@ -2879,6 +2808,30 @@
         // Initialize the UI on script load (sets initial state for guest/no-auth)
         initHomeUI(true); 
         updateCartUI(); 
+
+        // --- NEW: PASSWORD VISIBILITY TOGGLE LOGIC ---
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggleIcon = document.getElementById(toggleId);
+            const passwordInput = document.getElementById(inputId);
+
+            if (toggleIcon && passwordInput) {
+                toggleIcon.addEventListener('click', function () {
+                    // Toggle the type attribute
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Toggle the icon
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+
+        // Initialize for all password fields
+        setupPasswordToggle('toggleLoginPassword', 'login-password');
+        setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
+        setupPasswordToggle('toggleRegisterConfirmPassword', 'registerConfirmPassword');
+
     </script>
 </body>
 </html>
