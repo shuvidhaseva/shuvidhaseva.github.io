@@ -11,9 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     
-    <!-- NEW: Google Sign-In Library -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
     <style>
         :root {
             /* --- MODIFIED: DEEP PURPLE SCHEME (Based on image hint) --- */
@@ -152,35 +149,30 @@
             color: #b2bec3; transition: color 0.3s;
         }
         
+        /* MODIFICATION: New style for password toggle icon */
+        .input-group i.password-toggle-icon {
+            left: auto; /* Unset left positioning */
+            right: 15px; /* Position on the right */
+            cursor: pointer; /* Make it look clickable */
+            z-index: 3; /* Ensure it's on top */
+        }
+        
         .auth-input {
-            width: 100%; padding: 15px 15px 15px 45px;
+            width: 100%; 
+            /* MODIFICATION: Added padding-right for toggle icon */
+            padding: 15px 45px 15px 45px;
             background: #f8f9fa; border: 2px solid #f1f2f6;
             border-radius: 12px; font-size: 1em;
             outline: none; transition: all 0.3s; box-sizing: border-box; font-family: 'Poppins', sans-serif; color: #333;
         }
-        
-        /* NEW: Password inputs have more padding on the right for the eye icon */
-        .auth-input[type="password"], .auth-input[type="text"]#login-password, .auth-input[type="text"]#registerPassword {
-             padding-right: 45px;
-        }
-        
-        /* NEW: Password visibility toggle icon style */
-        .password-toggle {
-            position: absolute;
-            top: 45px; /* Same vertical alignment as the lock icon */
-            right: 15px;
-            transform: translateY(-50%);
-            color: #b2bec3;
-            cursor: pointer;
-            z-index: 3; /* To be clickable over the input field */
-        }
-
         .auth-input:focus {
             background: #fff; border-color: var(--primary-color);
             /* MODIFIED: Purple Shadow */
             box-shadow: 0 5px 15px rgba(103, 58, 183, 0.1); 
         }
-        .auth-input:focus + i { color: var(--primary-color); } 
+        /* MODIFICATION: Use general sibling selector to color both icons */
+        .auth-input:focus ~ i { color: var(--primary-color); } 
+
         /* NEW: Address input style without icon padding */
          .auth-input.no-icon {
             padding: 15px;
@@ -199,14 +191,6 @@
         .btn-main:active { transform: scale(0.98); }
         .btn-main:disabled { background: #bdc3c7; cursor: not-allowed; box-shadow: none; opacity: 0.8; }
         
-        /* NEW: Google Button Container */
-        #google-signin-btn-login, #google-signin-btn-register {
-            display: flex;
-            justify-content: center;
-            margin-top: 5px;
-            margin-bottom: 20px;
-        }
-
         .auth-switch { text-align: center; margin-top: 10px; font-size: 0.9em; color: #636e72; }
         .auth-switch a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
         
@@ -482,7 +466,7 @@
         }
         .or-divider {
             display: flex; align-items: center; text-align: center; color: #b2bec3;
-            margin: 20px 0; font-weight: 600; font-size: 0.8em; letter-spacing: 1px;
+            margin: 25px 0; font-weight: 600; font-size: 0.8em; letter-spacing: 1px;
         }
         .or-divider::before, .or-divider::after { content: ''; flex: 1; border-bottom: 1px solid #dfe6e9; }
         .or-divider::before { margin-right: 15px; } .or-divider::after { margin-left: 15px; }
@@ -688,19 +672,15 @@
                                 <input type="email" id="login-email" class="auth-input" placeholder="name@example.com" required>
                                 <i class="fas fa-envelope"></i>
                             </div>
+                            <!-- MODIFIED: Added password toggle icon -->
                             <div class="input-group">
                                 <label class="input-label">* PASSWORD</label>
                                 <input type="password" id="login-password" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <!-- NEW: Password visibility toggle -->
-                                <i class="fas fa-eye password-toggle" data-target="login-password"></i>
+                                <i class="fas fa-eye password-toggle-icon" id="toggleLoginPassword"></i>
                             </div>
                             <button class="btn-main" type="submit" id="loginBtn">Login to Shuvidha Seva</button> 
                         </form>
-                        
-                        <!-- NEW: Google Sign-In -->
-                        <div class="or-divider">OR</div>
-                        <div id="google-signin-btn-login"></div>
                         
                         <div class="auth-switch">
                             Don't have an account? <a href="#" id="gotoRegister">Register</a>
@@ -743,7 +723,7 @@
                             <!-- Mobile Number -->
                             <div class="input-group">
                                 <label class="input-label">* MOBILE NUMBER</label>
-                                <input type="tel" id="regMobile" class="auth-input" placeholder="9876543210" maxlength="10" required>
+                                <input type="tel" id="regMobile" class="auth-input" placeholder="01234567890" maxlength="10" required>
                                 <i class="fas fa-mobile-alt"></i>
                             </div>
                             <!-- Email -->
@@ -752,13 +732,19 @@
                                 <input type="email" id="registerEmail" class="auth-input" placeholder="name@example.com" required>
                                 <i class="fas fa-envelope"></i>
                             </div>
-                            <!-- Password -->
+                            <!-- MODIFIED: Added password toggle icon -->
                             <div class="input-group">
                                 <label class="input-label">* PASSWORD</label>
                                 <input type="password" id="registerPassword" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <!-- NEW: Password visibility toggle -->
-                                <i class="fas fa-eye password-toggle" data-target="registerPassword"></i>
+                                <i class="fas fa-eye password-toggle-icon" id="toggleRegisterPassword"></i>
+                            </div>
+                             <!-- NEW: Added Confirm Password field with toggle -->
+                            <div class="input-group">
+                                <label class="input-label">* CONFIRM PASSWORD</label>
+                                <input type="password" id="registerConfirmPassword" class="auth-input" placeholder="********" required>
+                                <i class="fas fa-lock"></i>
+                                <i class="fas fa-eye password-toggle-icon" id="toggleRegisterConfirmPassword"></i>
                             </div>
                             
                             <!-- NEW ADDRESS FIELDS -->
@@ -788,10 +774,6 @@
 
                             <button class="btn-main" type="submit" id="registerBtn">Sign Up Now</button> 
                         </form>
-                        
-                        <!-- NEW: Google Sign-In -->
-                        <div class="or-divider">OR</div>
-                        <div id="google-signin-btn-register"></div>
 
                         <div class="auth-switch">
                             Already have an account? <a href="#" id="gotoLogin">Login</a>
@@ -1204,9 +1186,7 @@ const firebaseConfig = {
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             signOut,
-            sendPasswordResetEmail, // For password reset (although only simulated message is given in UI)
-            GoogleAuthProvider, // NEW: Import Google Auth Provider
-            signInWithCredential // NEW: Import for signing in with Google credential
+            sendPasswordResetEmail // For password reset (although only simulated message is given in UI)
         } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { 
             getDatabase, 
@@ -1513,12 +1493,20 @@ const firebaseConfig = {
             const mobile = document.getElementById('regMobile').value.trim();
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value; // Get confirm password value
             const pincode = document.getElementById('regPincode').value.trim();
             const state = document.getElementById('regState').value;
             const district = document.getElementById('regDistrict').value;
             const addressLine = document.getElementById('regAddressLine').value;
 
             const btn = document.getElementById('registerBtn');
+            
+            // MODIFICATION: Added password match validation
+            if (password !== confirmPassword) {
+                showError("Passwords do not match. Please try again.");
+                return;
+            }
+
             if(!name || !mobile || !email || !password || !pincode || !state || !district || !addressLine) {
                 showError("All fields marked with * are required."); return;
             }
@@ -1561,108 +1549,6 @@ const firebaseConfig = {
                 console.error("Registration Error:", error.message);
             }
         });
-        
-        // --- NEW: GOOGLE SIGN-IN LOGIC ---
-
-        // Function to decode JWT (for getting user info from Google's token)
-        function decodeJwtResponse(token) {
-            try {
-                var base64Url = token.split('.')[1];
-                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                return JSON.parse(jsonPayload);
-            } catch (e) {
-                return null;
-            }
-        }
-        
-        // This function will be called by Google after successful sign-in
-        async function handleGoogleCredentialResponse(response) {
-            showError("Signing in with Google...");
-            const responsePayload = decodeJwtResponse(response.credential);
-
-            // Create a Google credential with the token
-            const credential = GoogleAuthProvider.credential(response.credential);
-
-            try {
-                // Sign in to Firebase with the credential
-                const result = await signInWithCredential(auth, credential);
-                const user = result.user;
-
-                // Check if user is new or existing in our database
-                const userRef = ref(db, `users/${user.uid}`);
-                const snapshot = await get(userRef);
-
-                if (!snapshot.exists()) {
-                    // This is a NEW user, create a record for them in the database
-                    // We don't have their address, so we save what we have from Google
-                    await set(userRef, {
-                        name: user.displayName || responsePayload.name,
-                        email: user.email,
-                        mobile: user.phoneNumber || "N/A", // Google rarely provides this
-                        pincode: "N/A",
-                        address: {
-                            state: "N/A",
-                            district: "N/A",
-                            line: "Please update in profile"
-                        },
-                        createdAt: new Date().toISOString()
-                    });
-                     // Let the user know they need to update their address
-                     setTimeout(() => alert("Welcome! Please go to your Profile to add your delivery address and mobile number."), 2000);
-                }
-                // If the user exists, we don't need to do anything.
-                // The onAuthStateChanged listener will handle the redirect to the main app.
-            } catch (error) {
-                console.error("Google Sign-In Error:", error);
-                showError("Google sign-in failed. Please try again or use email/password.");
-            }
-        }
-
-        // Initialize the Google Sign-In button when the window loads
-        window.onload = function () {
-            google.accounts.id.initialize({
-                // <<<<===== YAHAN APNI GOOGLE WEB CLIENT ID PASTE KAREIN =====>>>>
-                // Isko apni real Client ID se replace karein
-                client_id: "YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com",
-                callback: handleGoogleCredentialResponse
-            });
-            // Render the button in both login and register pages
-            google.accounts.id.renderButton(
-                document.getElementById("google-signin-btn-login"),
-                { theme: "outline", size: "large", width: "280" } // Customization options
-            );
-             google.accounts.id.renderButton(
-                document.getElementById("google-signin-btn-register"),
-                { theme: "outline", size: "large", width: "280" }
-            );
-            // google.accounts.id.prompt(); // Optional: show a one-tap prompt
-        };
-
-
-        // --- NEW: PASSWORD TOGGLE LOGIC ---
-        function initializePasswordToggles() {
-            document.querySelectorAll('.password-toggle').forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const targetId = toggle.getAttribute('data-target');
-                    const passwordInput = document.getElementById(targetId);
-
-                    if (passwordInput.type === 'password') {
-                        passwordInput.type = 'text';
-                        toggle.classList.remove('fa-eye');
-                        toggle.classList.add('fa-eye-slash');
-                    } else {
-                        passwordInput.type = 'password';
-                        toggle.classList.remove('fa-eye-slash');
-                        toggle.classList.add('fa-eye');
-                    }
-                });
-            });
-        }
-        initializePasswordToggles();
-
 
         onAuthStateChanged(auth, (user) => {
             // NEW: Fetch theme settings as one of the first things to run
@@ -1730,7 +1616,7 @@ const firebaseConfig = {
                  } else {
                      // Fallback if no user data found (shouldn't happen for a logged-in user who registered)
                      userData = {
-                         name: currentUser.displayName || currentUser.email.split('@')[0],
+                         name: currentUser.email.split('@')[0],
                          mobile: "N/A",
                          email: currentUser.email,
                          pincode: "N/A",
@@ -1745,7 +1631,7 @@ const firebaseConfig = {
                  console.error("Failed to fetch user data:", e);
                  // Fallback: If DB fetch fails, populate minimal data from auth object
                  userData = {
-                     name: currentUser.displayName || currentUser.email.split('@')[0],
+                     name: currentUser.email.split('@')[0],
                      mobile: "N/A",
                      email: currentUser.email,
                      pincode: "N/A",
@@ -1759,7 +1645,7 @@ const firebaseConfig = {
         function loadCheckoutAddress() {
              // Load registered data into editable fields as default
             if (userData && userData.address) {
-                document.getElementById('addressName').value = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = userData.mobile || '';
                 document.getElementById('addressPincode').value = userData.pincode || '';
                 // State/District remain read-only, pulled from registration/profile
@@ -1768,7 +1654,7 @@ const firebaseConfig = {
                 document.getElementById('addressInstructions').value = ''; // Clear instructions
             } else {
                 // Clear fields if address is missing so user must input it
-                document.getElementById('addressName').value = currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = '';
                 document.getElementById('addressPincode').value = '';
                 document.getElementById('addressStateDistrict').value = 'Address not set. Update in Profile.';
@@ -2520,7 +2406,7 @@ const firebaseConfig = {
         function loadProfilePage() {
             if(currentUser && userData) {
                 // FIX: Use full userData object
-                document.getElementById('profileUserName').textContent = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('profileUserName').textContent = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('profileUserEmail').textContent = userData.email || 'N/A';
                 
                 const mobile = userData.mobile || 'N/A';
@@ -2922,6 +2808,30 @@ const firebaseConfig = {
         // Initialize the UI on script load (sets initial state for guest/no-auth)
         initHomeUI(true); 
         updateCartUI(); 
+
+        // --- NEW: PASSWORD VISIBILITY TOGGLE LOGIC ---
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggleIcon = document.getElementById(toggleId);
+            const passwordInput = document.getElementById(inputId);
+
+            if (toggleIcon && passwordInput) {
+                toggleIcon.addEventListener('click', function () {
+                    // Toggle the type attribute
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Toggle the icon
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+        }
+
+        // Initialize for all password fields
+        setupPasswordToggle('toggleLoginPassword', 'login-password');
+        setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
+        setupPasswordToggle('toggleRegisterConfirmPassword', 'registerConfirmPassword');
+
     </script>
 </body>
 </html>
