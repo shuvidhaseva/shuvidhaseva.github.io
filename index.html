@@ -149,18 +149,8 @@
             color: #b2bec3; transition: color 0.3s;
         }
         
-        /* MODIFICATION: New style for password toggle icon */
-        .input-group i.password-toggle-icon {
-            left: auto; /* Unset left positioning */
-            right: 15px; /* Position on the right */
-            cursor: pointer; /* Make it look clickable */
-            z-index: 3; /* Ensure it's on top */
-        }
-        
         .auth-input {
-            width: 100%; 
-            /* MODIFICATION: Added padding-right for toggle icon */
-            padding: 15px 45px 15px 45px;
+            width: 100%; padding: 15px 15px 15px 45px;
             background: #f8f9fa; border: 2px solid #f1f2f6;
             border-radius: 12px; font-size: 1em;
             outline: none; transition: all 0.3s; box-sizing: border-box; font-family: 'Poppins', sans-serif; color: #333;
@@ -170,9 +160,7 @@
             /* MODIFIED: Purple Shadow */
             box-shadow: 0 5px 15px rgba(103, 58, 183, 0.1); 
         }
-        /* MODIFICATION: Use general sibling selector to color both icons */
-        .auth-input:focus ~ i { color: var(--primary-color); } 
-
+        .auth-input:focus + i { color: var(--primary-color); } 
         /* NEW: Address input style without icon padding */
          .auth-input.no-icon {
             padding: 15px;
@@ -656,8 +644,7 @@
                 <div class="auth-card">
                     <div class="auth-header">
                         <div class="logo-circle">
-                            <!-- MODIFIED: Updated Logo URL -->
-                            <img src="https://i.ibb.co/Kp1KTgsD/20260211-075938.png" alt="Shuvidha Seva Logo">
+                            <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
                         </div>
                         <h1>Welcome Back</h1>
                         <p>Sign in with your Email and Password</p> 
@@ -673,24 +660,14 @@
                                 <input type="email" id="login-email" class="auth-input" placeholder="name@example.com" required>
                                 <i class="fas fa-envelope"></i>
                             </div>
-                            <!-- MODIFIED: Added password toggle icon -->
                             <div class="input-group">
                                 <label class="input-label">* PASSWORD</label>
                                 <input type="password" id="login-password" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <i class="fas fa-eye password-toggle-icon" id="toggleLoginPassword"></i>
                             </div>
                             <button class="btn-main" type="submit" id="loginBtn">Login to Shuvidha Seva</button> 
                         </form>
                         
-                        <!-- NEW: Google Sign-In Button -->
-                        <div style="text-align: center; margin-top: 20px;">
-                            <button class="btn-main" id="googleAuthButton" style="background: var(--white); color: var(--text-color); border: 1px solid var(--border-color);">
-                                <img src="https://img.icons8.com/color/20/000000/google-logo.png" alt="Google Logo" style="width:20px; height:20px; margin-right:10px;"> Continue with Google
-                            </button>
-                        </div>
-                        <!-- END NEW: Google Sign-In Button -->
-
                         <div class="auth-switch">
                             Don't have an account? <a href="#" id="gotoRegister">Register</a>
                         </div>
@@ -707,92 +684,13 @@
             </div>
         </div>
 
-        <!-- NEW: GOOGLE REGISTER PAGE -->
-        <!-- This page appears after a new user signs in with Google, forcing them to complete address details -->
-        <div id="googleRegisterPage" class="page">
-             <div class="auth-content">
-                <div class="auth-card" style="max-height: 80vh; overflow-y: auto; padding-bottom: 20px;">
-                    <div class="auth-header">
-                        <div class="logo-circle">
-                            <!-- MODIFIED: Updated Logo URL -->
-                            <img src="https://i.ibb.co/Kp1KTgsD/20260211-075938.png" alt="Shuvidha Seva Logo">
-                        </div>
-                        <h1>Welcome, <span id="googleRegisterName"></span>!</h1>
-                        <p>Please confirm your details to continue.</p>
-                    </div>
-                    
-                    <div class="auth-body">
-                        <form id="google-register-form">
-                            <p style="font-size: 0.8em; color: var(--danger); text-align: center; margin-bottom: 20px;">* All fields are required</p>
-                            <!-- Name (Pre-filled, editable) -->
-                            <div class="input-group">
-                                <label class="input-label">* FULL NAME</label>
-                                <input type="text" id="googleRegName" class="auth-input" placeholder="Full Name" required>
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <!-- Mobile Number -->
-                            <div class="input-group">
-                                <label class="input-label">* MOBILE NUMBER</label>
-                                <input type="tel" id="googleRegMobile" class="auth-input" placeholder="01234567890" maxlength="10" required>
-                                <i class="fas fa-mobile-alt"></i>
-                            </div>
-                            <!-- Email (Pre-filled, read-only) -->
-                            <div class="input-group">
-                                <label class="input-label">* EMAIL ADDRESS</label>
-                                <input type="email" id="googleRegEmail" class="auth-input" placeholder="name@example.com" readonly required>
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            
-                            <!-- ADDRESS FIELDS -->
-                            <h3 style="font-size:1.1em; font-weight:700; margin-top:30px; margin-bottom:15px; color:var(--primary-color);">Delivery Address</h3>
-                            
-                            <div class="input-group">
-                                <label class="input-label">* PINCODE</label>
-                                <input type="tel" id="googleRegPincode" class="auth-input no-icon" placeholder="Enter Pincode" maxlength="6" required>
-                            </div>
-
-                            <div class="input-group">
-                                <label class="input-label">* STATE</label>
-                                <input type="text" id="googleRegState" class="auth-input no-icon" placeholder="State Name" required>
-                            </div>
-                            
-                            <div class="input-group">
-                                <label class="input-label">* DISTRICT</label>
-                                <input type="text" id="googleRegDistrict" class="auth-input no-icon" placeholder="District Name" required>
-                            </div>
-
-                            <div class="input-group">
-                                <label class="input-label">* VILLAGE / BUILDING / HOUSE</label>
-                                <input type="text" id="googleRegAddressLine" class="auth-input no-icon" placeholder="Flat No, Building Name, Village" required>
-                            </div>
-                            <!-- END ADDRESS FIELDS -->
-
-                            <button class="btn-main" type="submit" id="googleRegisterBtn">Continue to Shuvidha Seva</button> 
-                        </form>
-
-                        <!-- NEW: T&C and Privacy Links -->
-                        <div style="text-align:center; margin-top:20px; font-size:0.8em; color:#636e72;">
-                            By continuing, you agree to our 
-                            <a href="#" data-page="termsPage">Terms & Conditions</a> 
-                            and 
-                            <a href="#" data-page="privacyPage">Privacy Policy</a>.
-                        </div>
-                        <!-- END NEW -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END NEW: GOOGLE REGISTER PAGE -->
-
-
         <!-- DETAILED REGISTER PAGE -->
         <div id="registerPage" class="page">
              <div class="auth-content">
                 <div class="auth-card" style="max-height: 80vh; overflow-y: auto; padding-bottom: 20px;">
                     <div class="auth-header">
                         <div class="logo-circle">
-                            <!-- MODIFIED: Updated Logo URL -->
-                            <img src="https://i.ibb.co/Kp1KTgsD/20260211-075938.png" alt="Shuvidha Seva Logo">
+                            <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
                         </div>
                         <h1>Create Account</h1>
                         <p>Join the Shuvidha Seva community today!</p>
@@ -811,7 +709,7 @@
                             <!-- Mobile Number -->
                             <div class="input-group">
                                 <label class="input-label">* MOBILE NUMBER</label>
-                                <input type="tel" id="regMobile" class="auth-input" placeholder="01234567890" maxlength="10" required>
+                                <input type="tel" id="regMobile" class="auth-input" placeholder="9876543210" maxlength="10" required>
                                 <i class="fas fa-mobile-alt"></i>
                             </div>
                             <!-- Email -->
@@ -820,19 +718,11 @@
                                 <input type="email" id="registerEmail" class="auth-input" placeholder="name@example.com" required>
                                 <i class="fas fa-envelope"></i>
                             </div>
-                            <!-- MODIFIED: Added password toggle icon -->
+                            <!-- Password -->
                             <div class="input-group">
                                 <label class="input-label">* PASSWORD</label>
                                 <input type="password" id="registerPassword" class="auth-input" placeholder="********" required>
                                 <i class="fas fa-lock"></i>
-                                <i class="fas fa-eye password-toggle-icon" id="toggleRegisterPassword"></i>
-                            </div>
-                             <!-- NEW: Added Confirm Password field with toggle -->
-                            <div class="input-group">
-                                <label class="input-label">* CONFIRM PASSWORD</label>
-                                <input type="password" id="registerConfirmPassword" class="auth-input" placeholder="********" required>
-                                <i class="fas fa-lock"></i>
-                                <i class="fas fa-eye password-toggle-icon" id="toggleRegisterConfirmPassword"></i>
                             </div>
                             
                             <!-- NEW ADDRESS FIELDS -->
@@ -865,7 +755,10 @@
 
                         <div class="auth-switch">
                             Already have an account? <a href="#" id="gotoLogin">Login</a>
-                            <!-- REMOVED: Forgot Password link -->
+                            <!-- NEW: Forgot Password link -->
+                            <p style="margin-top: 10px; font-size: 0.9em;">
+                                Forgot your password? <a href="#" onclick="alert('Password reset link has been sent to your email (Simulated).');">Reset Password</a>
+                            </p>
                         </div>
                         <!-- NEW: T&C and Privacy Links -->
                         <div style="text-align:center; margin-top:20px; font-size:0.8em; color:#636e72;">
@@ -886,8 +779,7 @@
                 <div class="header-top">
                     <h1>
                         <div class="logo-image-container">
-                            <!-- MODIFIED: Updated Logo URL -->
-                            <img src="https://i.ibb.co/Kp1KTgsD/20260211-075938.png" alt="Shuvidha Seva Logo">
+                            <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
                         </div>
                         Shuvidha Seva 
                     </h1>
@@ -1102,11 +994,11 @@
             <div style="flex:1; padding:20px; overflow-y:auto;">
                 <!-- User Info Card (SIMPLIFIED) -->
                 <div class="order-card" style="text-align:center;">
-                    <!-- User Profile Image -->
+                    <!-- Profile Image/Icon placeholder -->
                     <div class="logo-circle" id="profileImageContainer" style="background:var(--secondary-color); margin: 0 auto 15px auto; color:var(--text-color); position:relative; overflow:hidden;">
-                        <img id="profileImagePreview" src="" alt="Profile Image" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
                         <i class="fas fa-user" id="profileImageDefaultIcon"></i>
                     </div>
+                    <!-- Keeping upload input for image, but removing the link if not needed -->
                     <input type="file" id="profileImageUploadInput" accept="image/*" style="display: none;"> 
                     <a href="#" id="changeProfileImageLink" style="font-size:0.8em; color:var(--primary-color); text-decoration:none;">Change Photo</a>
 
@@ -1139,22 +1031,22 @@
                 <p>App se order karne ke liye kam se kam <strong style="color:var(--danger);">3 items</strong> aur kul rashi <strong style="color:var(--danger);">₹50.00</strong> se zyada honi chahiye।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">2. Delivery Charges</h4>
-                <p>Har order par <strong style="color:var(--danger);">₹10 fixed delivery charge</strong> liya jayega, chahe order kitna bhi bada ho, jab tak ki aap free delivery threshold poora na karein.</p>
+                <p>Har order par <strong style="color:var(--danger);">₹10 fixed delivery charge</strong> liya jayega, chahe order kitna bhi bada ho।</p>
                 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">3. Per Item Quantity Rule (Max 5)</h4>
                 <p>Aap ek hi product ki zyada se zyada <strong style="color:var(--danger);">5 quantity</strong> order kar sakte hain।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Account Responsibility</h4>
-                <p>Aap apne account ki suraksha (email aur password ya Google account) ke liye khud zimmedar hain। Galat jankari dene par account band kiya ja sakta hai.</p>
+                <p>Aap apne mobile number aur password ki suraksha ke liye khud zimmedar hain। Galat jankari dene par account band kiya ja sakta hai।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Delivery Time</h4>
-                <p>Hum koshish karte hain ki order jaldi deliver ho, lekin mausam ya traffic ki wajah se deri ho sakti hai.</p>
+                <p>Hum koshish karte hain ki order jaldi deliver ho, lekin mausam ya traffic ki wajah se deri ho sakti hai।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">6. Order Cancellation</h4>
-                <p>Order place hone ke baad agar humne saaman pack kar diya hai, toh cancellation swikar nahi kiya jayega.</p>
+                <p>Order place hone ke baad agar humne saaman pack kar diya hai, toh cancellation swikar nahi kiya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">7. Contact Us</h4>
-                <p>Kisi bhi shikayat ya sawal ke liye aap humein <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par email kar sakte hain.</p>
+                <p>Kisi bhi shikayat ya sawal ke liye aap humein <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par email kar sakte hain।</p>
                 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
                     &copy; 2026 Shuvidha Seva. All Rights Reserved.
@@ -1183,7 +1075,7 @@
                 </ul>
                 
                 <h3 style="color:var(--primary-color); margin-top:0;">Privacy Policy - Shuvidha Seva</h3>
-                <p>Aapki privacy hamare liye bahut mahatvapurn hai। Yeh policy batati hai ki <strong>Shuvidha Seva</strong> aapka data kaise collect aur istemal karta hai.</p>
+                <p>Aapki privacy hamare liye bahut mahatvapurn hai। Yeh policy batati hai ki <strong>Shuvidha Seva</strong> aapka data kaise collect aur istemal karta hai।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">1. Data Jo Hum Collect Karte Hain</h4>
                 <p>Hum sirf wahi jankari lete hain jo aapke order ko deliver karne ke liye zaruri hai:</p>
@@ -1192,7 +1084,6 @@
                     <li>Mobile Number</li>
                     <li>Email Address</li>
                     <li>Delivery Address (Ghar ka pata)</li>
-                    <li>Order History</li>
                 </ul>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">2. Data Ka Istemal</h4>
@@ -1201,17 +1092,16 @@
                     <li>Aapke order ko process aur deliver karne ke liye।</li>
                     <li>Aapko order status updates bhejne ke liye।</li>
                     <li>App ki service ko behtar banane ke liye।</li>
-                    <li>Security aur fraud prevention ke liye.</li>
                 </ul>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">3. Data Security</h4>
-                <p>Hum aapka personal data kisi bhi third-party ko bechte ya share nahi karte hain, jab tak ki yeh order delivery ke liye zaruri na ho (e.g., delivery partner ko). Aapka data puri tarah surakshit hai.</p>
+                <p>Hum aapka personal data kisi bhi third-party ko bechte ya share nahi karte hain। Aapka data puri tarah surakshit hai।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Order Rules</h4>
-                <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order, aur maximum 5 quantity per item ka order hona anivarya hai. Har order par ₹10 delivery charge liya jayega (jab tak free delivery threshold poora na ho).</p>
+                <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order, aur maximum 5 quantity per item ka order hona anivarya hai। Har order par ₹10 delivery charge liya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Contact Us</h4>
-                <p>Agar aapko koi sawal hai, toh aap humse <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par sampark kar sakte hain ya app ke support section mein message karein.</p>
+                <p>Agar aapko koi sawal hai, toh aap humse <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par sampark kar sakte hain ya app ke support section mein message karein।</p>
 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
                     <p>&copy; 2026 Shuvidha Seva. All Rights Reserved.</p>
@@ -1247,7 +1137,7 @@
 
     </div>
 
-    <!-- Firebase Configuration -->
+    <!-- Firebase Configuration (FIXED: Added missing configuration) -->
     <script>
         // !! IMPORTANT: REPLACE THESE VALUES WITH YOUR ACTUAL FIREBASE PROJECT CONFIGURATION !!
         // Configuration matched with Admin App
@@ -1258,18 +1148,15 @@ const firebaseConfig = {
   projectId: "shuvidha-seva-32df0",
   storageBucket: "shuvidha-seva-32df0.firebasestorage.app",
   messagingSenderId: "508915247632",
-  appId: "1:508915247632:web:c6c8fbe2c63fc66350f895",
-  measurementId: "G-LR8Z4GTZ45"
+  appId: "1:508915247632:web:91c3df82b4eae3c750f895",
+  measurementId: "G-MQ6BPYD4EP"
 };
 
-        // ADDED: Google Client ID for Google Sign-In
-        // MODIFIED: Replaced with the user-provided ID
-        const GOOGLE_CLIENT_ID = "675165219978-1aus1qi4c73t46h0o7hsliptmk2uset0.apps.googleusercontent.com";
     </script>
     
     <!-- Firebase SDK (v9 Syntax) -->
     <script type="module">
-        // Import the functions you need from the SDKs need
+        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { 
             getAuth, 
@@ -1277,9 +1164,7 @@ const firebaseConfig = {
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             signOut,
-            GoogleAuthProvider, // Import GoogleAuthProvider
-            signInWithRedirect,    // MODIFIED: Import signInWithRedirect
-            updateProfile       // Import updateProfile for name setting
+            sendPasswordResetEmail // For password reset (although only simulated message is given in UI)
         } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { 
             getDatabase, 
@@ -1291,7 +1176,6 @@ const firebaseConfig = {
             push,
             update
         } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-        import { getStorage, uploadBytes, getDownloadURL, ref as storageRef } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js"; // For profile picture upload
 
         
         // Initialize Firebase
@@ -1299,16 +1183,6 @@ const firebaseConfig = {
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const storage = getStorage(app); // Initialize Firebase Storage
-
-        // Configure Google Auth Provider
-        const googleProvider = new GoogleAuthProvider();
-        googleProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
-        googleProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-        // ADDED: Explicitly add the client ID if required by your Firebase setup
-        googleProvider.setCustomParameters({
-             'client_id': GOOGLE_CLIENT_ID
-        });
         
         let cart = []; // Local cart array
         let wishlist = []; // Local wishlist array (stores product keys)
@@ -1329,9 +1203,8 @@ const firebaseConfig = {
         const MAX_ITEM_QTY = 5; // NEW: Maximum quantity per item (Customer Request)
         
         // NEW: Delivery Fee Config (will be fetched from Admin settings)
-        // MODIFIED: Changed default delivery fee to 0 as requested by user.
-        let adminDeliveryFee = 0.00; // Default delivery fee (FREE)
-        let freeDeliveryThreshold = 0; // Default threshold (0 = no free delivery check, always free unless changed by admin)
+        let adminDeliveryFee = 10.00; // Default delivery fee
+        let freeDeliveryThreshold = 0; // Default threshold (0 = no free delivery)
 
         // --- UPDATED DATA PLACEHOLDERS (Fast Food, Grocery, Treats, with new images) ---
         // Image URLs are simulated or from placeholder services.
@@ -1426,6 +1299,7 @@ const firebaseConfig = {
             },
         ];
         
+        // Placeholder DP details for 'On Way' status if real DP data is missing
         const simulatedDriver = {
             name: "Rajesh Kumar (Fallback)",
             mobile: "9876543210",
@@ -1448,13 +1322,13 @@ const firebaseConfig = {
                  }
                  
                  // 2. Delivery Fee Settings
-                 adminDeliveryFee = parseFloat(settings.delivery?.deliveryFee || 0.00); // MODIFIED: Default to 0 instead of 10
+                 adminDeliveryFee = parseFloat(settings.delivery?.deliveryFee || 10.00);
                  freeDeliveryThreshold = parseFloat(settings.delivery?.freeDeliveryThreshold || 0);
 
              } catch (e) {
                  console.error("Failed to fetch settings:", e);
                  // Fallback to defaults if fetch fails
-                 adminDeliveryFee = 0.00; // MODIFIED: Default to 0 on error too
+                 adminDeliveryFee = 10.00;
                  freeDeliveryThreshold = 0;
              }
         }
@@ -1463,7 +1337,7 @@ const firebaseConfig = {
 
         // --- UTILITY & NAVIGATION ---
         const showPage = (id) => {
-            // NEW: Auth check for restricted pages
+             // NEW: Auth check for restricted pages
             const restrictedPages = ['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'];
             if (restrictedPages.includes(id) && !currentUser) {
                 // Do not show an alert on initial load or if the user clicks a non-interactive element first.
@@ -1532,7 +1406,7 @@ const firebaseConfig = {
             b.addEventListener('click', (e) => {
                 const target = e.currentTarget.dataset.target || e.currentTarget.dataset.page;
                 // Only allow direct navigation if it's a back button or an unrestricted page
-                if(target && target !== 'ordersPage' && target !== 'wishlistPage' && target !== 'profilePage' && target !== 'cartPage' && target !== 'checkoutPage' && target !== 'productDetailPage') {
+                if(target && target !== 'ordersPage' && target !== 'wishlistPage' && target !== 'profilePage') {
                     showPage(target);
                 }
             })
@@ -1569,9 +1443,7 @@ const firebaseConfig = {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    document.getElementById('profileImageContainer').querySelector('img').src = e.target.result;
-                    document.getElementById('profileImageContainer').querySelector('img').style.display = 'block';
-                    document.getElementById('profileImageDefaultIcon').style.display = 'none';
+                     document.getElementById('profileImageContainer').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
                 };
                 reader.readAsDataURL(file);
             }
@@ -1594,37 +1466,18 @@ const firebaseConfig = {
             }
         });
 
-        // NEW: Google Sign-In Handler
-        document.getElementById('googleAuthButton').addEventListener('click', async () => {
-            try {
-                // MODIFIED: Use signInWithRedirect instead of signInWithPopup
-                await signInWithRedirect(auth, googleProvider);
-            } catch (error) {
-                console.error("Google Sign-In Error:", error.message);
-                showError(`Google Sign-In Failed: ${error.message}`);
-            }
-        });
-
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('regName').value;
             const mobile = document.getElementById('regMobile').value.trim();
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value; // Get confirm password value
             const pincode = document.getElementById('regPincode').value.trim();
             const state = document.getElementById('regState').value;
             const district = document.getElementById('regDistrict').value;
             const addressLine = document.getElementById('regAddressLine').value;
 
             const btn = document.getElementById('registerBtn');
-            
-            // MODIFICATION: Added password match validation
-            if (password !== confirmPassword) {
-                showError("Passwords do not match. Please try again.");
-                return;
-            }
-
             if(!name || !mobile || !email || !password || !pincode || !state || !district || !addressLine) {
                 showError("All fields marked with * are required."); return;
             }
@@ -1643,12 +1496,6 @@ const firebaseConfig = {
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                
-                // Update user's display name if it's not set
-                if(user.displayName !== name) {
-                    await updateProfile(user, { displayName: name });
-                }
-
                 // v9: Use user.uid for ref
                 await set(ref(db, 'users/' + user.uid), { 
                     mobile: mobile,
@@ -1656,7 +1503,6 @@ const firebaseConfig = {
                     email: email,
                     pincode: pincode,
                     address: { state: state, district: district, line: addressLine },
-                    method: 'Email/Password', // Track sign-in method
                     createdAt: new Date().toISOString()
                 });
                 
@@ -1667,7 +1513,7 @@ const firebaseConfig = {
                 btn.disabled = false; btn.textContent = 'Sign Up Now';
                 if (error.code === 'auth/email-already-in-use') {
                     // FIX: Informative message for existing email
-                    showError("This email is already registered. Please use the Login tab or the 'Continue with Google' option if applicable.");
+                    showError("This email is already registered. Please use the Login tab or the 'Reset Password' link below.");
                 } else {
                     showError("Registration Failed: " + error.message);
                 }
@@ -1675,146 +1521,34 @@ const firebaseConfig = {
             }
         });
 
-        // NEW: Handler for Google Registration Form Submission
-        document.getElementById('google-register-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('googleRegName').value;
-            const mobile = document.getElementById('googleRegMobile').value.trim();
-            const email = document.getElementById('googleRegEmail').value; // Read-only, pre-filled
-            const pincode = document.getElementById('googleRegPincode').value.trim();
-            const state = document.getElementById('googleRegState').value;
-            const district = document.getElementById('googleRegDistrict').value;
-            const addressLine = document.getElementById('googleRegAddressLine').value;
+        onAuthStateChanged(auth, (user) => {
+            // NEW: Fetch theme settings as one of the first things to run
+            fetchThemeAndDeliverySettings(); 
             
-            if(!name || !mobile || !pincode || !state || !district || !addressLine) {
-                showError("All fields marked with * are required."); return;
-            }
-            if(mobile.length !== 10 || isNaN(mobile)) {
-                showError("Please enter a valid 10-digit mobile number."); return;
-            }
-            if(pincode.length !== 6 || isNaN(pincode)) {
-                showError("Please enter a valid 6-digit pincode."); return;
-            }
-
-            const btn = document.getElementById('googleRegisterBtn');
-            btn.disabled = true; btn.textContent = 'Completing Profile...'; showError("Please wait...");
-
-            try {
-                // The user is already authenticated via Google, so we only need to save their profile data.
-                if (currentUser) {
-                    await set(ref(db, 'users/' + currentUser.uid), { 
-                        mobile: mobile,
-                        name: name,
-                        email: email, // Keep email from Google auth
-                        pincode: pincode,
-                        address: { state: state, district: district, line: addressLine },
-                        method: 'Google', // Track sign-in method
-                        createdAt: new Date().toISOString()
-                    });
-                    
-                    // Update display name if it changed
-                    if(currentUser.displayName !== name) {
-                         await updateProfile(currentUser, { displayName: name });
-                    }
-
-                    // Navigate to home page after successful profile completion
-                    showPage('appContainer');
-                    alert("Profile updated successfully!");
-                } else {
-                    // Should not happen if Google auth was successful before reaching this page
-                    showError("Authentication state lost. Please try signing in again.");
-                    btn.disabled = false; btn.textContent = 'Continue to Shuvidha Seva';
-                }
-            } catch (error) {
-                btn.disabled = false; btn.textContent = 'Error Completing Profile';
-                showError("Profile Update Failed: " + error.message);
-                console.error("Google Registration Form Error:", error.message);
-            }
-        });
-
-
-        // This `onAuthStateChanged` listener handles the core logic for user session management.
-        onAuthStateChanged(auth, async (user) => {
-            // Fetch theme settings regardless of login state
-            await fetchThemeAndDeliverySettings(); 
-            
-            currentUser = user; // Update the global currentUser variable
-
+            currentUser = user;
             if (user) {
-                // User is signed in.
-                // Check if they are a Customer or Delivery Partner
-                const isCustomer = await checkUserRole(user.uid, 'users');
-                const isDeliveryPartner = await checkUserRole(user.uid, 'delivery_partners');
-
-                if (isCustomer) {
-                    // --- Customer Login Flow ---
-                    await fetchUserPincodeAndData(); // Load customer profile and data
-                    listenForWishlistUpdates(); // Start listening for wishlist changes
-                    
-                    // Check if user just signed in with Google and needs to complete profile
-                    // We check if a new user (creationTime === lastSignInTime) AND if they don't have a record in our DB `users` node.
-                    const userDbSnapshot = await get(ref(db, `users/${user.uid}`));
-                    if (!userDbSnapshot.exists() && user.providerData?.[0]?.providerId === 'google.com') {
-                        // This user signed in with Google for the first time.
-                        const googleName = user.displayName || '';
-                        document.getElementById('googleRegName').value = googleName;
-                        document.getElementById('googleRegisterName').textContent = googleName || 'New User';
-                        document.getElementById('googleRegEmail').value = user.email; // Pre-fill email
-                        showPage('googleRegisterPage');
-                    } else {
-                        // If already a customer and already has profile data, navigate to home
-                        // Redirect if currently on login/register page
-                        const currentPage = document.querySelector('.page.active')?.id;
-                        if (currentPage === 'loginPage' || currentPage === 'registerPage' || currentPage === 'googleRegisterPage') {
-                            showPage('appContainer');
-                        }
-                    }
-                } else if (isDeliveryPartner) {
-                    // --- Delivery Partner Detected ---
-                    alert("You are logged in as a Delivery Partner. Please use the Partner App.");
-                    signOut(auth); // Force logout
-                    currentUser = null; // Clear current user
-                    // Optionally redirect to login page
-                    showPage('loginPage'); 
-                } else {
-                    // User exists in auth but not in 'users' or 'delivery_partners' (shouldn't happen ideally)
-                    // Treat as new/unregistered
-                    console.warn("User authenticated but role not found. Forcing login.");
-                    signOut(auth);
-                    currentUser = null;
-                    showPage('loginPage');
+                fetchUserPincodeAndData(); 
+                listenForWishlistUpdates(); 
+                // Redirect if currently on a non-Home starting page (Login/Register)
+                const currentPage = document.querySelector('.page.active')?.id;
+                if (currentPage === 'loginPage' || currentPage === 'registerPage') {
+                    showPage('appContainer');
                 }
-            } else {
-                // User is signed out.
+            }
+            else { 
                 currentUser = null; 
                 userPincode = null;
                 userData = null;
-                cart = []; // Clear cart for guests
-                wishlist = []; // Clear wishlist
                 updateCartUI(); 
-                
-                // Render initial UI for guests
+                // If logged out, render guest placeholders and stay on the current page (Home if user hasn't clicked anything)
                 initHomeUI(true); 
-                
                 // If current page is restricted, force redirect to login
-                const currentPage = document.querySelector('.page.active')?.id;
-                if (['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage', 'googleRegisterPage'].includes(currentPage)) {
+                 const currentPage = document.querySelector('.page.active')?.id;
+                if (['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'].includes(currentPage)) {
                     showPage('loginPage'); 
                 }
             }
         });
-
-        // Helper function to check if a user UID exists in a specific Firebase path
-        async function checkUserRole(uid, rolePath) {
-            if (!uid) return false;
-            try {
-                const snapshot = await get(ref(db, `${rolePath}/${uid}`));
-                return snapshot.exists();
-            } catch (e) {
-                console.error(`Error checking role for ${rolePath}:`, e);
-                return false;
-            }
-        }
 
         // --- USER DATA & PINCODE LOGIC (Auth Fix Applied Here) ---
         async function fetchUserPincodeAndData() {
@@ -1824,9 +1558,22 @@ const firebaseConfig = {
                  const snapshot = await get(ref(db, 'users/' + currentUser.uid));
                  const snapData = snapshot.val();
                  
+                 // FIX 1: Differentiate Customer from DP
+                 if (!snapData) {
+                      const dpCheck = await get(ref(db, 'delivery_partners/' + currentUser.uid));
+                      if (dpCheck.exists()) {
+                          // Logged in as DP in Customer App -> Log out
+                          alert("You are logged in as a Delivery Partner. Please use the Partner App.");
+                          signOut(auth);
+                          return;
+                      }
+                      // Not found in either (Shouldn't happen post-register) -> Continue
+                 }
+                 
+                 // FIX 2: Ensure full userData object is saved for profile display on every login
                  if (snapData) {
                     userData = {
-                        name: snapData.name || currentUser.displayName || currentUser.email.split('@')[0], // Prioritize name from DB, then Google, then email
+                        name: snapData.name || "User Name",
                         mobile: snapData.mobile || "N/A",
                         email: snapData.email || currentUser.email,
                         pincode: snapData.pincode || "N/A",
@@ -1834,80 +1581,51 @@ const firebaseConfig = {
                             state: snapData.address?.state || "N/A",
                             district: snapData.address?.district || "N/A",
                             line: snapData.address?.line || "N/A"
-                        },
-                        method: snapData.method || 'Unknown' // Store sign-in method
+                        }
                     };
                     userPincode = userData.pincode;
                  } else {
                      // Fallback if no user data found (shouldn't happen for a logged-in user who registered)
-                     // This might happen if a user registered via email/pass but their data didn't save properly.
                      userData = {
-                         name: currentUser.displayName || currentUser.email.split('@')[0],
+                         name: currentUser.email.split('@')[0],
                          mobile: "N/A",
                          email: currentUser.email,
                          pincode: "N/A",
-                         address: { state: "N/A", district: "N/A", line: "N/A" },
-                         method: currentUser.providerData?.[0]?.providerId === 'google.com' ? 'Google' : 'Email/Password'
+                         address: { state: "N/A", district: "N/A", line: "N/A" }
                      };
                      userPincode = null;
                  }
                  
-                 fetchData(); // Fetch other app data after user data is loaded
+                 fetchData();
                  
              } catch (e) {
                  console.error("Failed to fetch user data:", e);
                  // Fallback: If DB fetch fails, populate minimal data from auth object
                  userData = {
-                     name: currentUser.displayName || currentUser.email.split('@')[0],
+                     name: currentUser.email.split('@')[0],
                      mobile: "N/A",
                      email: currentUser.email,
                      pincode: "N/A",
-                     address: { state: "N/A", district: "N/A", line: "N/A" },
-                     method: currentUser.providerData?.[0]?.providerId === 'google.com' ? 'Google' : 'Email/Password'
+                     address: { state: "N/A", district: "N/A", line: "N/A" }
                  };
                  userPincode = null;
                  fetchData();
              }
         }
         
-        // NEW: Function to handle newly signed-in Google users
-        async function handleGoogleUser(firebaseUser) {
-            // Check if the user already has profile data in our 'users' node
-            try {
-                const userProfileSnapshot = await get(ref(db, `users/${firebaseUser.uid}`));
-                
-                if (userProfileSnapshot.exists()) {
-                    // Existing user: fetch data and proceed
-                    await fetchUserPincodeAndData(); // Loads profile and navigates to home
-                } else {
-                    // New user via Google: needs to complete profile
-                    document.getElementById('googleRegName').value = firebaseUser.displayName || '';
-                    document.getElementById('googleRegEmail').value = firebaseUser.email;
-                    document.getElementById('googleRegisterName').textContent = firebaseUser.displayName || 'New User';
-                    
-                    // Navigate to the Google registration page
-                    showPage('googleRegisterPage');
-                }
-            } catch (error) {
-                console.error("Error handling Google user:", error);
-                showError("An error occurred while processing your Google account. Please try again.");
-            }
-        }
-
-
         function loadCheckoutAddress() {
              // Load registered data into editable fields as default
             if (userData && userData.address) {
-                document.getElementById('addressName').value = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
-                document.getElementById('contactPhone').value = userData.mobile !== 'N/A' ? userData.mobile : '';
-                document.getElementById('addressPincode').value = userData.pincode !== 'N/A' ? userData.pincode : '';
+                document.getElementById('addressName').value = userData.name || currentUser.email.split('@')[0];
+                document.getElementById('contactPhone').value = userData.mobile || '';
+                document.getElementById('addressPincode').value = userData.pincode || '';
                 // State/District remain read-only, pulled from registration/profile
-                document.getElementById('addressStateDistrict').value = `${userData.address.state !== 'N/A' ? userData.address.state : ''}, ${userData.address.district !== 'N/A' ? userData.address.district : ''}`.replace(/^, /, '').replace(/, $/, '').replace(/N\/A, N\/A/g, 'Address not set');
-                document.getElementById('addressFullLine').value = userData.address.line !== 'N/A' ? userData.address.line : '';
+                document.getElementById('addressStateDistrict').value = `${userData.address.state || 'N/A'}, ${userData.address.district || 'N/A'}`;
+                document.getElementById('addressFullLine').value = userData.address.line || '';
                 document.getElementById('addressInstructions').value = ''; // Clear instructions
             } else {
                 // Clear fields if address is missing so user must input it
-                document.getElementById('addressName').value = currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('addressName').value = currentUser.email.split('@')[0];
                 document.getElementById('contactPhone').value = '';
                 document.getElementById('addressPincode').value = '';
                 document.getElementById('addressStateDistrict').value = 'Address not set. Update in Profile.';
@@ -2165,7 +1883,7 @@ const firebaseConfig = {
                                 <button class="btn-main" onclick="addToCart('${d.key}', 1)" style="width:auto; padding:8px 15px; font-size:0.9em; margin-bottom:0; background:var(--primary-gradient);">
                                     <i class="fas fa-shopping-basket"></i> Add
                                 </button>
-                                <button class="wishlist-btn active" onclick="event.stopPropagation(); toggleWishlist('${d.key}')" style="background-color: var(--danger); color:white; box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4);">
+                                <button class="wishlist-btn active" onclick="toggleWishlist('${d.key}')" style="background-color: var(--danger); color:white; box-shadow: 0 4px 10px rgba(216, 67, 21, 0.4);">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -2492,7 +2210,6 @@ const firebaseConfig = {
             }
 
             // NEW: Delivery Fee Calculation Logic
-            // If subtotal >= threshold, deliveryFee = 0. Else deliveryFee = adminDeliveryFee.
             const deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : adminDeliveryFee;
             const total = subtotal + deliveryFee;
             
@@ -2660,48 +2377,31 @@ const firebaseConfig = {
         function loadProfilePage() {
             if(currentUser && userData) {
                 // FIX: Use full userData object
-                document.getElementById('profileUserName').textContent = userData.name || currentUser.displayName || currentUser.email.split('@')[0];
+                document.getElementById('profileUserName').textContent = userData.name || currentUser.email.split('@')[0];
                 document.getElementById('profileUserEmail').textContent = userData.email || 'N/A';
                 
-                const mobile = userData.mobile !== 'N/A' ? userData.mobile : 'N/A';
+                const mobile = userData.mobile || 'N/A';
                 
-                const addressLine = userData.address?.line !== 'N/A' ? userData.address.line : 'N/A';
-                const district = userData.address?.district !== 'N/A' ? userData.address.district : 'N/A';
-                const state = userData.address?.state !== 'N/A' ? userData.address.state : 'N/A';
-                const pincode = userData.pincode !== 'N/A' ? userData.pincode : 'N/A';
+                const addressLine = userData.address?.line || 'N/A';
+                const district = userData.address?.district || 'N/A';
+                const state = userData.address?.state || 'N/A';
+                const pincode = userData.pincode || 'N/A';
 
-                const fullAddressDisplay = `${addressLine}, ${district}, ${state} - ${pincode}`.replace(/N\/A, N\/A, N\/A - N\/A/g, 'N/A').replace(/N\/A, /g, '').replace(/, N\/A/g, '').replace(/ - N\/A/g, '');
+                const fullAddressDisplay = `${addressLine}, ${district}, ${state} - ${pincode}`;
                 
                 document.getElementById('profileUserMobileDisplay').textContent = `Mobile: ${mobile}`;
-                document.getElementById('profileUserAddressDisplay').textContent = `Address: ${fullAddressDisplay || 'N/A'}`;
+                document.getElementById('profileUserAddressDisplay').textContent = `Address: ${fullAddressDisplay}`;
 
-                // Handle profile image display
-                const profilePicUrl = currentUser.photoURL; // Get from Firebase Auth
-                const profileImgContainer = document.getElementById('profileImageContainer');
-                const profileImgPreview = document.getElementById('profileImagePreview');
-                const defaultIcon = document.getElementById('profileImageDefaultIcon');
-
-                if (profilePicUrl) {
-                    profileImgPreview.src = profilePicUrl;
-                    profileImgPreview.style.display = 'block';
-                    defaultIcon.style.display = 'none';
-                } else {
-                    profileImgPreview.style.display = 'none';
-                    defaultIcon.style.display = 'block';
-                }
-                
             } else {
                  // Should be unreachable due to auth gate, but as fallback for display
                  document.getElementById('profileUserName').textContent = 'Guest User';
                  document.getElementById('profileUserEmail').textContent = 'Please log in';
                  document.getElementById('profileUserMobileDisplay').textContent = `Mobile: N/A`;
                  document.getElementById('profileUserAddressDisplay').textContent = `Address: N/A`;
-                 document.getElementById('profileImageContainer').querySelector('img').style.display = 'none';
-                 document.getElementById('profileImageDefaultIcon').style.display = 'block';
             }
         }
         
-        // NEW: Confirm and Cancel Active Order (Only if PLACED)
+        // NEW FUNCTION: Confirm and Cancel Active Order (Only if PLACED)
         window.confirmCancelOrder = (orderKey) => {
             if (confirm("Kya aap sach mein yeh order cancel karna chahte hain? Ek baar cancel hone ke baad wapas nahi ho payega.")) {
                 cancelOrder(orderKey);
@@ -2718,7 +2418,7 @@ const firebaseConfig = {
             
             try {
                 // Set the status to CANCELLED in the database
-                await update(ref(db, `orders/${orderKey}`), { status: 'CANCELLED', cancellationReason: 'Cancelled by customer via app.', statusTimestamp: Date.now() });
+                await update(ref(db, `orders/${orderKey}`), { status: 'CANCELLED', cancellationReason: 'Cancelled by customer via app.' });
             } catch (e) {
                 alert("Order cancel karne mein fail ho gaye. Kripya dobara try karein.");
                 console.error("Cancellation Failed:", e);
@@ -2729,7 +2429,7 @@ const firebaseConfig = {
             }
         };
 
-        // NEW: Confirm and Delete Order from History (Only if DONE or CANCELLED)
+        // NEW FUNCTION: Confirm and Delete Order from History (Only if DONE or CANCELLED)
         window.confirmDeleteOrder = (orderKey) => {
             if (confirm("Kya aap sach mein yeh order history se hatana chahte hain?")) {
                 deleteOrder(orderKey);
@@ -3079,30 +2779,6 @@ const firebaseConfig = {
         // Initialize the UI on script load (sets initial state for guest/no-auth)
         initHomeUI(true); 
         updateCartUI(); 
-
-        // --- NEW: PASSWORD VISIBILITY TOGGLE LOGIC ---
-        function setupPasswordToggle(toggleId, inputId) {
-            const toggleIcon = document.getElementById(toggleId);
-            const passwordInput = document.getElementById(inputId);
-
-            if (toggleIcon && passwordInput) {
-                toggleIcon.addEventListener('click', function () {
-                    // Toggle the type attribute
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    
-                    // Toggle the icon
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
-                });
-            }
-        }
-
-        // Initialize for all password fields
-        setupPasswordToggle('toggleLoginPassword', 'login-password');
-        setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
-        setupPasswordToggle('toggleRegisterConfirmPassword', 'registerConfirmPassword');
-
     </script>
 </body>
 </html>
