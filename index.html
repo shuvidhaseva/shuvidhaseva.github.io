@@ -49,6 +49,8 @@
                 border-radius: 30px;
                 box-shadow: 0 20px 60px rgba(0,0,0,0.2);
                 height: 90vh;
+                /* NEW: Border matching app icon color (primary color) */
+                border: 8px solid var(--primary-color);
             }
         }
 
@@ -63,6 +65,20 @@
         /* .page.active { opacity: 1; visibility: visible; z-index: 5; } */
         .page.active { opacity: 1; visibility: visible; z-index: 5; } /* Re-added but controlled by JS on load */
 
+        /* --- SPLASH SCREEN STYLES (NEW) --- */
+        #splashPage {
+            background: linear-gradient(135deg, #FF9933 0%, #673AB7 100%); /* Orange to Purple Gradient based on app icon colors */
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+        }
+        #splashPage .logo-circle {
+            width: 150px; height: 150px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        #splashPage h1 {
+            color: var(--white); font-size: 2.5em; text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+
         /* --- AUTH UI --- */
 
         .auth-content {
@@ -70,7 +86,8 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             padding: 20px;
             box-sizing: border-box;
-            background: #ecf0f1; /* Light neutral background */
+            /* MODIFIED: Use light background consistent with app screenshots */
+            background: #f8f9fa; 
         }
 
         .auth-card {
@@ -309,23 +326,6 @@
             line-height: 1;
         }
 
-        /* NEW: Out of stock logic */
-        .card.out-of-stock {
-            opacity: 0.5;
-            pointer-events: none; /* Disable click on the card itself */
-        }
-        .out-of-stock-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1em;
-            font-weight: 700;
-            color: var(--danger);
-            z-index: 10;
-        }
-        /* END NEW: Out of stock logic */
-
         /* --- UPDATED: PURPLE NAV & FLOATING CART --- */
         nav {
             /* MODIFIED: Changed to 'fixed' to prevent it from moving up when keyboard is open */
@@ -334,10 +334,9 @@
             left: 0; 
             right: 0;
             height: 70px; 
-            /* CHANGED TO DARK PURPLE GRADIENT */
-            background: var(--primary-gradient); 
-            /* MODIFIED: Purple Shadow */
-            box-shadow: 0 -5px 20px rgba(103, 58, 183, 0.3);
+            /* MODIFIED: Changed background to White as requested */
+            background: var(--white); 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
             border-radius: 30px 30px 0 0; z-index: 10;
             padding: 0 30px; 
             display: flex; justify-content: space-around; /* Changed to space-around for new layout */
@@ -349,16 +348,17 @@
         
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
-            /* Light transparent white for inactive items */
-            color: rgba(255, 255, 255, 0.6); 
+            /* MODIFIED: Inactive items color changed for white background */
+            color: var(--light-text); 
             cursor: pointer; position: relative;
             transition: all 0.3s;
         }
         
         /* Active item is Pure White and slightly lifted */
         .nav-item.active { 
-            color: #ffffff; 
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            /* MODIFIED: Active item color changed for white background */
+            color: var(--primary-color); 
+            text-shadow: 0 2px 5px rgba(0,0,0,0.05);
         } 
         
         .nav-item i { font-size: 1.4em; margin-bottom: 2px;}
@@ -638,13 +638,23 @@
 
     <div class="mobile-container">
 
+        <!-- NEW: SPLASH SCREEN -->
+        <div id="splashPage" class="page active">
+            <div class="logo-circle">
+                <img src="https://i.ibb.co/yF2VjbMF/20260211-075938.png" alt="Shuvidha Seva Logo">
+            </div>
+            <h1>Shuvidha Seva</h1>
+        </div>
+        <!-- END SPLASH SCREEN -->
+
+
         <!-- DETAILED LOGIN PAGE -->
         <div id="loginPage" class="page">
             <div class="auth-content">
                 <div class="auth-card">
                     <div class="auth-header">
                         <div class="logo-circle">
-                            <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
+                            <img src="https://i.ibb.co/yF2VjbMF/20260211-075938.png" alt="Shuvidha Seva Logo">
                         </div>
                         <h1>Welcome Back</h1>
                         <p>Sign in with your Email and Password</p> 
@@ -690,7 +700,7 @@
                 <div class="auth-card" style="max-height: 80vh; overflow-y: auto; padding-bottom: 20px;">
                     <div class="auth-header">
                         <div class="logo-circle">
-                            <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
+                            <img src="https://i.ibb.co/yF2VjbMF/20260211-075938.png" alt="Shuvidha Seva Logo">
                         </div>
                         <h1>Create Account</h1>
                         <p>Join the Shuvidha Seva community today!</p>
@@ -755,10 +765,7 @@
 
                         <div class="auth-switch">
                             Already have an account? <a href="#" id="gotoLogin">Login</a>
-                            <!-- NEW: Forgot Password link -->
-                            <p style="margin-top: 10px; font-size: 0.9em;">
-                                Forgot your password? <a href="#" onclick="alert('Password reset link has been sent to your email (Simulated).');">Reset Password</a>
-                            </p>
+                            <!-- DELETED: Removed Forgot Password link as per request -->
                         </div>
                         <!-- NEW: T&C and Privacy Links -->
                         <div style="text-align:center; margin-top:20px; font-size:0.8em; color:#636e72;">
@@ -774,12 +781,12 @@
         </div>
 
         <!-- HOME -->
-        <div id="appContainer" class="page active">
+        <div id="appContainer" class="page">
             <header class="app-header">
                 <div class="header-top">
                     <h1>
                         <div class="logo-image-container">
-                            <img src="https://i.ibb.co/kgVKVjz0/IMG-20260117-112546.jpg" alt="Shuvidha Seva Logo">
+                            <img src="https://i.ibb.co/yF2VjbMF/20260211-075938.png" alt="Shuvidha Seva Logo">
                         </div>
                         Shuvidha Seva 
                     </h1>
@@ -872,18 +879,19 @@
 
                     <!-- Quantity & Add to Cart -->
                     <div class="pdp-qty-controls">
-                        <label style="font-weight:600;">Quantity (Max 5):</label> <!-- MODIFIED TEXT -->
+                        <!-- MODIFIED: Removed '(Max 5)' from label as requested -->
+                        <label style="font-weight:600;">Quantity:</label> 
                         <div class="qty-controls">
                             <button id="pdpQtyMinus"><i class="fas fa-minus"></i></button>
                             <span id="pdpQuantity">1</span> <!-- MODIFIED START QTY -->
                             <button id="pdpQtyPlus"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <!-- NEW: Warning text for stock -->
-                    <p id="pdpMinQtyWarning">Maximum purchase quantity per item: 5</p> 
+                    <!-- DELETED: Removed max quantity warning as requested -->
 
+                    <!-- MODIFIED: Removed '(Max 5)' from button text as requested -->
                     <button class="btn-main" id="pdpAddToCartBtn" style="margin-top:20px;">
-                        <i class="fas fa-shopping-basket"></i> Add to Cart (Max 5) <!-- MODIFIED BUTTON TEXT -->
+                        <i class="fas fa-shopping-basket"></i> Add to Cart 
                     </button>
 
                     <h3 style="font-size:1.1em; font-weight:700; margin-top:30px; margin-bottom:10px; color:var(--primary-color);">Product Description</h3>
@@ -922,16 +930,11 @@
                 <p id="order-constraint-warning" style="color:var(--danger); text-align:center; margin-bottom:15px; display:none;">
                     Minimum order: 3 items AND ₹50.00
                 </p>
-                <!-- NEW: Free delivery message -->
-                <p id="free-delivery-message" style="color:var(--success); text-align:center; margin-bottom:15px; display:none;">
-                    You qualify for free delivery!
-                </p>
                 <div id="cartItemsContainer"></div>
                 <div id="cart-summary" style="margin-top:30px; border-top:1px solid var(--border-color); padding-top:20px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Subtotal</span><span id="subtotal-price">₹0.00</span></div>
-                    <!-- NEW: Delivery fee display -->
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Delivery Fee</span><span id="delivery-fee-display">₹10.00</span></div>
-                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.4em; color:#2d3436; margin-top:10px;"><span>Total</span><span id="total-price">₹10.00</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Delivery Fee</span><span>Free delivery charges </span></div>
+                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.4em; color:#2d3436; margin-top:10px;"><span>Total</span><span id="total-price">Free delivery Charges;</span></div>
                     <button class="btn-main" id="goToCheckoutBtn" style="margin-top:25px;">Proceed to Checkout</button>
                 </div>
             </div>
@@ -1033,19 +1036,18 @@
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">2. Delivery Charges</h4>
                 <p>Har order par <strong style="color:var(--danger);">₹10 fixed delivery charge</strong> liya jayega, chahe order kitna bhi bada ho।</p>
                 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">3. Per Item Quantity Rule (Max 5)</h4>
-                <p>Aap ek hi product ki zyada se zyada <strong style="color:var(--danger);">5 quantity</strong> order kar sakte hain।</p>
+                <!-- DELETED: Removed "Per Item Quantity Rule" section -->
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Account Responsibility</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">3. Account Responsibility</h4>
                 <p>Aap apne mobile number aur password ki suraksha ke liye khud zimmedar hain। Galat jankari dene par account band kiya ja sakta hai।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Delivery Time</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Delivery Time</h4>
                 <p>Hum koshish karte hain ki order jaldi deliver ho, lekin mausam ya traffic ki wajah se deri ho sakti hai।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">6. Order Cancellation</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Order Cancellation</h4>
                 <p>Order place hone ke baad agar humne saaman pack kar diya hai, toh cancellation swikar nahi kiya jayega।</p>
 
-                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">7. Contact Us</h4>
+                <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">6. Contact Us</h4>
                 <p>Kisi bhi shikayat ya sawal ke liye aap humein <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par email kar sakte hain।</p>
                 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
@@ -1098,7 +1100,7 @@
                 <p>Hum aapka personal data kisi bhi third-party ko bechte ya share nahi karte hain। Aapka data puri tarah surakshit hai।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">4. Order Rules</h4>
-                <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order, aur maximum 5 quantity per item ka order hona anivarya hai। Har order par ₹10 delivery charge liya jayega।</p>
+                <p>Shuvidha Seva par order karne ke liye minimum 3 items aur ₹50 ka order hona anivarya hai। Har order par ₹10 delivery charge liya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">5. Contact Us</h4>
                 <p>Agar aapko koi sawal hai, toh aap humse <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par sampark kar sakte hain ya app ke support section mein message karein।</p>
@@ -1200,12 +1202,9 @@ const firebaseConfig = {
         // MODIFIED: Updated Minimum Order Constants
         const MIN_ORDER_QTY = 3; 
         const MIN_ORDER_AMOUNT = 50;
-        const MAX_ITEM_QTY = 5; // NEW: Maximum quantity per item (Customer Request)
+        // DELETED: Removed Max Item Quantity constraint as requested by user.
+        const MAX_ITEM_QTY = Infinity; // NEW: Setting to infinity to disable max quantity check as requested
         
-        // NEW: Delivery Fee Config (will be fetched from Admin settings)
-        let adminDeliveryFee = 10.00; // Default delivery fee
-        let freeDeliveryThreshold = 0; // Default threshold (0 = no free delivery)
-
         // --- UPDATED DATA PLACEHOLDERS (Fast Food, Grocery, Treats, with new images) ---
         // Image URLs are simulated or from placeholder services.
         const placeholderCategories = [
@@ -1234,8 +1233,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png", 
                 images: ["https://i.ibb.co/hJ3RSF0f/pngtree-group-of-fast-food-products-png-image-14008130.png"], 
                 categoryId: "fastfood", 
-                pincode: "ALL" ,
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Fast Food (Samosa - Updated URL)
             { 
@@ -1249,14 +1247,13 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg", 
                 images: ["https://i.ibb.co/yFJw2NQm/samosa-recipe.jpg"], 
                 categoryId: "fastfood", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Grocery (Fourtun/kachi Ghani - Updated URL)
             { 
                 key: "dish_gr1", 
                 name: "Fourtun kachi Ghani 1kg", 
-                price: { final: 170.00, restaurantPrice: 65.00, adminFee: 5.00 },
+                price: { final: 70.00, restaurantPrice: 65.00, adminFee: 5.00 },
                 discount: 0, 
                 unit: "1kg Pouch", 
                 description: "Vacuum sealed for extra freshness.", 
@@ -1264,14 +1261,13 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg", 
                 images: ["https://i.ibb.co/0j6w4zyL/61qs-W9-zfa-L-SX679.jpg"], 
                 categoryId: "grocery", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Grocery (Fourtun/Soya health  - Updated URL)
             { 
                 key: "dish_gr2", 
                 name: "Fourtun Soya health 1Kg", 
-                price: { final: 160.00, restaurantPrice: 60.00, adminFee: 5.00 },
+                price: { final: 65.00, restaurantPrice: 60.00, adminFee: 5.00 },
                 discount: 5, 
                 unit: "1 Kg Pack", 
                 description: "Whole wheat flour for soft rotis.", 
@@ -1279,14 +1275,13 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg", 
                 images: ["https://i.ibb.co/pBKKxD0t/612-KEk-Qn-TJL-SX679.jpg"], 
                 categoryId: "grocery", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
             // Treats (Cadbury Silk Oreo - Updated URL)
             { 
                 key: "dish_tr1", 
                 name: "Premium Chocolate Bar", 
-                price: { final: 100.00, restaurantPrice: 160.00, adminFee: 20.00 },
+                price: { final: 180.00, restaurantPrice: 160.00, adminFee: 20.00 },
                 discount: 10, 
                 unit: "1 Large Bar", 
                 description: "A delicious milk chocolate bar with crunchy bits and a smooth center.", 
@@ -1294,8 +1289,7 @@ const firebaseConfig = {
                 imageUrl: "https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg", 
                 images: ["https://i.ibb.co/7JXPjrVT/sliding-images-jpeg-1df64a82-d773-41cd-bcdd-d919c0d65374jpgts1715597648-de4a52a2-8ad3-4360-bd6c-3493.jpg"], 
                 categoryId: "treats", 
-                pincode: "ALL",
-                isInStock: true // NEW: Add in stock status (default true)
+                pincode: "ALL" 
             },
         ];
         
@@ -1306,33 +1300,27 @@ const firebaseConfig = {
             imageUrl: "https://cdn-icons-png.flaticon.com/512/4140/4140037.png" 
         };
 
-        // --- THEME & SETTINGS COLOR LINKING LOGIC (NEW) ---
-        async function fetchThemeAndDeliverySettings() {
+        // --- THEME COLOR LINKING LOGIC (NEW) ---
+        async function fetchThemeSettings() {
              try {
-                 const settingsRef = ref(db, 'settings');
-                 const snapshot = await get(settingsRef);
-                 const settings = snapshot.val() || {};
-
-                 // 1. Theme Color
-                 const customerThemeColor = settings.theme?.customerThemeColor;
+                 const themeRef = ref(db, 'settings/theme/customerThemeColor');
+                 const snapshot = await get(themeRef);
+                 const customerThemeColor = snapshot.val();
+                 
                  if (customerThemeColor && /^#[0-9A-F]{6}$/i.test(customerThemeColor)) {
+                     // Apply the fetched color to the CSS variables
                      document.documentElement.style.setProperty('--primary-color', customerThemeColor);
+                     // Set a simple gradient based on the new primary color (Note: Gradient should ideally be calculated)
+                     // For simplicity, using a slightly darker version for the gradient end if possible, otherwise use the same color
                      const fallbackGradientEnd = customerThemeColor; 
                      document.documentElement.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${customerThemeColor} 0%, ${fallbackGradientEnd} 100%)`);
                  }
-                 
-                 // 2. Delivery Fee Settings
-                 adminDeliveryFee = parseFloat(settings.delivery?.deliveryFee || 10.00);
-                 freeDeliveryThreshold = parseFloat(settings.delivery?.freeDeliveryThreshold || 0);
-
              } catch (e) {
-                 console.error("Failed to fetch settings:", e);
-                 // Fallback to defaults if fetch fails
-                 adminDeliveryFee = 10.00;
-                 freeDeliveryThreshold = 0;
+                 console.error("Failed to fetch theme settings:", e);
+                 // Fallback to default CSS variables if fetch fails
              }
         }
-        // --- END THEME & SETTINGS LINKING LOGIC ---
+        // --- END THEME COLOR LINKING LOGIC ---
 
 
         // --- UTILITY & NAVIGATION ---
@@ -1513,7 +1501,7 @@ const firebaseConfig = {
                 btn.disabled = false; btn.textContent = 'Sign Up Now';
                 if (error.code === 'auth/email-already-in-use') {
                     // FIX: Informative message for existing email
-                    showError("This email is already registered. Please use the Login tab or the 'Reset Password' link below.");
+                    showError("This email is already registered. Please use the Login tab.");
                 } else {
                     showError("Registration Failed: " + error.message);
                 }
@@ -1521,34 +1509,38 @@ const firebaseConfig = {
             }
         });
 
-        onAuthStateChanged(auth, (user) => {
-            // NEW: Fetch theme settings as one of the first things to run
-            fetchThemeAndDeliverySettings(); 
-            
-            currentUser = user;
-            if (user) {
-                fetchUserPincodeAndData(); 
-                listenForWishlistUpdates(); 
-                // Redirect if currently on a non-Home starting page (Login/Register)
-                const currentPage = document.querySelector('.page.active')?.id;
-                if (currentPage === 'loginPage' || currentPage === 'registerPage') {
-                    showPage('appContainer');
-                }
-            }
-            else { 
-                currentUser = null; 
-                userPincode = null;
-                userData = null;
-                updateCartUI(); 
-                // If logged out, render guest placeholders and stay on the current page (Home if user hasn't clicked anything)
-                initHomeUI(true); 
-                // If current page is restricted, force redirect to login
-                 const currentPage = document.querySelector('.page.active')?.id;
-                if (['ordersPage', 'wishlistPage', 'profilePage', 'cartPage', 'checkoutPage', 'productDetailPage'].includes(currentPage)) {
-                    showPage('loginPage'); 
-                }
-            }
+        // --- SPLASH SCREEN LOGIC ---
+        let splashTimer;
+
+        // NEW function to handle post-splash-screen initialization and redirects
+        function handleAuthRedirect() {
+             clearTimeout(splashTimer); // Clear any existing splash timer
+             
+             // Check authentication status
+             onAuthStateChanged(auth, (user) => {
+                 currentUser = user;
+                 if (user) {
+                     fetchUserPincodeAndData(); 
+                     listenForWishlistUpdates(); 
+                     showPage('appContainer');
+                 } else { 
+                     currentUser = null; 
+                     userPincode = null;
+                     userData = null;
+                     updateCartUI(); 
+                     initHomeUI(true); // Render home UI (guest mode)
+                     showPage('loginPage'); // Go to login page
+                 }
+             });
+        }
+        
+        // --- On Page Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+             // 1. Show Splash screen initially (Set active class in HTML)
+             // 2. Start timer for splash duration
+             splashTimer = setTimeout(handleAuthRedirect, 2000); // 2 seconds splash duration
         });
+        // --- END SPLASH SCREEN LOGIC ---
 
         // --- USER DATA & PINCODE LOGIC (Auth Fix Applied Here) ---
         async function fetchUserPincodeAndData() {
@@ -1660,12 +1652,10 @@ const firebaseConfig = {
                  console.log(`Minimum order: ${MIN_ORDER_QTY} items AND ₹${MIN_ORDER_AMOUNT.toFixed(2)}.`); return;
             }
             
-            // Calculate final delivery fee based on settings and order total
-            const deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : adminDeliveryFee;
-            const total = (subtotal + deliveryFee).toFixed(2);
-            
             // Construct the address using the (possibly) changed fields
             const fullAddress = `${addressFullLine}, ${stateDistrict} (Pincode: ${pincode}) - Instructions: ${instructions || 'None'}`;
+            const deliveryFee = 10.00;
+            const total = (subtotal + deliveryFee).toFixed(2);
             
             // FIX: Ensure cart items are copied correctly
             const itemsToStore = cart.map(item => {
@@ -1739,7 +1729,7 @@ const firebaseConfig = {
             
             const orderBtn = document.getElementById('placeOrderBtn');
             const warning = document.getElementById('order-constraint-warning');
-            const freeDeliveryMsg = document.getElementById('free-delivery-message');
+
 
             // Cart Page Check (Checks Cart constraints only)
             if (document.getElementById('cartPage').classList.contains('active')) {
@@ -1749,18 +1739,10 @@ const firebaseConfig = {
                     warning.innerHTML = `Minimum order: ${MIN_ORDER_QTY} items AND ₹${MIN_ORDER_AMOUNT.toFixed(2)}`;
                     document.getElementById('goToCheckoutBtn').disabled = true;
                     document.getElementById('goToCheckoutBtn').style.opacity = '0.6';
-                    freeDeliveryMsg.style.display = 'none';
                 } else {
                     warning.style.display = 'none';
                     document.getElementById('goToCheckoutBtn').disabled = false;
                     document.getElementById('goToCheckoutBtn').style.opacity = '1';
-                    
-                    // NEW: Show free delivery message
-                    if (subtotal >= freeDeliveryThreshold) {
-                         freeDeliveryMsg.style.display = 'block';
-                    } else {
-                         freeDeliveryMsg.style.display = 'none';
-                    }
                 }
             }
 
@@ -1795,12 +1777,6 @@ const firebaseConfig = {
              
             const dish = allDishesData.find(d => d.key === dishKey);
             if (!dish) { console.error("Dish not found for key:", dishKey); return; }
-
-            // NEW: Check stock status for wishlist
-            if (dish.isInStock === false) {
-                 alert('This product is currently out of stock.');
-                 return;
-            }
 
             const wishlistProductRef = ref(db, `users/${currentUser.uid}/wishlist/${dishKey}`);
             
@@ -1918,24 +1894,16 @@ const firebaseConfig = {
 
                 const discountTag = discount > 0 ? `<div class="discount-tag">-${discount}%</div>` : ''; // NEW
 
-                // NEW: Out of stock logic
-                const isInStock = d.isInStock === undefined ? true : d.isInStock; // Assume true if not specified
-                const stockOverlay = !isInStock ? '<div class="out-of-stock-overlay">Out of Stock</div>' : '';
-                const cardClass = !isInStock ? 'card out-of-stock' : 'card';
-                // Click handler behavior for out of stock products (disabled, but the card still exists)
-                const clickHandler = isInStock ? `showProductDetail('${d.key}')` : `alert('This product is out of stock.')`;
-
+                // Card is now clickable via showProductDetail, with event.stopPropagation() on buttons
                 c.innerHTML += `
-                    <div class="${cardClass}" onclick="${clickHandler}"> 
-                        ${stockOverlay}
+                    <div class="card" onclick="showProductDetail('${d.key}')"> 
                         ${discountTag}
                         <img src="${dishImage}" alt="${d.name}">
                         <div class="card-actions">
                             <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
                                 <i class="fas ${wishIcon}"></i>
                             </button>
-                            <!-- NEW: Disable add button if out of stock -->
-                            <button class="add-btn" ${!isInStock ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
+                            <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -2036,7 +2004,6 @@ const firebaseConfig = {
                     dish.discount = dish.discount || 0;
                     dish.unit = dish.unit || 'Unit N/A'; // Using 'unit' field from admin
                     dish.description = dish.description || 'No description available.';
-                    dish.isInStock = dish.isInStock === undefined ? true : dish.isInStock; // NEW: Read stock status
                     
                     // FIX: Ensure correct price object is used/created
                     dish.price = dish.price && typeof dish.price === 'object' 
@@ -2123,32 +2090,20 @@ const firebaseConfig = {
             const dish = allDishesData.find(d => d.key === id);
             if (!dish) { console.error("Dish not found for key:", id); return; }
 
-            // NEW: Check stock status
-            if (dish.isInStock === false) {
-                 alert('This product is currently out of stock.');
-                 return;
-            }
-
             // FIX: Use customerPrice for the price in the cart
             const discountedPrice = parseFloat(dish.customerPrice || 0);
 
             const ex = cart.find(i=>i.id===id);
             
-            // Check max quantity constraint before adding
+            // Check max quantity constraint before adding (MAX_ITEM_QTY is now Infinity)
             let newQuantity = quantity;
             if(ex) {
                  newQuantity = ex.quantity + quantity;
             }
 
             if (newQuantity > MAX_ITEM_QTY) {
-                 alert(`Cannot add. Maximum quantity for this item is ${MAX_ITEM_QTY}.`);
-                 // Allow immediate maximum quantity add from the card button only if it was a single item add
-                 if (ex && ex.quantity < MAX_ITEM_QTY && quantity === 1) {
-                      ex.quantity = MAX_ITEM_QTY;
-                      alert(`Quantity automatically adjusted to the maximum of ${MAX_ITEM_QTY}.`);
-                 } else {
-                      return; 
-                 }
+                 // DELETED: Removed alert for max quantity. Check will always fail for finite numbers.
+                 // The logic here is now effectively disabled, as requested.
             } else {
                  // Proceed with regular add/update
                  if(ex) {
@@ -2171,8 +2126,8 @@ const firebaseConfig = {
                 if (newQty < 1) {
                      cart=cart.filter(x=>x.id!==id); // Remove if quantity goes to 0 or below
                 } else if (newQty > MAX_ITEM_QTY) {
-                     alert(`Cannot increase quantity above maximum limit of ${MAX_ITEM_QTY}.`);
-                     return; // Do nothing if max exceeded
+                     // DELETED: Removed alert for max quantity as requested.
+                     return; // Do nothing if max exceeded (with infinite max, this check passes for positive numbers)
                 } else {
                      i.quantity = newQty;
                 }
@@ -2209,13 +2164,9 @@ const firebaseConfig = {
                 });
             }
 
-            // NEW: Delivery Fee Calculation Logic
-            const deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : adminDeliveryFee;
+            const deliveryFee = 10.00;
             const total = subtotal + deliveryFee;
-            
-            // NEW: Update UI elements with new calculations
             document.getElementById('subtotal-price').textContent = `₹${subtotal.toFixed(2)}`;
-            document.getElementById('delivery-fee-display').textContent = deliveryFee === 0 ? 'Free' : `₹${deliveryFee.toFixed(2)}`;
             document.getElementById('total-price').textContent = `₹${total.toFixed(2)}`;
             document.getElementById('cart-count').textContent = cart.reduce((a, b) => a + b.quantity, 0);
 
@@ -2263,23 +2214,10 @@ const firebaseConfig = {
             pdpQuantity = 1; // MODIFIED: Reset quantity to minimum of 1
             document.getElementById('pdpQuantity').textContent = pdpQuantity;
             
-            // NEW: Stock check logic for PDP
-            const isInStock = currentPdpDish.isInStock === undefined ? true : currentPdpDish.isInStock;
-            const pdpAddToCartBtn = document.getElementById('pdpAddToCartBtn');
-            const pdpMinQtyWarning = document.getElementById('pdpMinQtyWarning');
-
-            if (!isInStock) {
-                pdpAddToCartBtn.disabled = true;
-                pdpAddToCartBtn.textContent = 'Out of Stock';
-                pdpMinQtyWarning.textContent = 'This product is currently out of stock.';
-                pdpMinQtyWarning.style.color = 'var(--danger)';
-            } else {
-                pdpAddToCartBtn.disabled = false;
-                pdpAddToCartBtn.textContent = `Add to Cart (Max ${MAX_ITEM_QTY})`;
-                pdpMinQtyWarning.textContent = `प्रति वस्तु अधिकतम खरीद मात्रा: ${MAX_ITEM_QTY}`;
-                pdpMinQtyWarning.style.color = 'var(--danger)';
-            }
-            // END NEW: Stock check logic for PDP
+            // MODIFIED: Set initial text for button (removed max quantity text)
+            document.getElementById('pdpAddToCartBtn').textContent = `Add to Cart`;
+            // DELETED: Removed this warning text as requested
+            // document.getElementById('pdpMinQtyWarning').textContent = `प्रति वस्तु अधिकतम खरीद मात्रा: ${MAX_ITEM_QTY}`; 
 
             // Image Slider setup
             const images = currentPdpDish.images || [currentPdpDish.imageUrl || 'https://via.placeholder.com/150'];
@@ -2340,12 +2278,9 @@ const firebaseConfig = {
              }
         };
         document.getElementById('pdpQtyPlus').onclick = () => {
-             if (pdpQuantity < MAX_ITEM_QTY) { // MODIFIED: Maximum quantity is 5
-                 pdpQuantity++;
-                 document.getElementById('pdpQuantity').textContent = pdpQuantity;
-             } else {
-                 alert(`Cannot add more. Maximum quantity per item is ${MAX_ITEM_QTY}.`);
-             }
+             // DELETED: Removed max quantity check as requested
+             pdpQuantity++;
+             document.getElementById('pdpQuantity').textContent = pdpQuantity;
         };
 
         // PDP Add to Cart Button (Adds pdpQuantity items at once)
@@ -2355,15 +2290,7 @@ const firebaseConfig = {
                  return;
              }
              if (currentPdpDish) {
-                 // Check if the current cart quantity + pdpQuantity exceeds MAX_ITEM_QTY for this item
-                 const existingItem = cart.find(i=>i.id===currentPdpDish.key);
-                 const currentTotal = existingItem ? existingItem.quantity : 0;
-                 
-                 if (currentTotal + pdpQuantity > MAX_ITEM_QTY) {
-                      alert(`You can only have a maximum of ${MAX_ITEM_QTY} of this item in your cart (Current: ${currentTotal}, Adding: ${pdpQuantity}). Please reduce the quantity.`);
-                      return;
-                 }
-                 
+                 // DELETED: Removed max quantity check as requested
                  window.addToCart(currentPdpDish.key, pdpQuantity);
                  alert(`${pdpQuantity} x ${currentPdpDish.name} added to cart!`);
                  showPage('cartPage');
@@ -2725,9 +2652,9 @@ const firebaseConfig = {
             renderDishes(initialDishes); 
             
              // Set the initial active page (Home) only if no other page is active (i.e., on first load)
-            if (!document.querySelector('.page.active')) {
-                document.getElementById('appContainer').classList.add('active');
-            }
+            // if (!document.querySelector('.page.active')) {
+            //     document.getElementById('appContainer').classList.add('active');
+            // }
         }
 
         // --- SLIDER LOGIC ---
@@ -2777,7 +2704,7 @@ const firebaseConfig = {
         };
 
         // Initialize the UI on script load (sets initial state for guest/no-auth)
-        initHomeUI(true); 
+        // initHomeUI(true); // Moved call to inside splash logic
         updateCartUI(); 
     </script>
 </body>
