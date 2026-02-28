@@ -1079,7 +1079,7 @@
                 <p>Order place hone ke baad agar humne saaman pack kar diya hai, toh cancellation swikar nahi kiya jayega।</p>
 
                 <h4 style="color:var(--primary-color); font-weight:700; margin-top:15px; margin-bottom:5px;">6. Contact Us</h4>
-                <p> Kisi bhi shikayat ya sawal ke liye aap humein <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par email kar sakte hain.</p>
+                <p>Kisi bhi shikayat ya sawal ke liye aap humein <strong style="color:var(--primary-color);">shuvidhaseva1@gmail.com</strong> par email kar sakte hain.</p>
                 
                 <div style="text-align: center; margin-top: 30px; font-size: 0.8em; color: var(--light-text);">
                     &copy; 2026 Shuvidha Seva. All Rights Reserved.
@@ -1369,8 +1369,13 @@ const firebaseConfig = {
             document.getElementById('auth-error').style.display = 'none'; 
 
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            const activeNav = document.querySelector(`.nav-item[data-page="${id}"]`);
-            if (activeNav) activeNav.classList.add('active');
+            // MODIFIED: Navigation item selection logic adjusted
+            const navItemElement = document.querySelector(`.nav-item[data-page="${id}"], #ordersNavBtn, #wishlistNavBtn, #profileNavBtn`);
+            if (navItemElement) {
+                navItemElement.classList.add('active');
+            } else if (id === 'appContainer' && !document.querySelector('.nav-item.active')) { // Special case for Home page on initial load
+                 document.querySelector('.nav-item[data-page="appContainer"]').classList.add('active');
+            }
 
 
             if(id === 'checkoutPage') {
@@ -1834,9 +1839,16 @@ const firebaseConfig = {
 
             const wishlistProductRef = ref(db, `users/${currentUser.uid}/wishlist/${dishKey}`);
             
-            if (wishlist.includes(dishKey)) {
+            // Check if item is already in wishlist array
+            const isCurrentlyWished = wishlist.includes(dishKey);
+            
+            if (isCurrentlyWished) {
+                // Remove from Firebase
                 await remove(wishlistProductRef);
+                // Remove from local wishlist array for immediate UI update
+                wishlist = wishlist.filter(key => key !== dishKey);
             } else {
+                 // Add to Firebase
                  await set(wishlistProductRef, { 
                     key: dish.key, // FIX: Ensure key is saved in the object for retrieval
                     name: dish.name, 
@@ -1846,6 +1858,15 @@ const firebaseConfig = {
                     discount: dish.discount || 0,
                     unit: dish.unit || 'Unit N/A'
                 });
+                // Add to local wishlist array
+                wishlist.push(dishKey);
+            }
+            
+            // Update UI elements that depend on wishlist state
+            updateWishlistIconInCards(dishKey, !isCurrentlyWished);
+            updatePdpWishlistButton(dishKey);
+            if (document.getElementById('wishlistPage').classList.contains('active')) {
+                 loadWishlist(); // Re-render the wishlist page if active
             }
         };
 
@@ -1859,16 +1880,11 @@ const firebaseConfig = {
                         wishlist.push(childSnap.key);
                     });
                 }
-                // Update UI everywhere
-                if (document.getElementById('appContainer').classList.contains('active')) {
-                   showAllDishes();
-                }
+                // Update UI everywhere that might depend on wishlist state
+                updateAllCardWishlistIcons();
+                updatePdpWishlistButtonIfOpen();
                 if (document.getElementById('wishlistPage').classList.contains('active')) {
                      loadWishlist();
-                }
-                 // NEW: Update PDP wishlist button if open
-                if (document.getElementById('productDetailPage').classList.contains('active') && currentPdpDish) {
-                     updatePdpWishlistButton(currentPdpDish.key);
                 }
             });
         }
@@ -1933,8 +1949,11 @@ const firebaseConfig = {
 
             dishesList.forEach(d => {
                 const dishImage = d.imageUrl || 'https://via.placeholder.com/150';
-                const isWished = wishlist.includes(d.key) ? 'active' : ''; 
-                const wishIcon = 'fa-heart';
+                // Check wishlist status using the `wishlist` array
+                const isWished = wishlist.includes(d.key);
+                const wishBtnClass = `wishlist-btn ${isWished ? 'active' : ''}`;
+                const wishIconClass = `fas ${isWished ? 'fa-heart' : 'fa-heart'}`; // Heart icon always, class determines state
+                
                 const discount = d.discount || 0;
                 // FIX: Use the pre-calculated customerPrice for card display
                 const discountedPrice = parseFloat(d.customerPrice || 0); 
@@ -1954,8 +1973,8 @@ const firebaseConfig = {
                         ${discountTag}
                         <img src="${dishImage}" alt="${d.name}">
                         <div class="card-actions">
-                            <button class="wishlist-btn ${isWished}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
-                                <i class="fas ${wishIcon}"></i>
+                            <button class="${wishBtnClass}" onclick="event.stopPropagation(); toggleWishlist('${d.key}')">
+                                <i class="${wishIconClass}"></i>
                             </button>
                             <button class="add-btn" onclick="event.stopPropagation(); addToCart('${d.key}', 1)">
                                 <i class="fas fa-plus"></i>
@@ -1968,6 +1987,30 @@ const firebaseConfig = {
                     </div>
                 `;
             });
+        }
+        
+        // Helper to update wishlist icons in all cards on the page
+        function updateAllCardWishlistIcons() {
+            document.querySelectorAll('.card .wishlist-btn').forEach(btn => {
+                const dishKey = btn.getAttribute('onclick').match(/'([^']+)'/)[1]; // Extract key from onclick
+                const isWished = wishlist.includes(dishKey);
+                btn.classList.toggle('active', isWished);
+                // The icon itself remains 'fa-heart', the 'active' class handles the visual state
+            });
+        }
+        
+        // Helper to update a specific card's wishlist icon
+        function updateWishlistIconInCards(dishKey, isWished) {
+             const cardContainer = document.getElementById('dishesContainer');
+             if (cardContainer) {
+                 const buttons = cardContainer.querySelectorAll('.card .wishlist-btn');
+                 buttons.forEach(btn => {
+                      const keyFromBtn = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                      if (keyFromBtn === dishKey) {
+                           btn.classList.toggle('active', isWished);
+                      }
+                 });
+             }
         }
         
         function renderCategories(categoriesList) {
@@ -2300,6 +2343,13 @@ const firebaseConfig = {
             wishlistBtn.className = `btn-main wishlist-btn ${isWished ? 'active' : ''}`;
             wishlistBtn.innerHTML = `<i class="fas fa-heart" style="color:${heartColor};"></i> ${isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}`;
             wishlistBtn.onclick = () => toggleWishlist(dishKey);
+        }
+
+        // Helper to update PDP wishlist button if it's currently visible
+        function updatePdpWishlistButtonIfOpen() {
+             if (document.getElementById('productDetailPage').classList.contains('active') && currentPdpDish) {
+                 updatePdpWishlistButton(currentPdpDish.key);
+            }
         }
 
         // PDP Slider JS
@@ -2764,6 +2814,4 @@ const firebaseConfig = {
         updateCartUI(); 
     </script>
 </body>
-</html>
-
 </html>
